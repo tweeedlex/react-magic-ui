@@ -1,0 +1,42 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+import Example from "./Example.tsx";
+import * as Switch from "./Switch.stories.tsx";
+
+<Meta of={Switch} title="Switch" />
+
+# Switch
+
+Switch component with different props.
+
+#### Example
+
+<Canvas of={Switch.Default}/>
+
+## Usage
+
+```ts
+import {Switch} from "react-glass-ui";
+import { useState } from "react";
+
+const Example = () => {
+  const [isActive, setIsActive] = useState(false);
+
+  return (
+      <Switch
+        size={"medium"}
+        disabled={false}
+        isActive={isActive}
+        setIsActive={setIsActive}
+      />
+  );
+};
+
+export default Example;
+```
+
+#### Arguments
+
+- **disabled** - A boolean indicating whether the Switch should be disabled or not. When disabled, the Switch cannot be clicked or interacted with.
+- **size** - A string with one of three possible values: "small," "medium," or "large." It defines the size or dimensions of the Switch.
+- **isActive** - A boolean indicating whether the Switch is active or not. When active, the Switch is in the "on" position.
+- **setIsActive** - A function that sets the value of the isActive prop. It is used to toggle the Switch between the "on" and "off" positions.

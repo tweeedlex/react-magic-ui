@@ -1,0 +1,47 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+import Example from "./Example.tsx";
+import * as Card from "./Card.stories.tsx";
+
+<Meta of={Card} title="Card"/>
+
+# Card
+
+Card component with different props.
+
+#### Example
+
+<Canvas of={Card.Default} />
+
+## Usage
+
+```ts
+import { Card } from "react-glass-ui";
+
+const Example = () => {
+  return (
+      <Card
+        size={"small"}
+        direction={"column"}
+        align={"start"}
+        justify={"start"}
+      >
+        <h1>Title</h1>
+        <h2>Subtitle</h2>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
+          vehicula, sapien nec consectetur aliquam, turpis ex tincidunt
+          turpis, sed facilisis eros libero a purus.
+        </p>
+      </Card>
+  );
+};
+
+export default Example;
+```
+
+#### Arguments
+
+- **size** - A string with one of three possible values: "small," "medium," or "large." It defines the size or dimensions of the Card.
+- **direction** - A string with one of two possible values: "row" or "column." It defines the direction of the Card.
+- **align** - A string with one of five possible values: "start," "end," "center," "baseline," or "stretch." It defines the alignment of the Card.
+- **justify** - A string with one of five possible values: "start," "end," "center," "between," or "around." It defines the justification of the Card.

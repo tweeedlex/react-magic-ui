@@ -1,0 +1,71 @@
+.switch {
+  position: relative;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  outline: none;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 10px 20px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
+  width: 60px;
+  height: 30px;
+
+  &.small {
+    width: 30px;
+    height: 15px;
+
+    &.active:before {
+      transform: translateX(12px) translateY(-50%);
+    }
+
+    &:before {
+      width: 10px;
+      height: 10px;
+    }
+  }
+
+  &.medium {
+    width: 60px;
+    height: 30px;
+
+    &.active:before {
+      transform: translateX(30px) translateY(-50%);
+    }
+
+    &:before {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  &.large {
+    width: 120px;
+    height: 60px;
+
+    &.active:before {
+      transform: translateX(68px) translateY(-50%);
+    }
+
+    &:before {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    transition: all 0.3s ease-in-out;
+    background: rgba(255, 255, 255);
+  }
+
+  &.disabled:before {
+    background: rgba(255, 255, 255, 0.5);
+  }
+}

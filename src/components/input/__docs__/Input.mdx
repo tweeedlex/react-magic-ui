@@ -1,0 +1,42 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+import Example from "./Example.tsx";
+import * as Input from "./Input.stories.tsx";
+
+<Meta of={Input} title="Input" />
+
+# Input
+
+Input component with different props.
+
+#### Example
+
+<Canvas of={Input.Default} />
+
+## Usage
+
+```ts
+import { Input } from "react-glass-ui";
+import { useState } from "react";
+
+const Example = () => {
+  const [value, setValue] = useState("");
+
+  return (
+      <Input
+        size={"small"}
+        onChange={(e) => setValue(previousValue => e.target.value)}
+        placeholder={"Type something..."}
+        value={value}
+      />
+  );
+};
+
+export default Example;
+```
+
+#### Arguments
+
+- **disabled** - A boolean indicating whether the Input should be disabled or not. When disabled, the Input cannot be interacted with.
+- **size** - A string with one of three possible values: "small," "medium," or "large." It defines the size or dimensions of the Input.
+- **placeholder** - A string that represents the placeholder text of the Input.
+- **onChange** _`() => void`_ - A function that is called when the value of the Input changes.
