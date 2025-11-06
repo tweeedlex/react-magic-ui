@@ -64,10 +64,6 @@
   transform: translateY(-50%) translateX(68px);
 }
 
-.switch.active {
-  background: rgba(4, 148, 164, 0.8); /* твій brand */
-}
-
 .switch.disabled {
   cursor: not-allowed;
   opacity: 0.5;
