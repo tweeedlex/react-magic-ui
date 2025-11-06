@@ -1,5 +1,6 @@
 import React from "react";
 import "./styles/Switch.scss";
+import { cn } from "../../func.ts";
 
 export type SwitchProps = {
   disabled?: boolean;
@@ -9,32 +10,23 @@ export type SwitchProps = {
 };
 
 const Switch: React.FC<SwitchProps> = ({
-                                         size,
+                                         size = "medium",
                                          disabled,
-                                         isActive,
+                                         isActive = false,
                                          setIsActive,
                                          ...props
                                        }) => {
-
   const handleClick = () => {
-    if (!disabled && setIsActive) {
-      setIsActive(!isActive);
-    }
+    if (!disabled && setIsActive) setIsActive(!isActive);
   };
-
-  const classList = [
-    "switch",
-    disabled ? "disabled" : "",
-    isActive ? "active" : "",
-    size
-  ];
 
   return (
     <button
       onClick={handleClick}
-      className={classList.join(" ")}
+      className={cn("switch glass", size, isActive ? "active" : "", disabled ? "disabled" : "")}
+      disabled={disabled}
       {...props}
-    ></button>
+    />
   );
 };
 

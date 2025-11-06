@@ -1,71 +1,86 @@
 .switch {
   position: relative;
-  border-radius: 100px;
-  background: rgba(255, 255, 255, 0.2);
   border: none;
   outline: none;
   cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.1);
   box-shadow: rgba(0, 0, 0, 0.1) 0 10px 20px;
   backdrop-filter: blur(10px);
+}
+
+.switch::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 1);
   transition: all 0.3s ease-in-out;
-  overflow: hidden;
+}
+
+.switch.small {
+  width: 30px;
+  height: 15px;
+}
+
+.switch.small::before {
+  width: 10px;
+  height: 10px;
+}
+
+.switch.small.active::before {
+  transform: translateY(-50%) translateX(12px);
+}
+
+.switch.medium {
   width: 60px;
   height: 30px;
+}
 
-  &.small {
-    width: 30px;
-    height: 15px;
+.switch.medium::before {
+  width: 20px;
+  height: 20px;
+}
 
-    &.active:before {
-      transform: translateX(12px) translateY(-50%);
-    }
+.switch.medium.active::before {
+  transform: translateY(-50%) translateX(30px);
+}
 
-    &:before {
-      width: 10px;
-      height: 10px;
-    }
-  }
+.switch.large {
+  width: 120px;
+  height: 60px;
+}
 
-  &.medium {
-    width: 60px;
-    height: 30px;
+.switch.large::before {
+  width: 40px;
+  height: 40px;
+}
 
-    &.active:before {
-      transform: translateX(30px) translateY(-50%);
-    }
+.switch.large.active::before {
+  transform: translateY(-50%) translateX(68px);
+}
 
-    &:before {
-      width: 20px;
-      height: 20px;
-    }
-  }
+.switch.active {
+  background: rgba(4, 148, 164, 0.8); /* твій brand */
+}
 
-  &.large {
-    width: 120px;
-    height: 60px;
+.switch.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
 
-    &.active:before {
-      transform: translateX(68px) translateY(-50%);
-    }
+.switch.disabled::before {
+  background: rgba(255, 255, 255, 0.5);
+}
 
-    &:before {
-      width: 40px;
-      height: 40px;
-    }
-  }
+.switch:hover:not(.disabled) {
+  background: rgba(255, 255, 255, 0.2);
+}
 
-  &:before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 5px;
-    transform: translateY(-50%);
-    border-radius: 50%;
-    transition: all 0.3s ease-in-out;
-    background: rgba(255, 255, 255);
-  }
-
-  &.disabled:before {
-    background: rgba(255, 255, 255, 0.5);
-  }
+.switch:active:not(.disabled) {
+  background: rgba(255, 255, 255, 0.3);
 }

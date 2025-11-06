@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@layer utilities {
+    .glass {
+        @apply relative overflow-hidden rounded-lg;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+}
+
+@layer utilities {
+    .small {
+        @apply px-4 py-2 text-sm;
+    }
+
+    .medium {
+        @apply px-6 py-3 text-base;
+    }
+
+    .large {
+        @apply px-9 py-4 text-lg;
+    }
+}
+
+@theme{
+    --color-danger: rgba(148, 76, 158);
+    --color-link: rgba(4, 148, 164);
+    --color-default: #FFFFFF33;
+}
+

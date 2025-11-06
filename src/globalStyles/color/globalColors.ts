@@ -1,6 +1,7 @@
-type ColorName = 'blue' | 'lilac' | 'green' | 'magenta' | 'pale' | 'indigo';
+type ColorName = 'blue' | 'lilac' | 'green' | 'magenta' | 'pale' | 'indigo' | 'white';
 
 export const globalColors: Record<ColorName, string> = {
+  "white": "rgba(255, 255, 255, 0.2)",
   "blue": "rgba(56, 173, 241)",
   "lilac": "rgba(120, 82, 247)",
   "green": "rgba(4, 148, 164)",

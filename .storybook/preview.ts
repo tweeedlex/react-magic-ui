@@ -1,4 +1,5 @@
 import type { Preview } from "@storybook/react-vite";
+import "../src/tailwind.css"
 
 const preview: Preview = {
   parameters: {
@@ -26,6 +27,10 @@ const preview: Preview = {
         image: {
           name: 'image',
           value: 'url("https://png.pngtree.com/thumb_back/fh260/background/20210929/pngtree-glassmorphism-wave-effect-abstract-background-image_908575.png") 0 0 / cover no-repeat fixed'
+        },
+        imageDark: {
+          name: 'image-nature',
+          value: 'url("https://png.pngtree.com/png-vector/20220615/ourlarge/pngtree-seamless-pattern-of-grid-with-transparency-effect-in-png-for-photoshop-vector-png-image_47094852.jpg") 0 0 / cover no-repeat fixed'
         },
 
         dark: {

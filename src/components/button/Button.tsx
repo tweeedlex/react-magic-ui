@@ -1,5 +1,6 @@
 import React from "react";
 import "./style/Button.scss";
+import { cn } from "../../func.ts";
 
 export type ButtonProps = {
   text?: string;
@@ -9,32 +10,37 @@ export type ButtonProps = {
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
+const sizeStyles = {
+  small: "small text-sm",
+  medium: "medium text-lg",
+  large: "large text-md",
+};
+
 const Button: React.FC<ButtonProps> = ({
-                                         size,
-                                         variant,
-                                         disabled,
-                                         text,
-                                         onClick,
-                                         ...props
-                                       }) => {
+  size = "medium",
+  variant,
+  disabled,
+  text,
+  onClick,
+  ...props
+}) => {
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!disabled && onClick) {
       onClick(event);
     }
   };
 
-  const classList = [
-    "button",
-    disabled ? "disabled" : "",
-    variant ? variant : "default",
-    size ? size : "medium",
-  ];
-
   return (
     <button
       type="button"
       onClick={handleClick}
-      className={classList.join(" ")}
+      className={cn(
+        "glass btn",
+        variant ? `bg-${variant}` : "bg-default",
+        sizeStyles[size],
+        disabled ? "opacity-50 cursor-not-allowed" : "",
+        "hover:bg-white/30 active:bg-white/40",
+      )}
       disabled={disabled}
       {...props}
     >
