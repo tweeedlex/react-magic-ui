@@ -26,7 +26,7 @@ const preview: Preview = {
 
         image: {
           name: 'image',
-          value: 'url("https://png.pngtree.com/thumb_back/fh260/background/20210929/pngtree-glassmorphism-wave-effect-abstract-background-image_908575.png") 0 0 / cover no-repeat fixed'
+          value: 'url("https://images.unsplash.com/photo-1673526759327-54f1f5b27322?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDE3fHx8ZW58MHx8fHx8") 0 0 / cover no-repeat fixed'
         },
         imageDark: {
           name: 'image-nature',
