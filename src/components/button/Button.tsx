@@ -1,6 +1,6 @@
 import React from "react";
 import "./style/Button.scss";
-import { cn } from "../../func.ts";
+import clsx from "clsx";
 
 export type ButtonProps = {
   text?: string;
@@ -34,7 +34,7 @@ const Button: React.FC<ButtonProps> = ({
     <button
       type="button"
       onClick={handleClick}
-      className={cn(
+      className={clsx(
         "glass btn",
         variant ? `bg-${variant}` : "bg-default",
         sizeStyles[size],

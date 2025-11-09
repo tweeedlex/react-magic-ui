@@ -1,6 +1,6 @@
 import React from "react";
-import { cn } from "../../func.ts";
 import "./style/Card.scss";
+import clsx from "clsx";
 
 export type CardProps = {
   children?: React.ReactNode | string;
@@ -24,7 +24,7 @@ const Card: React.FC<CardProps> = ({
                                      justify,
                                      ...props
                                    }) => {
-  const classNames = cn(
+  const classNames = clsx(
     "glass card flex bg-default",
     size,
     direction === "row" ? "flex-row" : "flex-col",
