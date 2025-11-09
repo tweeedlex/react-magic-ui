@@ -1,0 +1,58 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+import Example from "./Example.tsx";
+import * as SidebarStories from "./Sidebar.stories.tsx";
+
+<Meta of={SidebarStories} title="Sidebar" />
+
+# Sidebar
+
+Sidebar with glassmorphism styling that exposes a compound component API.
+
+#### Example
+
+<Canvas of={SidebarStories.Default} />
+
+## Usage
+
+```tsx
+import { Sidebar } from "react-glass-ui";
+
+const Title = () => {
+  const { collapsed } = Sidebar.useSidebar();
+  if (collapsed) return null;
+  return <span>Glass UI</span>;
+};
+
+export const Example = () => (
+  <Sidebar collapsible defaultActiveItemId="dashboard">
+    <Sidebar.Header>
+      <Title />
+      <Sidebar.Toggle />
+    </Sidebar.Header>
+
+    <Sidebar.Items>
+      <Sidebar.Item itemId="dashboard">Dashboard</Sidebar.Item>
+      <Sidebar.Item itemId="analytics" badge={3}>
+        Analytics
+      </Sidebar.Item>
+      <Sidebar.Item itemId="settings">Settings</Sidebar.Item>
+    </Sidebar.Items>
+
+    <Sidebar.Footer>
+      <small>© 2025</small>
+    </Sidebar.Footer>
+  </Sidebar>
+);
+```
+
+#### Arguments
+
+- **size** _(`"small" | "medium" | "large"`)_ – Controls the width presets of the sidebar.
+- **collapsed / defaultCollapsed** _(`boolean`)_ – Collapse state (controlled or uncontrolled).
+- **collapsible** _(`boolean`)_ – Enables the collapse toggle control.
+- **activeItemId / defaultActiveItemId** _(`string`)_ – Active item id (controlled or uncontrolled).
+- **onSelectItem** _(`(itemId, event) => void`)_ – Called when an item is selected.
+- **onToggle** _(`(collapsed) => void`)_ – Fired when collapse state changes.
+- **children** _(ReactNode)_ – Compose the sidebar via `Sidebar.Header`, `Sidebar.Items`, `Sidebar.Item`, `Sidebar.Footer`, and `Sidebar.Toggle`.
+- **Sidebar.useSidebar()** _(() => SidebarContextValue)_ – Hook available inside sidebar subtree to read current state (e.g., `collapsed`, `size`) and react accordingly.
+

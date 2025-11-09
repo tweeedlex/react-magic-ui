@@ -7,7 +7,6 @@
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
     }
-
 }
 
 @layer utilities {
@@ -29,4 +28,3 @@
     --color-link: rgba(4, 148, 164);
     --color-default: #FFFFFF33;
 }
-
