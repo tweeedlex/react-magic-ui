@@ -1,5 +1,5 @@
 import React, { ChangeEventHandler } from "react";
-import { cn } from "../../func.ts";
+import clsx from "clsx";
 
 export type InputProps = {
   disabled?: boolean;
@@ -27,7 +27,7 @@ const Input: React.FC<InputProps> = ({
       onChange={onChange}
       disabled={disabled}
       placeholder={placeholder}
-      className={cn(
+      className={clsx(
         "glass bg-default text-white font-normal leading-none placeholder:text-white/75 focus:outline-none",
         sizeStyles[size],
         disabled ? "opacity-50 cursor-not-allowed" : ""
