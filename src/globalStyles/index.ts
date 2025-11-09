@@ -1,1 +1,0 @@
-export {globalColors} from './color/globalColors.ts'
