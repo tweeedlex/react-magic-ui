@@ -1,0 +1,60 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+import Example from "./Example.tsx";
+import * as ToastStories from "./Toast.stories.tsx";
+
+<Meta of={ToastStories} title="Toast" />
+
+# Toast
+
+Toasts deliver short, time-bound messages that appear above the interface without interrupting flow.
+
+#### Example
+
+<Canvas of={ToastStories.Playground} />
+
+## Usage
+
+```tsx
+import { ToastProvider, useToast } from "react-glass-ui";
+
+const Controls = () => {
+  const { showToast, clearToasts } = useToast();
+
+  return (
+    <>
+      <button
+        onClick={() =>
+          showToast({
+            title: "Success!",
+            description: "Your workspace has been updated.",
+            variant: "success",
+            duration: 5000,
+            animation: "slide-from-right",
+            position: "top-right",
+          })
+        }
+      >
+        Show toast
+      </button>
+      <button onClick={clearToasts}>Clear all</button>
+    </>
+  );
+};
+
+const Example = () => {
+  return (
+    <ToastProvider duration={4000} animation="slide-from-right" position="top-right">
+      <Controls />
+    </ToastProvider>
+  );
+};
+```
+
+#### Options
+
+- **variant** — Visual style for the toast. Supports `"default"`, `"success"`, `"error"`, and `"info"`.
+- **duration** — Time in milliseconds the toast stays visible. Set to `Infinity` to disable auto-dismiss.
+- **animation** — Entry and exit motion. Choose from `"slide-from-right"`, `"slide-from-left"`, `"slide-from-bottom"`, or `"scale"`.
+- **position** — Screen anchoring for the stack. Supports `"top-right"`, `"top-left"`, `"top-center"`, `"bottom-right"`, `"bottom-left"`, or `"bottom-center"`.
+
+
