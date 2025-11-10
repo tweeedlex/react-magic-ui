@@ -1,0 +1,64 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+import Example from "./Example.tsx";
+import * as ModalStories from "./Modal.stories.tsx";
+
+<Meta of={ModalStories} title="Modal" />
+
+# Modal
+
+Modal presents content in a focus-trapped glass surface over an application.
+
+#### Example
+
+<Canvas of={ModalStories.Default} />
+
+## Usage
+
+```ts
+import { Modal, Button } from "react-glass-ui";
+import { useState } from "react";
+
+const Example = () => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <Button text="Open modal" onClick={() => setOpen(true)} />
+      <Modal
+        open={open}
+        onOpenChange={setOpen}
+        title="Glass modal"
+        description="A translucent surface that keeps the focus on your content."
+        footer={
+          <>
+            <Button text="Cancel" variant="link" onClick={() => setOpen(false)} />
+            <Button text="Confirm" onClick={() => setOpen(false)} />
+          </>
+        }
+      >
+        <p>
+          This modal demonstrates the glassmorphism style with focus management, overlay dismissal,
+          and a flexible footer.
+        </p>
+      </Modal>
+    </>
+  );
+};
+
+export default Example;
+```
+
+#### Props
+
+- **open** - Controls whether the modal is visible.
+- **onOpenChange** - Callback fired when the open state should change.
+- **onClose** - Fired after the modal requests to close (overlay, close button, or escape).
+- **title** - Heading content displayed at the top of the modal.
+- **description** - Supporting text rendered under the title.
+- **footer** - Footer content, typically actions.
+- **size** - Controls the maximum width. Accepts "sm", "md", or "lg".
+- **closeOnOverlay** - Allows closing by clicking the overlay. Defaults to `true`.
+- **closeOnEsc** - Allows closing with the Escape key. Defaults to `true`.
+- **lockScroll** - Prevents body scroll while open. Defaults to `true`.
+
+
