@@ -1,20 +1,7 @@
 @import "tailwindcss";
-@import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
-
-* {
-    font-family: "Nunito", sans-serif;
-}
 
 @layer utilities {
-    .glass {
-        @apply relative overflow-hidden rounded-lg;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-    }
-}
 
-@layer utilities {
     .small {
         @apply px-4 py-2 text-sm;
     }
@@ -28,8 +15,3 @@
     }
 }
 
-@theme{
-    --color-danger: rgba(148, 76, 158);
-    --color-link: rgba(4, 148, 164);
-    --color-default: #FFFFFF22;
-}
