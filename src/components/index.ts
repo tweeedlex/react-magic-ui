@@ -7,3 +7,4 @@ export * from './topbar';
 export * from './modal';
 export * from './toast';
 export * from './tabs';
+export * from './badge';

@@ -1,0 +1,39 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+import Example from "./Example.tsx";
+import * as BadgeStories from "./Badge.stories.tsx";
+
+<Meta of={BadgeStories} title="Badge" />
+
+# Badge
+
+badge component for status tagging with glassmorphism styling.
+
+#### Example
+
+<Canvas of={BadgeStories.Default} />
+
+## Usage
+
+```ts
+import { Badge } from "react-glass-ui";
+
+const Example = () => {
+  return (
+    <Badge variant="positive">
+      active
+    </Badge>
+  );
+};
+
+export default Example;
+```
+
+#### Variants
+
+- **default** - subtle appearance for neutral information.
+- **positive** - success state such as completed or active.
+- **negative** - error state for failures.
+- **warning** - cautionary messages that need attention.
+- **info** - informational notices.
+- **neutral** - low emphasis state labels.
+

@@ -11,6 +11,11 @@ export default {
         danger: "var(--color-danger)",
         link: "var(--color-link)",
         default: "var(--color-default)",
+        positive: "var(--color-positive)",
+        negative: "var(--color-negative)",
+        warning: "var(--color-warning)",
+        info: "var(--color-info)",
+        neutral: "var(--color-neutral)",
         gradient: "var(--color-gradient)",
       }
     },
@@ -29,7 +34,12 @@ export default {
     "justify-around",
     "bg-danger",
     "bg-link",
-    "bg-default"
+    "bg-default",
+    "bg-positive",
+    "bg-negative",
+    "bg-warning",
+    "bg-info",
+    "bg-neutral",
   ],
 }
 

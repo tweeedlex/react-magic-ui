@@ -1,0 +1,10 @@
+.badge {
+  @apply select-none;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  & .badge__icon {
+    @apply inline-flex items-center justify-center text-base;
+  }
+}
+

@@ -33,5 +33,10 @@
     --color-danger: rgba(148, 76, 158);
     --color-link: rgba(4, 148, 164);
     --color-default: #FFFFFF22;
+    --color-positive: rgba(34, 197, 94, 0.35);
+    --color-negative: rgba(239, 68, 68, 0.35);
+    --color-warning: rgba(251, 191, 36, 0.35);
+    --color-info: rgba(59, 130, 246, 0.35);
+    --color-neutral: rgba(148, 163, 184, 0.35);
     --color-gradient: linear-gradient(180deg, rgba(56, 173, 241) 0%, rgba(120, 82, 247) 35%, rgba(36, 36, 68) 100%) no-repeat center center fixed;
 }
