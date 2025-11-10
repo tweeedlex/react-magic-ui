@@ -1,0 +1,53 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+import Example from "./Example.tsx";
+import * as TabsStories from "./Tabs.stories.tsx";
+
+<Meta of={TabsStories} title="Tabs" />
+
+# Tabs
+
+Accessible glassmorphism tabs with keyboard navigation and compound subcomponents.
+
+#### Example
+
+<Canvas of={TabsStories.Default} />
+
+## Usage
+
+```ts
+import { Tabs } from "react-glass-ui";
+
+const Example = () => {
+  return (
+    <Tabs defaultValue="overview">
+      <Tabs.List>
+        <Tabs.Trigger value="overview">Overview</Tabs.Trigger>
+        <Tabs.Trigger value="analytics">Analytics</Tabs.Trigger>
+        <Tabs.Trigger value="settings">Settings</Tabs.Trigger>
+      </Tabs.List>
+
+      <Tabs.Content value="overview">
+        Overview content
+      </Tabs.Content>
+      <Tabs.Content value="analytics">
+        Analytics content
+      </Tabs.Content>
+      <Tabs.Content value="settings">
+        Settings content
+      </Tabs.Content>
+    </Tabs>
+  );
+};
+
+export default Example;
+```
+
+#### Arguments
+
+- **value** - Controlled value that specifies the active tab. Combine with `onValueChange`.
+- **defaultValue** - Sets the initially active tab in uncontrolled mode.
+- **onValueChange** - Callback fired when the active tab changes.
+- **activationMode** - Determines whether tabs activate on focus (`"auto"`) or require a click (`"manual"`).
+- **orientation** - Display tabs horizontally or vertically.
+*** End Patch
+
