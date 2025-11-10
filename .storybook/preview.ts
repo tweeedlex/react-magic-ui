@@ -1,4 +1,6 @@
 import type { Preview } from "@storybook/react-vite";
+import { themes } from 'storybook/theming';
+import "../src/styles/preview.scss"
 import "../src/tailwind.css"
 
 const preview: Preview = {
@@ -39,8 +41,10 @@ const preview: Preview = {
         }
       }
     },
+    docs: {
+      theme: themes.dark,
+    }
   },
-
   initialGlobals: {
     backgrounds: {
       value: 'gradient'

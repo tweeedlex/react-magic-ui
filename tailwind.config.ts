@@ -11,6 +11,7 @@ export default {
         danger: "var(--color-danger)",
         link: "var(--color-link)",
         default: "var(--color-default)",
+        gradient: "var(--color-gradient)",
       }
     },
   },

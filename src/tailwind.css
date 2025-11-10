@@ -33,4 +33,5 @@
     --color-danger: rgba(148, 76, 158);
     --color-link: rgba(4, 148, 164);
     --color-default: #FFFFFF22;
+    --color-gradient: linear-gradient(180deg, rgba(56, 173, 241) 0%, rgba(120, 82, 247) 35%, rgba(36, 36, 68) 100%) no-repeat center center fixed;
 }
