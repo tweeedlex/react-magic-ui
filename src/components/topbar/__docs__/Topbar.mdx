@@ -1,0 +1,47 @@
+import { Canvas, Meta } from "@storybook/addon-docs";
+import Example from "./Example.tsx";
+import * as TopbarStories from "./Topbar.stories.tsx";
+
+<Meta of={TopbarStories} title="Topbar" />
+
+# Topbar
+
+Glassmorphism top navigation bar with compound sections, brand, and action helpers.
+
+#### Example
+
+<Canvas of={TopbarStories.Default} />
+
+## Usage
+
+```tsx
+import { Topbar, Button, Input } from "react-glass-ui";
+
+export const Example = () => (
+  <Topbar>
+    <Topbar.Brand icon="✨" title="Glass UI" subtitle="Command Center" />
+
+    <Topbar.Section grow>
+      <Input size="medium" placeholder="Search anything..." />
+    </Topbar.Section>
+
+    <Topbar.Actions>
+      <Topbar.Divider />
+      <Button text="Invite" size="small" />
+      <Button text="Share" size="small" variant="link" />
+    </Topbar.Actions>
+  </Topbar>
+);
+```
+
+#### Arguments
+
+- **size** _(`"compact" | "comfortable" | "spacious"`)_ – Controls the height, padding, and typography rhythm.
+- **elevated** _(`boolean`)_ – Toggles the drop shadow for a flatter appearance.
+- **Topbar.Section** _(`{ grow, align, gap, wrap }`)_ – Compose flexible areas, optionally stretching with `grow`.
+- **Topbar.Brand** _(`{ icon, title, subtitle }`)_ – Brand helper that adapts to the current topbar size.
+- **Topbar.Actions** _(`{ gap }`)_ – Right-aligned action container, wraps on smaller widths if needed.
+- **Topbar.Divider** _(`void`)_ – Responsive divider that matches the current topbar height.
+- **Topbar.useTopbar()** _(() => TopbarContextValue)_ – Access the active `size` within the component tree.
+
+
