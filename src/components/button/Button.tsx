@@ -1,6 +1,7 @@
 import React from "react";
 import "./style/Button.scss";
 import clsx from "clsx";
+import Glass from "../glass/Glass.tsx";
 
 export type ButtonProps = {
   text?: string;
@@ -31,21 +32,23 @@ const Button: React.FC<ButtonProps> = ({
   };
 
   return (
-    <button
-      type="button"
-      onClick={handleClick}
-      className={clsx(
-        "glass btn",
-        variant ? `bg-${variant}` : "bg-default",
-        sizeStyles[size],
-        disabled ? "opacity-50 cursor-not-allowed" : "",
-        "hover:bg-white/30 active:bg-white/40",
-      )}
-      disabled={disabled}
-      {...props}
-    >
-      {text}
-    </button>
+    <Glass>
+      <button
+        type="button"
+        onClick={handleClick}
+        className={clsx(
+          "btn",
+          variant ? `bg-${variant}` : "bg-default",
+          sizeStyles[size],
+          disabled ? "opacity-50 cursor-not-allowed" : "",
+          "hover:bg-white/30 active:bg-white/40",
+        )}
+        disabled={disabled}
+        {...props}
+      >
+        {text}
+      </button>
+    </Glass>
   );
 };
 
