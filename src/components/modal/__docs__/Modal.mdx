@@ -50,15 +50,18 @@ export default Example;
 
 #### Props
 
-- **open** - Controls whether the modal is visible.
-- **onOpenChange** - Callback fired when the open state should change.
-- **onClose** - Fired after the modal requests to close (overlay, close button, or escape).
-- **title** - Heading content displayed at the top of the modal.
-- **description** - Supporting text rendered under the title.
-- **footer** - Footer content, typically actions.
-- **size** - Controls the maximum width. Accepts "sm", "md", or "lg".
-- **closeOnOverlay** - Allows closing by clicking the overlay. Defaults to `true`.
-- **closeOnEsc** - Allows closing with the Escape key. Defaults to `true`.
-- **lockScroll** - Prevents body scroll while open. Defaults to `true`.
+- **open** _`boolean`_ — Controls whether the modal is visible.
+- **onOpenChange** _`(open: boolean) => void`_ — Callback fired when the open state should change.
+- **onClose** _`() => void`_ — Fired after the modal requests to close (overlay, close button, or escape).
+- **title** _`React.ReactNode`_ — Heading content displayed at the top of the modal.
+- **description** _`React.ReactNode`_ — Supporting text rendered under the title.
+- **footer** _`React.ReactNode`_ — Footer content, typically actions.
+- **size** _`"sm" | "md" | "lg"`_ — Controls the maximum width. Default is `"md"`.
+- **closeOnOverlay** _`boolean`_ — Allows closing by clicking the overlay. Default is `true`.
+- **closeOnEsc** _`boolean`_ — Allows closing with the Escape key. Default is `true`.
+- **lockScroll** _`boolean`_ — Prevents body scroll while open. Default is `true`.
+- **enableLiquidAnimation** _`boolean`_ — Enable liquid bounce animation on modal open. Default is `true`.
+- **portalContainer** _`HTMLElement | null`_ — Custom container for rendering the modal.
+- **className** _`string`_ — Additional CSS classes to apply to the modal content.
 
 

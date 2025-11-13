@@ -50,11 +50,23 @@ const Example = () => {
 };
 ```
 
-#### Options
+#### ToastProvider Props
 
-- **variant** — Visual style for the toast. Supports `"default"`, `"success"`, `"error"`, and `"info"`.
-- **duration** — Time in milliseconds the toast stays visible. Set to `Infinity` to disable auto-dismiss.
-- **animation** — Entry and exit motion. Choose from `"slide-from-right"`, `"slide-from-left"`, `"slide-from-bottom"`, or `"scale"`.
-- **position** — Screen anchoring for the stack. Supports `"top-right"`, `"top-left"`, `"top-center"`, `"bottom-right"`, `"bottom-left"`, or `"bottom-center"`.
+- **duration** _`number`_ — Default time in milliseconds the toast stays visible. Default is `4000`.
+- **animation** _`ToastAnimation`_ — Default entry and exit motion. Choose from `"slide-from-right"`, `"slide-from-left"`, `"slide-from-bottom"`, or `"scale"`.
+- **position** _`ToastPosition`_ — Default screen anchoring for the stack. Supports `"top-right"`, `"top-left"`, `"top-center"`, `"bottom-right"`, `"bottom-left"`, or `"bottom-center"`.
+- **enableLiquidAnimation** _`boolean`_ — Enable liquid bounce animation on toast appearance. Default is `true`.
+- **portalContainer** _`HTMLElement | null`_ — Custom container for rendering toasts.
+
+#### Toast Options
+
+- **title** _`React.ReactNode`_ — The title of the toast.
+- **description** _`React.ReactNode`_ — The description/body text of the toast.
+- **variant** _`"default" | "success" | "error" | "info"`_ — Visual style for the toast.
+- **duration** _`number`_ — Time in milliseconds the toast stays visible. Set to `Infinity` to disable auto-dismiss.
+- **animation** _`ToastAnimation`_ — Entry and exit motion. Overrides provider default.
+- **position** _`ToastPosition`_ — Screen anchoring. Overrides provider default.
+- **enableLiquidAnimation** _`boolean`_ — Enable liquid bounce animation for this specific toast. Overrides provider default.
+- **onClose** _`() => void`_ — Callback fired when the toast is dismissed.
 
 

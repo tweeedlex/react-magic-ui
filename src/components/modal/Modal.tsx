@@ -24,6 +24,7 @@ export type ModalProps = ComponentPropsWithoutRef<"div"> & {
   closeOnEsc?: boolean;
   lockScroll?: boolean;
   size?: ModalSize;
+  enableLiquidAnimation?: boolean;
   portalContainer?: HTMLElement | null;
 };
 
@@ -70,6 +71,7 @@ const Modal: React.FC<ModalProps> = ({
   closeOnEsc = true,
   lockScroll = true,
   size = "md",
+  enableLiquidAnimation = true,
   className,
   portalContainer,
   onClick,
@@ -77,6 +79,7 @@ const Modal: React.FC<ModalProps> = ({
 }) => {
   const [mounted, setMounted] = useState(false);
   const [container, setContainer] = useState<HTMLElement | null>(null);
+  const [shouldAnimate, setShouldAnimate] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
   const descriptionId = useId();
@@ -147,6 +150,23 @@ const Modal: React.FC<ModalProps> = ({
     }
   }, [open]);
 
+  // Trigger liquid animation when modal opens
+  useEffect(() => {
+    if (open && enableLiquidAnimation) {
+      // Reset animation state first
+      setShouldAnimate(false);
+
+      // Trigger animation after a short delay to ensure modal is rendered
+      const timer = setTimeout(() => {
+        setShouldAnimate(true);
+      }, 50);
+
+      return () => clearTimeout(timer);
+    } else {
+      setShouldAnimate(false);
+    }
+  }, [open, enableLiquidAnimation]);
+
   if (!open || !mounted || !container) {
     return null;
   }
@@ -171,6 +191,8 @@ const Modal: React.FC<ModalProps> = ({
 
       <Glass
         ref={contentRef}
+        enableLiquidAnimation={false}
+        triggerAnimation={enableLiquidAnimation && shouldAnimate}
         className={cn(baseContentClasses, sizeClasses[size], className)}
         role="dialog"
         aria-modal="true"

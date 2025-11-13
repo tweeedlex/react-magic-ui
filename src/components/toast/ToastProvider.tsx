@@ -37,6 +37,7 @@ export type ToastDefinition = {
   duration?: number;
   animation?: ToastAnimation;
   position?: ToastPosition;
+  enableLiquidAnimation?: boolean;
   onClose?: () => void;
 };
 
@@ -48,12 +49,14 @@ type ToastRecord = ToastDefinition & {
   animation: ToastAnimation;
   position: ToastPosition;
   variant: ToastVariant;
+  enableLiquidAnimation: boolean;
 };
 
 export type ToastProviderProps = PropsWithChildren<{
   duration?: number;
   animation?: ToastAnimation;
   position?: ToastPosition;
+  enableLiquidAnimation?: boolean;
   portalContainer?: HTMLElement | null;
 }>;
 
@@ -65,12 +68,13 @@ type ToastContextValue = {
     duration: number;
     animation: ToastAnimation;
     position: ToastPosition;
+    enableLiquidAnimation: boolean;
   };
 };
 
 const defaultVariantClasses: Record<ToastVariant, string> = {
   default:
-    "bg-white/10 border-white/25 text-white shadow-[0_18px_40px_rgba(15,23,42,0.32)]",
+    "border-white/25 text-white shadow-[0_18px_40px_rgba(15,23,42,0.32)]",
   success:
     "bg-emerald-500/15 border-emerald-400/40 text-emerald-50 shadow-[0_18px_40px_rgba(16,185,129,0.28)]",
   error:
@@ -236,8 +240,10 @@ const ToastCard: React.FC<{
     <Glass
       role="status"
       aria-live="polite"
-      className={cn(
-        "pointer-events-auto w-full rounded-3xl border transition-all duration-200 ease-out",
+      enableLiquidAnimation={toast.enableLiquidAnimation}
+      triggerAnimation={phase === "enter"}
+      rootClassName={cn(
+        "pointer-events-auto w-full transition-all duration-200 ease-out",
         defaultVariantClasses[toast.variant],
         animationClass,
       )}
@@ -284,6 +290,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
   duration = 4000,
   animation = "slide-from-right",
   position = "top-right",
+  enableLiquidAnimation = true,
   portalContainer,
 }) => {
   const [toasts, setToasts] = useState<ToastRecord[]>([]);
@@ -313,6 +320,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
           duration: toast.duration ?? duration,
           animation: toast.animation ?? animation,
           position: toast.position ?? position,
+          enableLiquidAnimation: toast.enableLiquidAnimation ?? enableLiquidAnimation,
           onClose: toast.onClose,
           createdAt: Date.now(),
           dismissed: false,
@@ -321,7 +329,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
 
       return id;
     },
-    [animation, duration, position],
+    [animation, duration, position, enableLiquidAnimation],
   );
 
   const dismissToast = useCallback((id: string) => {
@@ -359,9 +367,10 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
         duration,
         animation,
         position,
+        enableLiquidAnimation,
       },
     }),
-    [animation, clearToasts, dismissToast, duration, position, showToast],
+    [animation, clearToasts, dismissToast, duration, position, enableLiquidAnimation, showToast],
   );
 
   const toastsByPosition = useMemo(() => {

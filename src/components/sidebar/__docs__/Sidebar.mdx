@@ -47,12 +47,14 @@ export const Example = () => (
 
 #### Arguments
 
-- **size** _(`"small" | "medium" | "large"`)_ – Controls the width presets of the sidebar.
-- **collapsed / defaultCollapsed** _(`boolean`)_ – Collapse state (controlled or uncontrolled).
-- **collapsible** _(`boolean`)_ – Enables the collapse toggle control.
-- **activeItemId / defaultActiveItemId** _(`string`)_ – Active item id (controlled or uncontrolled).
-- **onSelectItem** _(`(itemId, event) => void`)_ – Called when an item is selected.
-- **onToggle** _(`(collapsed) => void`)_ – Fired when collapse state changes.
-- **children** _(ReactNode)_ – Compose the sidebar via `Sidebar.Header`, `Sidebar.Items`, `Sidebar.Item`, `Sidebar.Footer`, and `Sidebar.Toggle`.
-- **Sidebar.useSidebar()** _(() => SidebarContextValue)_ – Hook available inside sidebar subtree to read current state (e.g., `collapsed`, `size`) and react accordingly.
+- **size** _`"small" | "medium" | "large"`_ — Controls the width presets of the sidebar. Default is `"medium"`.
+- **collapsed / defaultCollapsed** _`boolean`_ — Collapse state (controlled or uncontrolled).
+- **collapsible** _`boolean`_ — Enables the collapse toggle control. Default is `false`.
+- **enableLiquidAnimation** _`boolean`_ — Enable liquid bounce animation on collapse/expand. Default is `true`.
+- **activeItemId / defaultActiveItemId** _`string`_ — Active item id (controlled or uncontrolled).
+- **onSelectItem** _`(itemId: string, event: React.MouseEvent<HTMLButtonElement>) => void`_ — Called when an item is selected.
+- **onToggle** _`(collapsed: boolean) => void`_ — Fired when collapse state changes.
+- **className** _`string`_ — Additional CSS classes to apply to the sidebar.
+- **children** _`React.ReactNode`_ — Compose the sidebar via `Sidebar.Header`, `Sidebar.Items`, `Sidebar.Item`, `Sidebar.Footer`, and `Sidebar.Toggle`.
+- **Sidebar.useSidebar()** _`() => SidebarContextValue`_ — Hook available inside sidebar subtree to read current state (e.g., `collapsed`, `size`) and react accordingly.
 

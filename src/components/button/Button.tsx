@@ -1,15 +1,14 @@
-import React from "react";
+import React, { forwardRef, ComponentPropsWithoutRef } from "react";
 import "./style/Button.scss";
 import clsx from "clsx";
 import Glass from "../glass/Glass.tsx";
 
-export type ButtonProps = {
+export type ButtonProps = ComponentPropsWithoutRef<"button"> & {
   text?: string;
-  disabled?: boolean;
+  children?: React.ReactNode;
   variant?: "default" | "danger" | "link";
   size?: "small" | "medium" | "large";
   enableClickAnimation?: boolean;
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
 const sizeStyles = {
@@ -18,15 +17,17 @@ const sizeStyles = {
   large: "large text-md",
 };
 
-const Button: React.FC<ButtonProps> = ({
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
   size = "medium",
   variant,
   disabled,
   text,
+  children,
   onClick,
   enableClickAnimation = true,
+  className,
   ...props
-}) => {
+}, ref) => {
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!disabled && onClick) {
       onClick(event);
@@ -36,6 +37,7 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <Glass
       as="button"
+      ref={ref}
       type="button"
       onClick={handleClick}
       enableLiquidAnimation={!disabled && enableClickAnimation}
@@ -45,13 +47,16 @@ const Button: React.FC<ButtonProps> = ({
         sizeStyles[size],
         disabled ? "opacity-50 cursor-not-allowed" : "",
         "hover:bg-white/30 active:bg-white/40",
+        className,
       )}
       disabled={disabled}
       {...props}
     >
-      {text}
+      {children ?? text}
     </Glass>
   );
-};
+});
+
+Button.displayName = "Button";
 
 export default Button;

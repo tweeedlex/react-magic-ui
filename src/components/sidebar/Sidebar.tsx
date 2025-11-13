@@ -3,6 +3,7 @@ import React, {
   ReactNode,
   forwardRef,
   useCallback,
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -46,6 +47,7 @@ export type SidebarProps = ComponentPropsWithoutRef<"aside"> & {
   collapsed?: boolean;
   defaultCollapsed?: boolean;
   collapsible?: boolean;
+  enableLiquidAnimation?: boolean;
   onToggle?: (collapsed: boolean) => void;
   activeItemId?: string;
   defaultActiveItemId?: string;
@@ -62,6 +64,7 @@ const SidebarBase = forwardRef<HTMLElement, SidebarProps>(
       collapsed: collapsedProp,
       defaultCollapsed = false,
       collapsible = false,
+      enableLiquidAnimation = true,
       onToggle,
       activeItemId: activeItemIdProp,
       defaultActiveItemId,
@@ -74,6 +77,7 @@ const SidebarBase = forwardRef<HTMLElement, SidebarProps>(
   ) => {
     const isCollapsedControlled = collapsedProp !== undefined;
     const [collapsedState, setCollapsedState] = useState(defaultCollapsed);
+    const [shouldAnimate, setShouldAnimate] = useState(false);
 
     const collapsed = isCollapsedControlled ? collapsedProp : collapsedState;
 
@@ -115,6 +119,21 @@ const SidebarBase = forwardRef<HTMLElement, SidebarProps>(
       [isActiveControlled, onSelectItem],
     );
 
+    // Trigger liquid animation on collapse/expand
+    useEffect(() => {
+      if (enableLiquidAnimation && collapsible) {
+        // Reset animation state
+        setShouldAnimate(false);
+
+        // Trigger animation after a short delay
+        const timer = setTimeout(() => {
+          setShouldAnimate(true);
+        }, 50);
+
+        return () => clearTimeout(timer);
+      }
+    }, [collapsed, enableLiquidAnimation, collapsible]);
+
     const contextValue = useMemo<SidebarContextValue>(
       () => ({
         size,
@@ -135,6 +154,8 @@ const SidebarBase = forwardRef<HTMLElement, SidebarProps>(
         <Glass
           as="aside"
           ref={ref}
+          enableLiquidAnimation={false}
+          triggerAnimation={enableLiquidAnimation && shouldAnimate}
           className={clsx(
             "text-white flex flex-col gap-4 relative min-h-full",
             paddingXClass,

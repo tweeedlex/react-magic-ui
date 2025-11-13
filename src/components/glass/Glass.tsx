@@ -14,11 +14,12 @@ export type GlassProps<T extends ElementType = "div"> = {
   children?: React.ReactNode;
   rootClassName?: string;
   enableLiquidAnimation?: boolean;
+  triggerAnimation?: boolean;
 } & ComponentPropsWithoutRef<T>;
 
 const Glass = forwardRef(
   <T extends ElementType = "div">(
-    { as, children, className, rootClassName, enableLiquidAnimation = false, onClick, ...props }: GlassProps<T>,
+    { as, children, className, rootClassName, enableLiquidAnimation = false, triggerAnimation = false, onClick, ...props }: GlassProps<T>,
     ref: React.ForwardedRef<any>,
   ) => {
     const Component = as || "div";
@@ -42,6 +43,18 @@ const Glass = forwardRef(
         onClick(event);
       }
     }, [enableLiquidAnimation, onClick]);
+
+    // Handle programmatic animation trigger (independent of enableLiquidAnimation)
+    React.useEffect(() => {
+      if (triggerAnimation) {
+        // Center the ripple for programmatic triggers
+        setRipplePosition({ x: 50, y: 50 });
+        setIsAnimating(true);
+
+        const timer = setTimeout(() => setIsAnimating(false), 800);
+        return () => clearTimeout(timer);
+      }
+    }, [triggerAnimation]);
 
     return (
       <>
@@ -70,13 +83,13 @@ const Glass = forwardRef(
           className={clsx(
             "relative overflow-hidden rounded-[8px]",
             rootClassName,
-            isAnimating && enableLiquidAnimation && "glass-animating"
+            isAnimating && "glass-animating"
           )}
         >
-          <div className={clsx("glass-filter", isAnimating && enableLiquidAnimation && "glass-filter-animate")}></div>
+          <div className={clsx("glass-filter", isAnimating && "glass-filter-animate")}></div>
           <div className="glass-overlay"></div>
           <div className="glass-specular"></div>
-          {enableLiquidAnimation && isAnimating && (
+          {isAnimating && (
             <div
               className="glass-ripple"
               style={{

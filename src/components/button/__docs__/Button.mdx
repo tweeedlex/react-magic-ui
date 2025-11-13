@@ -21,10 +21,11 @@ const Example = () => {
   return (
       <Button
         size={"small"}
-        text={"Button"}
         onClick={()=> console.log("Clicked")}
         variant={"default"}
-      />
+      >
+        Click me!
+      </Button>
   );
 };
 
@@ -33,9 +34,11 @@ export default Example;
 
 #### Arguments
 
-- **text** _`() => void`_ - A string that represents the text content of the button.
-- **primary** - A boolean indicating whether the button should have a primary styling or not. Typically, a primary button stands out as the main action in a user interface.
-- **disabled** - A boolean indicating whether the button should be disabled or not. When disabled, the button cannot be clicked or interacted with.
-- **size** - A string with one of three possible values: "small," "medium," or "large." It defines the size or dimensions of the button.
-- **onClick** - A function that is called when the button is clicked. It receives a MouseEventHandler for handling the click event on the button element.
-- **enableClickAnimation** - A boolean indicating whether to enable the liquid bounce animation on click
+- **text** _`string`_ - A string that represents the text content of the button.
+- **children** _`React.ReactNode`_ - Content to render inside the button. Takes priority over `text` prop if both are provided.
+- **variant** _`"default" | "danger" | "link"`_ - The visual style variant of the button.
+- **disabled** _`boolean`_ - A boolean indicating whether the button should be disabled or not. When disabled, the button cannot be clicked or interacted with.
+- **size** _`"small" | "medium" | "large"`_ - Defines the size or dimensions of the button. Default is `"medium"`.
+- **onClick** _`(event: React.MouseEvent<HTMLButtonElement>) => void`_ - A function that is called when the button is clicked.
+- **enableClickAnimation** _`boolean`_ - A boolean indicating whether to enable the liquid bounce animation on click. Default is `true`.
+- **className** _`string`_ - Additional CSS classes to apply to the button.

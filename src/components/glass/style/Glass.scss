@@ -1,6 +1,6 @@
 :root {
   --lg-bg-color: rgba(255, 255, 255, 0.15);
-  --lg-highlight: rgba(255, 255, 255, 0.75);
+  --lg-highlight: rgba(255, 255, 255, 0.45);
   --lg-text: #ffffff;
   --lg-hover-glow: rgba(255, 255, 255, 0.4);
 }
@@ -118,7 +118,7 @@
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.2) 40%, transparent 70%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 40%, transparent 70%);
   pointer-events: none;
   animation: liquidRipple 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
