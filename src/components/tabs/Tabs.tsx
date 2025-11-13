@@ -10,6 +10,7 @@ import React, {
   useState,
 } from "react";
 import { cn } from "../../func.ts";
+import Glass from "../glass/Glass.tsx";
 
 type TabsOrientation = "horizontal" | "vertical";
 type TabsActivationMode = "auto" | "manual";
@@ -176,17 +177,17 @@ const TabsBase = forwardRef<HTMLDivElement, TabsProps>(
 
     return (
       <TabsContext.Provider value={contextValue}>
-        <div
+        <Glass
           ref={ref}
           className={cn(
-            "glass bg-default text-white flex flex-col gap-4 p-4",
+            "bg-default text-white flex flex-col gap-4 p-4",
             orientation === "vertical" ? "max-w-[320px]" : "",
             className,
           )}
           {...rest}
         >
           {children}
-        </div>
+        </Glass>
       </TabsContext.Provider>
     );
   },
@@ -404,13 +405,14 @@ const TabsTrigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
     }, [disabled, isControlled, selectedValue, setValue, value]);
 
     return (
-      <button
+      <Glass
+        as="button"
         ref={composedRef}
         type="button"
         role="tab"
         id={triggerId}
         className={cn(
-          "glass bg-white/10 hover:bg-white/20 active:bg-white/25 transition-colors px-4 py-2 rounded-lg text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-white/40 disabled:opacity-50 disabled:cursor-not-allowed",
+          "bg-white/10 hover:bg-white/20 active:bg-white/25 transition-colors px-4 py-2 rounded-lg text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-white/40 disabled:opacity-50 disabled:cursor-not-allowed",
           isSelected ? "bg-white/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]" : "",
           className,
         )}
@@ -424,7 +426,7 @@ const TabsTrigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
         {...rest}
       >
         {children}
-      </button>
+      </Glass>
     );
   },
 );

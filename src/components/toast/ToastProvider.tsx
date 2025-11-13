@@ -11,6 +11,7 @@ import React, {
 } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "../../func.ts";
+import Glass from "../glass/Glass.tsx";
 
 type ToastVariant = "default" | "success" | "error" | "info";
 
@@ -232,47 +233,41 @@ const ToastCard: React.FC<{
       : animation.exit;
 
   return (
-    <div
+    <Glass
       role="status"
       aria-live="polite"
       className={cn(
-        "relative pointer-events-auto w-full overflow-hidden rounded-3xl border px-6 py-4 backdrop-blur-xl transition-all duration-200 ease-out",
+        "pointer-events-auto w-full rounded-3xl border transition-all duration-200 ease-out",
         defaultVariantClasses[toast.variant],
         animationClass,
       )}
     >
-      <span
-        aria-hidden="true"
-        className={cn(
-          "absolute inset-y-0 left-0 w-1",
-          accentClasses[toast.variant],
-        )}
-      />
+      <div className="relative px-6 py-4">
+        <div className="flex items-start gap-4">
+          <div className="min-w-0 flex-1 space-y-1">
+            {toast.title && (
+              <p className="text-base font-semibold leading-tight">
+                {toast.title}
+              </p>
+            )}
+            {toast.description && (
+              <p className="text-sm leading-snug text-white/80">
+                {toast.description}
+              </p>
+            )}
+          </div>
 
-      <div className="flex items-start gap-4">
-        <div className="min-w-0 flex-1 space-y-1">
-          {toast.title && (
-            <p className="text-base font-semibold leading-tight">
-              {toast.title}
-            </p>
-          )}
-          {toast.description && (
-            <p className="text-sm leading-snug text-white/80">
-              {toast.description}
-            </p>
-          )}
+          <button
+            type="button"
+            aria-label="close toast"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/25 bg-white/10 text-sm font-medium text-white transition duration-150 hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/40"
+            onClick={() => setPhase("exit")}
+          >
+            ×
+          </button>
         </div>
-
-        <button
-          type="button"
-          aria-label="close toast"
-          className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/25 bg-white/10 text-sm font-medium text-white transition duration-150 hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/40"
-          onClick={() => setPhase("exit")}
-        >
-          ×
-        </button>
       </div>
-    </div>
+    </Glass>
   );
 };
 

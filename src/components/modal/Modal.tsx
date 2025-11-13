@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "../../func.ts";
+import { Glass } from "../glass";
 
 type ModalSize = "sm" | "md" | "lg";
 
@@ -39,7 +40,7 @@ const overlayClasses =
   "modal-overlay absolute inset-0 bg-slate-950/60 backdrop-blur-xl transition-opacity duration-200";
 
 const baseContentClasses =
-  "modal-content relative glass bg-default text-white w-full shadow-[0_28px_60px_rgba(15,23,42,0.45)] rounded-3xl outline-none flex flex-col overflow-hidden p-8";
+  "modal-content relative bg-default text-white w-full shadow-[0_28px_60px_rgba(15,23,42,0.45)] rounded-3xl outline-none flex flex-col overflow-hidden p-8";
 
 const headerClasses = "modal-header flex items-start justify-between gap-6";
 const headingClasses = "modal-heading flex flex-col gap-2";
@@ -168,7 +169,7 @@ const Modal: React.FC<ModalProps> = ({
         }
       />
 
-      <div
+      <Glass
         ref={contentRef}
         className={cn(baseContentClasses, sizeClasses[size], className)}
         role="dialog"
@@ -214,7 +215,7 @@ const Modal: React.FC<ModalProps> = ({
         {children && <div className={bodyClasses}>{children}</div>}
 
         {footer && <div className={footerClasses}>{footer}</div>}
-      </div>
+      </Glass>
     </div>,
     container,
   );

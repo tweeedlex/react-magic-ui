@@ -1,5 +1,6 @@
 import React, { ChangeEventHandler } from "react";
-import clsx from "clsx";
+import { cn } from "../../func.ts";
+import Glass from "../glass/Glass.tsx";
 
 export type InputProps = {
   disabled?: boolean;
@@ -22,18 +23,20 @@ const Input: React.FC<InputProps> = ({
                                        ...props
                                      }) => {
   return (
-    <input
-      type="text"
-      onChange={onChange}
-      disabled={disabled}
-      placeholder={placeholder}
-      className={clsx(
-        "glass bg-default text-white font-normal leading-none placeholder:text-white/75 focus:outline-none",
-        sizeStyles[size],
-        disabled ? "opacity-50 cursor-not-allowed" : ""
-      )}
-      {...props}
-    />
+    <Glass>
+      <input
+        type="text"
+        onChange={onChange}
+        disabled={disabled}
+        placeholder={placeholder}
+        className={cn(
+          "bg-default text-white font-normal leading-none placeholder:text-white/75 focus:outline-none",
+          sizeStyles[size],
+          disabled ? "opacity-50 cursor-not-allowed" : ""
+        )}
+        {...props}
+      />
+    </Glass>
   );
 };
 

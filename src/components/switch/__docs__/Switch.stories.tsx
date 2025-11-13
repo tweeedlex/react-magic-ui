@@ -12,6 +12,7 @@ type Story = StoryObj<typeof Example>;
 export const Default: Story = {
   args: {
     disabled: false,
-    size: "medium"
+    size: "medium",
+    isActive: false,
   },
 };

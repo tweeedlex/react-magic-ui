@@ -6,6 +6,7 @@ import React, {
   useMemo,
 } from "react";
 import { cn } from "../../func.ts";
+import Glass from "../glass/Glass.tsx";
 
 type TopbarSize = "compact" | "comfortable" | "spacious";
 
@@ -67,10 +68,11 @@ const TopbarBase = forwardRef<HTMLElement, TopbarProps>(
 
     return (
       <TopbarContext.Provider value={value}>
-        <header
+        <Glass
+          as="header"
           ref={ref}
           className={cn(
-            "glass bg-default text-white flex items-center w-full rounded-2xl",
+            "bg-default text-white flex items-center w-full rounded-2xl",
             topbarSizeStyles[size],
             elevated ? "shadow-[0_18px_40px_rgba(15,23,42,0.32)]" : "",
             className,
@@ -78,7 +80,7 @@ const TopbarBase = forwardRef<HTMLElement, TopbarProps>(
           {...rest}
         >
           {children}
-        </header>
+        </Glass>
       </TopbarContext.Provider>
     );
   },

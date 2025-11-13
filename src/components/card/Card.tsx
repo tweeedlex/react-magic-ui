@@ -1,6 +1,7 @@
 import React from "react";
+import { cn } from "../../func.ts";
 import "./style/Card.scss";
-import clsx from "clsx";
+import Glass from "../glass/Glass.tsx";
 
 export type CardProps = {
   children?: React.ReactNode | string;
@@ -24,8 +25,8 @@ const Card: React.FC<CardProps> = ({
                                      justify,
                                      ...props
                                    }) => {
-  const classNames = clsx(
-    "glass card flex bg-default",
+  const classNames = cn(
+    "card flex bg-default",
     size,
     direction === "row" ? "flex-row" : "flex-col",
     align ? `items-${align}` : "items-start",
@@ -36,12 +37,12 @@ const Card: React.FC<CardProps> = ({
 
 
   return (
-    <div
+    <Glass
       className={classNames}
       {...props}
     >
       {children}
-    </div>
+    </Glass>
   );
 };
 

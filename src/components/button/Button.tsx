@@ -32,22 +32,21 @@ const Button: React.FC<ButtonProps> = ({
   };
 
   return (
-    <Glass>
-      <button
-        type="button"
-        onClick={handleClick}
-        className={clsx(
-          "btn",
-          variant ? `bg-${variant}` : "bg-default",
-          sizeStyles[size],
-          disabled ? "opacity-50 cursor-not-allowed" : "",
-          "hover:bg-white/30 active:bg-white/40",
-        )}
-        disabled={disabled}
-        {...props}
-      >
-        {text}
-      </button>
+    <Glass
+      as="button"
+      type="button"
+      onClick={handleClick}
+      className={clsx(
+        "btn",
+        variant ? `bg-${variant}` : "bg-default",
+        sizeStyles[size],
+        disabled ? "opacity-50 cursor-not-allowed" : "",
+        "hover:bg-white/30 active:bg-white/40",
+      )}
+      disabled={disabled}
+      {...props}
+    >
+      {text}
     </Glass>
   );
 };

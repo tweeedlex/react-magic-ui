@@ -1,7 +1,7 @@
-import clsx from 'clsx';
-
 import React from "react";
 import "./styles/Switch.scss";
+import { cn } from "../../func.ts";
+import Glass from "../glass/Glass.tsx";
 
 export type SwitchProps = {
   disabled?: boolean;
@@ -22,9 +22,10 @@ const Switch: React.FC<SwitchProps> = ({
   };
 
   return (
-    <button
+    <Glass
+      as="button"
       onClick={handleClick}
-      className={clsx("switch glass", size, isActive ? "active" : "", disabled ? "disabled" : "")}
+      className={cn("switch", size, isActive ? "active" : "", disabled ? "disabled" : "")}
       disabled={disabled}
       {...props}
     />

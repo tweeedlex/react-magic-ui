@@ -20,6 +20,7 @@
   border-radius: 50%;
   background: rgba(255, 255, 255, 1);
   transition: all 0.3s ease-in-out;
+  z-index: 10;
 }
 
 .switch.small {

@@ -12,7 +12,6 @@ describe("Button component", () => {
   it("applies default styling when no variant or size provided", () => {
     render(<Button text="default styles" />);
     const button = screen.getByRole("button") as HTMLButtonElement;
-    expect(button.className).toContain("glass");
     expect(button.className).toContain("btn");
     expect(button.className).toContain("bg-default");
     expect(button.className).toContain("medium");

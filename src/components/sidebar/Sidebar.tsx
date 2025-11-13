@@ -7,6 +7,7 @@ import React, {
   useState,
 } from "react";
 import { cn } from "../../func.ts";
+import Glass from "../glass/Glass.tsx";
 
 type SidebarSize = "small" | "medium" | "large";
 
@@ -131,10 +132,11 @@ const SidebarBase = forwardRef<HTMLElement, SidebarProps>(
 
     return (
       <SidebarContext.Provider value={contextValue}>
-        <aside
+        <Glass
+          as="aside"
           ref={ref}
           className={cn(
-            "glass bg-default text-white flex flex-col gap-4 relative min-h-full py-6 transition-[width,padding] duration-200",
+            "bg-default text-white flex flex-col gap-4 relative min-h-full py-6 transition-[width,padding] duration-200",
             widthClass,
             paddingXClass,
             className,
@@ -142,7 +144,7 @@ const SidebarBase = forwardRef<HTMLElement, SidebarProps>(
           {...rest}
         >
           {children}
-        </aside>
+        </Glass>
       </SidebarContext.Provider>
     );
   },
