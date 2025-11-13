@@ -7,6 +7,7 @@ export type SwitchProps = {
   disabled?: boolean;
   size?: "small" | "medium" | "large";
   isActive?: boolean;
+  enableClickAnimation?: boolean;
   setIsActive?: (isActive: boolean) => void;
 };
 
@@ -15,6 +16,7 @@ const Switch: React.FC<SwitchProps> = ({
                                          disabled,
                                          isActive = false,
                                          setIsActive,
+                                         enableClickAnimation = true,
                                          ...props
                                        }) => {
   const handleClick = () => {
@@ -23,6 +25,7 @@ const Switch: React.FC<SwitchProps> = ({
 
   return (
     <Glass
+      enableLiquidAnimation={enableClickAnimation}
       as="button"
       onClick={handleClick}
       className={clsx("switch", size, isActive ? "active" : "", disabled ? "disabled" : "")}

@@ -7,6 +7,7 @@ export type InputProps = {
   size?: "small" | "medium" | "large";
   placeholder?: string;
   onChange?: ChangeEventHandler<HTMLInputElement>;
+  enableClickAnimation?: boolean;
 };
 
 const sizeStyles = {
@@ -20,10 +21,11 @@ const Input: React.FC<InputProps> = ({
                                        disabled,
                                        onChange,
                                        placeholder,
+                                       enableClickAnimation = true,
                                        ...props
                                      }) => {
   return (
-    <Glass>
+    <Glass enableLiquidAnimation={enableClickAnimation}>
       <input
         type="text"
         onChange={onChange}

@@ -37,7 +37,7 @@ const containerClasses =
   "modal-container fixed inset-0 z-[1000] flex items-center justify-center px-4 py-10 sm:py-16";
 
 const overlayClasses =
-  "modal-overlay absolute inset-0 bg-slate-950/60 backdrop-blur-xl transition-opacity duration-200";
+  "modal-overlay absolute inset-0 bg-slate-950/30 backdrop-blur-[10px] transition-opacity duration-200";
 
 const baseContentClasses =
   "modal-content relative text-white w-full shadow-[0_28px_60px_rgba(15,23,42,0.45)] rounded-3xl outline-none flex flex-col overflow-hidden p-8";

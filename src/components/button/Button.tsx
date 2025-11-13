@@ -8,6 +8,7 @@ export type ButtonProps = {
   disabled?: boolean;
   variant?: "default" | "danger" | "link";
   size?: "small" | "medium" | "large";
+  enableClickAnimation?: boolean;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
@@ -23,6 +24,7 @@ const Button: React.FC<ButtonProps> = ({
   disabled,
   text,
   onClick,
+  enableClickAnimation = true,
   ...props
 }) => {
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -36,6 +38,7 @@ const Button: React.FC<ButtonProps> = ({
       as="button"
       type="button"
       onClick={handleClick}
+      enableLiquidAnimation={!disabled && enableClickAnimation}
       className={clsx(
         "btn",
         variant && `bg-${variant}`,

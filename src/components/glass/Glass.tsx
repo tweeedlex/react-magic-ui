@@ -3,6 +3,9 @@ import React, {
   forwardRef,
   ElementType,
   ComponentPropsWithoutRef,
+  useState,
+  useRef,
+  useCallback,
 } from "react";
 import clsx from "clsx";
 
@@ -10,14 +13,35 @@ export type GlassProps<T extends ElementType = "div"> = {
   as?: T;
   children?: React.ReactNode;
   rootClassName?: string;
+  enableLiquidAnimation?: boolean;
 } & ComponentPropsWithoutRef<T>;
 
 const Glass = forwardRef(
   <T extends ElementType = "div">(
-    { as, children, className, rootClassName, ...props }: GlassProps<T>,
+    { as, children, className, rootClassName, enableLiquidAnimation = false, onClick, ...props }: GlassProps<T>,
     ref: React.ForwardedRef<any>,
   ) => {
     const Component = as || "div";
+    const [isAnimating, setIsAnimating] = useState(false);
+    const [ripplePosition, setRipplePosition] = useState({ x: 0, y: 0 });
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    const handleClick = useCallback((event: React.MouseEvent<any>) => {
+      if (enableLiquidAnimation && containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        const x = ((event.clientX - rect.left) / rect.width) * 100;
+        const y = ((event.clientY - rect.top) / rect.height) * 100;
+
+        setRipplePosition({ x, y });
+        setIsAnimating(true);
+
+        setTimeout(() => setIsAnimating(false), 800);
+      }
+
+      if (onClick) {
+        onClick(event);
+      }
+    }, [enableLiquidAnimation, onClick]);
 
     return (
       <>
@@ -41,13 +65,30 @@ const Glass = forwardRef(
           </filter>
         </svg>
 
-        <div className={clsx("relative overflow-hidden rounded-[8px]", rootClassName)}>
-          <div className="glass-filter"></div>
+        <div
+          ref={containerRef}
+          className={clsx(
+            "relative overflow-hidden rounded-[8px]",
+            rootClassName,
+            isAnimating && enableLiquidAnimation && "glass-animating"
+          )}
+        >
+          <div className={clsx("glass-filter", isAnimating && enableLiquidAnimation && "glass-filter-animate")}></div>
           <div className="glass-overlay"></div>
           <div className="glass-specular"></div>
+          {enableLiquidAnimation && isAnimating && (
+            <div
+              className="glass-ripple"
+              style={{
+                left: `${ripplePosition.x}%`,
+                top: `${ripplePosition.y}%`,
+              }}
+            />
+          )}
           <Component
             {...props}
             ref={ref}
+            onClick={handleClick}
             className={clsx("glass-content", className)}
           >
             {children}
