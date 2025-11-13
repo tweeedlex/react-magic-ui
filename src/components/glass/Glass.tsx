@@ -1,16 +1,21 @@
 import "./style/Glass.scss";
-import React, { forwardRef, ElementType, ComponentPropsWithoutRef } from "react";
-import { cn } from "../../func.ts";
+import React, {
+  forwardRef,
+  ElementType,
+  ComponentPropsWithoutRef,
+} from "react";
+import clsx from "clsx";
 
 export type GlassProps<T extends ElementType = "div"> = {
   as?: T;
   children?: React.ReactNode;
+  rootClassName?: string;
 } & ComponentPropsWithoutRef<T>;
 
 const Glass = forwardRef(
   <T extends ElementType = "div">(
-    { as, children, className, ...props }: GlassProps<T>,
-    ref: React.ForwardedRef<any>
+    { as, children, className, rootClassName, ...props }: GlassProps<T>,
+    ref: React.ForwardedRef<any>,
   ) => {
     const Component = as || "div";
 
@@ -36,21 +41,21 @@ const Glass = forwardRef(
           </filter>
         </svg>
 
-        <Component
-          ref={ref}
-          className={cn("relative overflow-hidden rounded-[8px]", className)}
-          {...props}
-        >
-          <div>
-            <div className="glass-filter"></div>
-            <div className="glass-overlay"></div>
-            <div className="glass-specular"></div>
-            <div className="glass-content">{children}</div>
-          </div>
-        </Component>
+        <div className={clsx("relative overflow-hidden rounded-[8px]", rootClassName)}>
+          <div className="glass-filter"></div>
+          <div className="glass-overlay"></div>
+          <div className="glass-specular"></div>
+          <Component
+            {...props}
+            ref={ref}
+            className={clsx("glass-content", className)}
+          >
+            {children}
+          </Component>
+        </div>
       </>
     );
-  }
+  },
 );
 
 Glass.displayName = "Glass";

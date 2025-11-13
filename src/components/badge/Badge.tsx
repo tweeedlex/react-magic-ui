@@ -19,7 +19,7 @@ export type BadgeProps = React.HTMLAttributes<HTMLSpanElement> & {
 };
 
 const variantBackground = {
-  default: "bg-default",
+  default: "",
   positive: "bg-positive",
   negative: "bg-negative",
   warning: "bg-warning",
@@ -39,11 +39,12 @@ const Badge: React.FC<BadgeProps> = ({
     <Glass
       as="span"
       className={clsx(
-        "badge inline-flex items-center gap-2 rounded-full text-xs font-semibold uppercase tracking-wide text-white",
+        "badge inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-white",
         "px-3 py-1",
         variantBackground[variant],
         className,
       )}
+      rootClassName={"rounded-full"}
       {...props}
     >
       {leadingIcon && <span className="badge__icon">{leadingIcon}</span>}

@@ -6,8 +6,8 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { cn } from "../../func.ts";
 import Glass from "../glass/Glass.tsx";
+import clsx from "clsx";
 
 type SidebarSize = "small" | "medium" | "large";
 
@@ -135,12 +135,12 @@ const SidebarBase = forwardRef<HTMLElement, SidebarProps>(
         <Glass
           as="aside"
           ref={ref}
-          className={cn(
-            "bg-default text-white flex flex-col gap-4 relative min-h-full py-6 transition-[width,padding] duration-200",
-            widthClass,
+          className={clsx(
+            "text-white flex flex-col gap-4 relative min-h-full",
             paddingXClass,
             className,
           )}
+          rootClassName={clsx(widthClass, "transition-[width,padding] py-6 duration-200")}
           {...rest}
         >
           {children}
@@ -161,7 +161,7 @@ const SidebarHeader = forwardRef<HTMLDivElement, SidebarHeaderProps>(
     return (
       <div
         ref={ref}
-        className={cn(
+        className={clsx(
           "flex items-center justify-between gap-2 pb-2 transition-all duration-200",
           collapsed ? "justify-center" : "",
           className,
@@ -181,7 +181,7 @@ const SidebarFooter = forwardRef<HTMLDivElement, SidebarFooterProps>(
     return (
       <div
         ref={ref}
-        className={cn("flex items-center justify-between pt-2", className)}
+        className={clsx("flex items-center justify-between pt-2", className)}
         {...rest}
       />
     );
@@ -197,7 +197,7 @@ const SidebarItems = forwardRef<HTMLElement, SidebarItemsProps>(
     return (
       <nav
         ref={ref}
-        className={cn("flex flex-col gap-2 flex-1", className)}
+        className={clsx("flex flex-col gap-2 flex-1", className)}
         {...rest}
       />
     );
@@ -268,7 +268,7 @@ const SidebarItem = forwardRef<HTMLButtonElement, SidebarItemProps>(
       <button
         ref={ref}
         type="button"
-        className={cn(
+        className={clsx(
           "flex items-center gap-3 w-full rounded-xl text-left font-medium transition-all duration-200 border-none outline-none bg-transparent text-inherit py-3 px-[14px] hover:bg-white/20 active:bg-white/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:active:bg-transparent",
           collapsed ? "justify-center py-2.5 px-2.5" : "",
           isActive
@@ -337,7 +337,7 @@ const SidebarToggle = forwardRef<HTMLButtonElement, SidebarToggleProps>(
       <button
         ref={ref}
         type="button"
-        className={cn(
+        className={clsx(
           "flex items-center justify-center rounded-full transition-colors w-9 h-9 border-none outline-none bg-white/15 text-inherit hover:bg-white/25 active:bg-white/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40",
           className,
         )}

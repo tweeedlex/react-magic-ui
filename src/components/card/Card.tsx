@@ -26,7 +26,7 @@ const Card: React.FC<CardProps> = ({
                                      ...props
                                    }) => {
   const classNames = cn(
-    "card flex bg-default",
+    "card flex",
     size,
     direction === "row" ? "flex-row" : "flex-col",
     align ? `items-${align}` : "items-start",

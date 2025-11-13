@@ -38,7 +38,7 @@ const Button: React.FC<ButtonProps> = ({
       onClick={handleClick}
       className={clsx(
         "btn",
-        variant ? `bg-${variant}` : "bg-default",
+        variant && `bg-${variant}`,
         sizeStyles[size],
         disabled ? "opacity-50 cursor-not-allowed" : "",
         "hover:bg-white/30 active:bg-white/40",

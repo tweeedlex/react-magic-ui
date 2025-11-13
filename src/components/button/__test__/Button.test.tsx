@@ -13,7 +13,6 @@ describe("Button component", () => {
     render(<Button text="default styles" />);
     const button = screen.getByRole("button") as HTMLButtonElement;
     expect(button.className).toContain("btn");
-    expect(button.className).toContain("bg-default");
     expect(button.className).toContain("medium");
     expect(button.className).toContain("text-lg");
   });

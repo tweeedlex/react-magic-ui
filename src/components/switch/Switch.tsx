@@ -1,6 +1,6 @@
 import React from "react";
 import "./styles/Switch.scss";
-import { cn } from "../../func.ts";
+import clsx from "clsx";
 import Glass from "../glass/Glass.tsx";
 
 export type SwitchProps = {
@@ -25,7 +25,8 @@ const Switch: React.FC<SwitchProps> = ({
     <Glass
       as="button"
       onClick={handleClick}
-      className={cn("switch", size, isActive ? "active" : "", disabled ? "disabled" : "")}
+      className={clsx("switch", size, isActive ? "active" : "", disabled ? "disabled" : "")}
+      rootClassName={clsx("rounded-[999px]", size === "small" && "flex h-[20px]")}
       disabled={disabled}
       {...props}
     />

@@ -30,7 +30,7 @@ const Input: React.FC<InputProps> = ({
         disabled={disabled}
         placeholder={placeholder}
         className={cn(
-          "bg-default text-white font-normal leading-none placeholder:text-white/75 focus:outline-none",
+          "text-white font-normal leading-none placeholder:text-white/75 focus:outline-none",
           sizeStyles[size],
           disabled ? "opacity-50 cursor-not-allowed" : ""
         )}

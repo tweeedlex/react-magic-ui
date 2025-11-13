@@ -5,10 +5,7 @@
   cursor: pointer;
   overflow: hidden;
   transition: all 0.3s ease-in-out;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.1);
   box-shadow: rgba(0, 0, 0, 0.1) 0 10px 20px;
-  backdrop-filter: blur(10px);
 }
 
 .switch::before {
@@ -25,7 +22,6 @@
 
 .switch.small {
   width: 30px;
-  height: 15px;
 }
 
 .switch.small::before {

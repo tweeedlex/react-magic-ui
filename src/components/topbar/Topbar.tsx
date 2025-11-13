@@ -72,7 +72,7 @@ const TopbarBase = forwardRef<HTMLElement, TopbarProps>(
           as="header"
           ref={ref}
           className={cn(
-            "bg-default text-white flex items-center w-full rounded-2xl",
+            "text-white flex items-center w-full rounded-2xl",
             topbarSizeStyles[size],
             elevated ? "shadow-[0_18px_40px_rgba(15,23,42,0.32)]" : "",
             className,

@@ -40,7 +40,7 @@ const overlayClasses =
   "modal-overlay absolute inset-0 bg-slate-950/60 backdrop-blur-xl transition-opacity duration-200";
 
 const baseContentClasses =
-  "modal-content relative bg-default text-white w-full shadow-[0_28px_60px_rgba(15,23,42,0.45)] rounded-3xl outline-none flex flex-col overflow-hidden p-8";
+  "modal-content relative text-white w-full shadow-[0_28px_60px_rgba(15,23,42,0.45)] rounded-3xl outline-none flex flex-col overflow-hidden p-8";
 
 const headerClasses = "modal-header flex items-start justify-between gap-6";
 const headingClasses = "modal-heading flex flex-col gap-2";
@@ -177,7 +177,7 @@ const Modal: React.FC<ModalProps> = ({
         aria-labelledby={labelledBy}
         aria-describedby={describedBy}
         tabIndex={-1}
-        onClick={(event) => {
+        onClick={(event: React.MouseEvent<HTMLDivElement>) => {
           event.stopPropagation();
           onClick?.(event);
         }}

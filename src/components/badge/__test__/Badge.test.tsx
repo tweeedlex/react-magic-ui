@@ -12,7 +12,6 @@ describe("Badge component", () => {
   it("applies default variant classes", () => {
     render(<Badge>default</Badge>);
     const badge = screen.getByText("default");
-    expect(badge.className).toContain("bg-default");
     expect(badge.className).toContain("badge");
   });
 

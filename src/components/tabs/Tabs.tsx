@@ -180,7 +180,7 @@ const TabsBase = forwardRef<HTMLDivElement, TabsProps>(
         <Glass
           ref={ref}
           className={cn(
-            "bg-default text-white flex flex-col gap-4 p-4",
+            "text-white flex flex-col gap-4 p-4",
             orientation === "vertical" ? "max-w-[320px]" : "",
             className,
           )}

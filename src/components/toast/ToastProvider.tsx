@@ -78,12 +78,12 @@ const defaultVariantClasses: Record<ToastVariant, string> = {
   info: "bg-sky-500/15 border-sky-400/40 text-sky-50 shadow-[0_18px_40px_rgba(56,189,248,0.28)]",
 };
 
-const accentClasses: Record<ToastVariant, string> = {
-  default: "bg-white/50",
-  success: "bg-emerald-300",
-  error: "bg-rose-300",
-  info: "bg-sky-300",
-};
+// const accentClasses: Record<ToastVariant, string> = {
+//   default: "bg-white/50",
+//   success: "bg-emerald-300",
+//   error: "bg-rose-300",
+//   info: "bg-sky-300",
+// };
 
 const animationStyles: Record<
   ToastAnimation,
