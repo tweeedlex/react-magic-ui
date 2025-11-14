@@ -1,3 +1,3 @@
-# react-glassmorphism-ui
+# react-magic-ui
 
-UI kit with components for creating popular glassmorphism effect in React applications
+UI kit with components for creating popular liquid glass effect in React applications

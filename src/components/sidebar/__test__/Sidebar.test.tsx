@@ -8,7 +8,7 @@ const renderSidebar = (props?: Partial<SidebarProps>) => {
   return render(
     <Sidebar collapsible {...props}>
       <Sidebar.Header>
-        <span>Glass UI</span>
+        <span>Magic UI</span>
         <Sidebar.Toggle />
       </Sidebar.Header>
 

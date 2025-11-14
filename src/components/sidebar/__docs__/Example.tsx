@@ -37,7 +37,7 @@ const MySidebarTitle: FC = () => {
     return null;
   }
 
-  return <span className="font-semibold text-nowrap">Glass UI</span>;
+  return <span className="font-semibold text-nowrap">Magic UI</span>;
 };
 
 const Example: FC<ExampleProps> = ({

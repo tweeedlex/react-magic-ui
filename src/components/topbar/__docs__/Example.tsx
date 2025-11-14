@@ -24,7 +24,7 @@ const defaultActions: ExampleAction[] = [
 ];
 
 const Example: FC<ExampleProps> = ({
-  title = "Glass UI",
+  title = "Magic UI",
   subtitle = "Command Center",
   icon = "✨",
   searchPlaceholder = "Search anything...",

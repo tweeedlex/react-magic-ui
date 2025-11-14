@@ -27,3 +27,5 @@ dist-ssr
 #storybook build directory
 storybook-static
 .cache
+
+package-lock.json

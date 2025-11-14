@@ -8,11 +8,11 @@ describe("Topbar component", () => {
   it("renders brand content with icon, title, and subtitle", () => {
     render(
       <Topbar>
-        <Topbar.Brand icon="✨" title="Glass UI" subtitle="Command Center" />
+        <Topbar.Brand icon="✨" title="Magic UI" subtitle="Command Center" />
       </Topbar>,
     );
 
-    expect(screen.getByText("Glass UI")).toBeInTheDocument();
+    expect(screen.getByText("Magic UI")).toBeInTheDocument();
     expect(screen.getByText("Command Center")).toBeInTheDocument();
     expect(screen.getByText("✨")).toBeInTheDocument();
   });
