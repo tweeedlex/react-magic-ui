@@ -1,6 +1,5 @@
 import { defineConfig } from "vitest/config";
 import dts from "vite-plugin-dts";
-import tailwindcss from "@tailwindcss/vite";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { dependencies:  peerDependencies } =  require('./package.json')
 
@@ -8,7 +7,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: "./src/index.ts",
-      name: "react-glass-ui",
+      name: "react-magic-ui",
       fileName: (format) => `index.${format}.js`,
       formats: ["cjs", "es"],
     },
@@ -17,9 +16,9 @@ export default defineConfig({
     },
     sourcemap: true,
     emptyOutDir: true,
+    cssCodeSplit: false,
   },
   plugins: [
-    tailwindcss(),
     dts()],
   test: {
     globals: true,
