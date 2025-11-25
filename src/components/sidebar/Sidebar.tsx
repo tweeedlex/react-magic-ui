@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import Glass from "../glass/Glass.tsx";
 import clsx from "clsx";
+import styles from "./style/Sidebar.module.scss";
 
 type SidebarSize = "small" | "medium" | "large";
 
@@ -36,11 +37,7 @@ const useSidebarContext = (component: string) => {
   return context;
 };
 
-const sizeStyles: Record<SidebarSize, string> = {
-  small: "w-[200px]",
-  medium: "w-[260px]",
-  large: "w-[320px]",
-};
+
 
 export type SidebarProps = ComponentPropsWithoutRef<"aside"> & {
   size?: SidebarSize;
@@ -146,8 +143,8 @@ const SidebarBase = forwardRef<HTMLElement, SidebarProps>(
       [size, collapsed, collapsible, handleToggle, handleItemSelect, activeItemId],
     );
 
-    const widthClass = collapsed ? "w-[88px]" : sizeStyles[size];
-    const paddingXClass = collapsed ? "px-3" : "px-4";
+    const widthClass = collapsed ? styles.collapsed : styles[size];
+    const paddingXClass = collapsed ? styles.paddingCollapsed : styles.paddingExpanded;
 
     return (
       <SidebarContext.Provider value={contextValue}>
@@ -157,11 +154,11 @@ const SidebarBase = forwardRef<HTMLElement, SidebarProps>(
           enableLiquidAnimation={false}
           triggerAnimation={enableLiquidAnimation && shouldAnimate}
           className={clsx(
-            "text-white flex flex-col gap-4 relative min-h-full",
+            styles.sidebar,
             paddingXClass,
             className,
           )}
-          rootClassName={clsx(widthClass, "transition-[width,padding] py-6 duration-200")}
+          rootClassName={clsx(widthClass, styles.sidebarRoot)}
           {...rest}
         >
           {children}
@@ -183,8 +180,8 @@ const SidebarHeader = forwardRef<HTMLDivElement, SidebarHeaderProps>(
       <div
         ref={ref}
         className={clsx(
-          "flex items-center justify-between gap-2 pb-2 transition-all duration-200",
-          collapsed ? "justify-center" : "",
+          styles.sidebarHeader,
+          collapsed && styles.headerCollapsed,
           className,
         )}
         {...rest}
@@ -202,7 +199,7 @@ const SidebarFooter = forwardRef<HTMLDivElement, SidebarFooterProps>(
     return (
       <div
         ref={ref}
-        className={clsx("flex items-center justify-between pt-2", className)}
+        className={clsx(styles.sidebarFooter, className)}
         {...rest}
       />
     );
@@ -218,7 +215,7 @@ const SidebarItems = forwardRef<HTMLElement, SidebarItemsProps>(
     return (
       <nav
         ref={ref}
-        className={clsx("flex flex-col gap-2 flex-1", className)}
+        className={clsx(styles.sidebarItems, className)}
         {...rest}
       />
     );
@@ -290,11 +287,9 @@ const SidebarItem = forwardRef<HTMLButtonElement, SidebarItemProps>(
         ref={ref}
         type="button"
         className={clsx(
-          "flex items-center gap-3 w-full rounded-xl text-left font-medium transition-all duration-200 border-none outline-none bg-transparent text-inherit py-3 px-[14px] hover:bg-white/20 active:bg-white/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:active:bg-transparent",
-          collapsed ? "justify-center py-2.5 px-2.5" : "",
-          isActive
-            ? "bg-white/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]"
-            : "",
+          styles.sidebarItem,
+          collapsed && styles.itemCollapsed,
+          isActive && styles.itemActive,
           className,
         )}
         onClick={handleClick}
@@ -304,7 +299,7 @@ const SidebarItem = forwardRef<HTMLButtonElement, SidebarItemProps>(
       >
         {icon && (
           <span
-            className="flex items-center justify-center rounded-lg w-9 h-9 bg-white/15 shadow-[0_10px_20px_rgba(15,23,42,0.25)]"
+            className={styles.itemIcon}
             aria-hidden="true"
           >
             {icon}
@@ -312,10 +307,10 @@ const SidebarItem = forwardRef<HTMLButtonElement, SidebarItemProps>(
         )}
 
         {!collapsed && (
-          <span className="flex items-center gap-2 flex-1 overflow-hidden">
-            <span className="truncate">{children}</span>
+          <span className={styles.itemContent}>
+            <span className={styles.itemText}>{children}</span>
             {badge && (
-              <span className="inline-flex items-center justify-center rounded-full text-xs font-semibold min-w-[24px] px-2 py-0.5 bg-white/25 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.2)]">
+              <span className={styles.itemBadge}>
                 {badge}
               </span>
             )}
@@ -324,7 +319,7 @@ const SidebarItem = forwardRef<HTMLButtonElement, SidebarItemProps>(
 
         {collapsed && !icon && (
           <span
-            className="flex items-center justify-center rounded-lg text-sm font-semibold w-8 h-8 bg-white/15 shadow-[0_10px_20px_rgba(15,23,42,0.25)]"
+            className={styles.itemFallback}
             aria-hidden="true"
           >
             {getCollapsedFallback(collapsedFallback, children)}
@@ -359,7 +354,7 @@ const SidebarToggle = forwardRef<HTMLButtonElement, SidebarToggleProps>(
         ref={ref}
         type="button"
         className={clsx(
-          "flex items-center justify-center rounded-full transition-colors w-9 h-9 border-none outline-none bg-white/15 text-inherit hover:bg-white/25 active:bg-white/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40",
+          styles.sidebarToggle,
           className,
         )}
         aria-label={collapsed ? "expand sidebar" : "collapse sidebar"}

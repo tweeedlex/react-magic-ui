@@ -1,4 +1,4 @@
-import "./style/Glass.scss";
+import styles from "./style/Glass.module.scss";
 import React, {
   forwardRef,
   ElementType,
@@ -81,17 +81,17 @@ const Glass = forwardRef(
         <div
           ref={containerRef}
           className={clsx(
-            "relative overflow-hidden rounded-[8px]",
+            styles.glassContainer,
             rootClassName,
-            isAnimating && "glass-animating"
+            isAnimating && styles.glassAnimating
           )}
         >
-          <div className={clsx("glass-filter", isAnimating && "glass-filter-animate")}></div>
-          <div className="glass-overlay"></div>
-          <div className="glass-specular"></div>
+          <div className={clsx(styles.glassFilter, isAnimating && styles.glassFilterAnimate)}></div>
+          <div className={styles.glassOverlay}></div>
+          <div className={styles.glassSpecular}></div>
           {isAnimating && (
             <div
-              className="glass-ripple"
+              className={styles.glassRipple}
               style={{
                 left: `${ripplePosition.x}%`,
                 top: `${ripplePosition.y}%`,
@@ -102,7 +102,7 @@ const Glass = forwardRef(
             {...props}
             ref={ref}
             onClick={handleClick}
-            className={clsx("glass-content", className)}
+            className={clsx(styles.glassContent, className)}
           >
             {children}
           </Component>

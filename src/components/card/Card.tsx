@@ -1,6 +1,6 @@
 import React from "react";
 import { cn } from "../../func.ts";
-import "./style/Card.scss";
+import styles from "./style/Card.module.scss";
 import Glass from "../glass/Glass.tsx";
 
 export type CardProps = {
@@ -11,28 +11,25 @@ export type CardProps = {
   justify?: "center" | "start" | "end" | "space-between" | "space-around";
 };
 
-const sizeStyles = {
-  small: "small w-[200px]",
-  medium: "medium w-[500px]",
-  large: "large w-[350px]",
-};
-
 const Card: React.FC<CardProps> = ({
-                                     children,
-                                     size = "medium",
-                                     direction = "col",
-                                     align,
-                                     justify,
-                                     ...props
-                                   }) => {
+  children,
+  size = "medium",
+  direction = "col",
+  align,
+  justify,
+  ...props
+}) => {
+  const alignClass = align ? styles[`items${align.charAt(0).toUpperCase() + align.slice(1)}`] : styles.itemsStart;
+  const justifyClass = justify
+    ? styles[`justify${justify === "space-between" ? "Between" : justify === "space-around" ? "Around" : justify.charAt(0).toUpperCase() + justify.slice(1)}`]
+    : styles.justifyStart;
+
   const classNames = cn(
-    "card flex",
-    size,
-    direction === "row" ? "flex-row" : "flex-col",
-    align ? `items-${align}` : "items-start",
-    justify ? `justify-${justify}` : "justify-start",
-    sizeStyles[size],
-    "p-5 gap-5 text-[15px] leading-none text-white"
+    styles.card,
+    styles[size],
+    direction === "row" ? styles.flexRow : styles.flexCol,
+    alignClass,
+    justifyClass,
   );
 
 

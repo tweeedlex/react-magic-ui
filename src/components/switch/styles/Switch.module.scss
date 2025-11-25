@@ -1,0 +1,75 @@
+.switch {
+    @apply cursor-pointer transition-all duration-300;
+    @apply bg-white/20 border-none outline-none;
+    width: 50px;
+    height: 25px;
+    border-radius: 999px;
+    position: relative;
+
+    &::after {
+        content: '';
+        @apply absolute bg-white;
+        @apply transition-all duration-300;
+        top: 2px;
+        left: 2px;
+        width: 21px;
+        height: 21px;
+        border-radius: 9999px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    &.active {
+        @apply bg-white/40;
+
+        &::after {
+            left: 27px;
+        }
+    }
+
+    &.disabled {
+        @apply opacity-50 cursor-not-allowed;
+    }
+}
+
+// Size variants
+.small {
+    width: 40px;
+    height: 20px;
+
+    &::after {
+        width: 16px;
+        height: 16px;
+    }
+
+    &.active::after {
+        left: 22px;
+    }
+}
+
+.medium {
+    width: 50px;
+    height: 25px;
+
+    &::after {
+        width: 21px;
+        height: 21px;
+    }
+
+    &.active::after {
+        left: 27px;
+    }
+}
+
+.large {
+    width: 60px;
+    height: 30px;
+
+    &::after {
+        width: 26px;
+        height: 26px;
+    }
+
+    &.active::after {
+        left: 32px;
+    }
+}

@@ -1,0 +1,29 @@
+.input {
+    @apply text-white font-normal leading-none bg-transparent;
+    @apply focus:outline-none;
+
+    &::placeholder {
+        @apply text-white/75;
+    }
+}
+
+// Size variants
+.small {
+    font-size: 12px;
+    padding: 7px 15px;
+}
+
+.medium {
+    font-size: 15px;
+    padding: 9px 20px;
+}
+
+.large {
+    font-size: 18px;
+    padding: 14px 20px;
+}
+
+// Disabled state
+.disabled {
+    @apply opacity-50 cursor-not-allowed;
+}

@@ -1,0 +1,154 @@
+.toastContainer {
+    @apply pointer-events-none fixed flex max-w-xs gap-3 sm:max-w-sm md:max-w-md;
+    z-index: 1100;
+}
+
+// Positions
+.topRight {
+    @apply top-6 right-6 flex-col items-end;
+}
+
+.topLeft {
+    @apply top-6 left-6 flex-col items-start;
+}
+
+.topCenter {
+    @apply top-6 flex-col items-center;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.bottomRight {
+    @apply bottom-6 right-6 flex-col items-end;
+}
+
+.bottomLeft {
+    @apply bottom-6 left-6 flex-col items-start;
+}
+
+.bottomCenter {
+    @apply bottom-6 flex-col items-center;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+// Toast card
+.toastCard {
+    @apply pointer-events-auto w-full transition-all duration-200 ease-out;
+}
+
+// Variants
+.variantDefault {
+    @apply border-white/25 text-white;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.32);
+}
+
+.variantSuccess {
+    @apply bg-emerald-500/15 border-emerald-400/40 text-emerald-50;
+    box-shadow: 0 18px 40px rgba(16, 185, 129, 0.28);
+}
+
+.variantError {
+    @apply bg-rose-500/15 border-rose-400/40 text-rose-50;
+    box-shadow: 0 18px 40px rgba(244, 63, 94, 0.3);
+}
+
+.variantInfo {
+    @apply bg-sky-500/15 border-sky-400/40 text-sky-50;
+    box-shadow: 0 18px 40px rgba(56, 189, 248, 0.28);
+}
+
+// Animations
+.animInitial {
+    @apply opacity-0;
+}
+
+.animEnter {
+    @apply opacity-100;
+}
+
+.animExit {
+    @apply opacity-0;
+}
+
+.slideFromRight {
+    &.animInitial {
+        transform: translateX(1.5rem);
+    }
+
+    &.animEnter {
+        transform: translateX(0);
+    }
+
+    &.animExit {
+        transform: translateX(1.5rem);
+    }
+}
+
+.slideFromLeft {
+    &.animInitial {
+        transform: translateX(-1.5rem);
+    }
+
+    &.animEnter {
+        transform: translateX(0);
+    }
+
+    &.animExit {
+        transform: translateX(-1.5rem);
+    }
+}
+
+.slideFromBottom {
+    &.animInitial {
+        transform: translateY(1.5rem);
+    }
+
+    &.animEnter {
+        transform: translateY(0);
+    }
+
+    &.animExit {
+        transform: translateY(1.5rem);
+    }
+}
+
+.scale {
+    &.animInitial {
+        @apply scale-95;
+    }
+
+    &.animEnter {
+        @apply scale-100;
+    }
+
+    &.animExit {
+        @apply scale-90;
+    }
+}
+
+// Toast content
+.toastContent {
+    @apply relative px-6 py-4;
+}
+
+.toastInner {
+    @apply flex items-start gap-4;
+}
+
+.toastTextContainer {
+    @apply min-w-0 flex-1 space-y-1;
+}
+
+.toastTitle {
+    @apply text-base font-semibold leading-tight;
+}
+
+.toastDescription {
+    @apply text-sm leading-snug text-white/80;
+}
+
+.toastCloseButton {
+    @apply inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/25 bg-white/10 text-sm font-medium text-white transition duration-150;
+    @apply hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/40;
+}

@@ -1,0 +1,62 @@
+.card {
+    @apply rounded-2xl shadow-lg flex p-5 gap-5 text-white;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    font-size: 15px;
+    line-height: 1;
+}
+
+// Size variants
+.small {
+    width: 200px;
+}
+
+.medium {
+    width: 500px;
+}
+
+.large {
+    width: 350px;
+}
+
+// Direction
+.flexRow {
+    @apply flex-row;
+}
+
+.flexCol {
+    @apply flex-col;
+}
+
+// Align
+.itemsCenter {
+    @apply items-center;
+}
+
+.itemsStart {
+    @apply items-start;
+}
+
+.itemsEnd {
+    @apply items-end;
+}
+
+// Justify
+.justifyCenter {
+    @apply justify-center;
+}
+
+.justifyStart {
+    @apply justify-start;
+}
+
+.justifyEnd {
+    @apply justify-end;
+}
+
+.justifyBetween {
+    @apply justify-between;
+}
+
+.justifyAround {
+    @apply justify-around;
+}

@@ -1,0 +1,124 @@
+.topbar {
+    @apply text-white flex items-center w-full rounded-2xl;
+}
+
+.elevated {
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.32);
+}
+
+// Size variants
+.compact {
+    min-height: 52px;
+    @apply px-4 py-2 gap-3 text-sm;
+}
+
+.comfortable {
+    min-height: 64px;
+    @apply px-5 py-3 gap-4 text-base;
+}
+
+.spacious {
+    min-height: 72px;
+    @apply px-6 py-4 gap-5 text-base;
+}
+
+// Section
+.topbarSection {
+    @apply flex items-center min-w-0;
+}
+
+.sectionGrow {
+    @apply flex-1 min-w-0;
+}
+
+.sectionWrap {
+    @apply flex-wrap;
+}
+
+.sectionNoWrap {
+    @apply flex-nowrap;
+}
+
+.gapTight {
+    @apply gap-2;
+}
+
+.gapRegular {
+    @apply gap-3;
+}
+
+.gapRelaxed {
+    @apply gap-4;
+}
+
+.alignLeft {
+    @apply justify-start;
+}
+
+.alignCenter {
+    @apply justify-center;
+}
+
+.alignRight {
+    @apply justify-end;
+}
+
+.alignBetween {
+    @apply justify-between;
+}
+
+// Brand
+.topbarBrand {
+    @apply flex items-center gap-3 min-w-0 text-white;
+}
+
+.brandIcon {
+    @apply flex items-center justify-center rounded-xl bg-white/15;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.35);
+}
+
+.brandIconCompact {
+    @apply w-9 h-9 text-base;
+}
+
+.brandIconComfortable {
+    @apply w-10 h-10 text-lg;
+}
+
+.brandIconSpacious {
+    @apply w-11 h-11 text-xl;
+}
+
+.brandContent {
+    @apply flex flex-col min-w-0;
+}
+
+.brandTitle {
+    @apply font-semibold tracking-tight truncate;
+}
+
+.brandSubtitle {
+    @apply text-sm font-normal text-white/70 truncate;
+}
+
+// Actions
+.topbarActions {
+    @apply text-sm font-medium;
+}
+
+// Divider
+.topbarDivider {
+    @apply w-px rounded-full bg-white/20;
+}
+
+.dividerCompact {
+    @apply h-8;
+}
+
+.dividerComfortable {
+    @apply h-9;
+}
+
+.dividerSpacious {
+    @apply h-10;
+}

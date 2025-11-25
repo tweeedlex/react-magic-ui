@@ -1,5 +1,5 @@
 import React from "react";
-import "./styles/Switch.scss";
+import styles from "./styles/Switch.module.scss";
 import clsx from "clsx";
 import Glass from "../glass/Glass.tsx";
 
@@ -12,13 +12,13 @@ export type SwitchProps = {
 };
 
 const Switch: React.FC<SwitchProps> = ({
-                                         size = "medium",
-                                         disabled,
-                                         isActive = false,
-                                         setIsActive,
-                                         enableClickAnimation = true,
-                                         ...props
-                                       }) => {
+  size = "medium",
+  disabled,
+  isActive = false,
+  setIsActive,
+  enableClickAnimation = true,
+  ...props
+}) => {
   const handleClick = () => {
     if (!disabled && setIsActive) setIsActive(!isActive);
   };
@@ -28,8 +28,13 @@ const Switch: React.FC<SwitchProps> = ({
       enableLiquidAnimation={enableClickAnimation}
       as="button"
       onClick={handleClick}
-      className={clsx("switch", size, isActive ? "active" : "", disabled ? "disabled" : "")}
-      rootClassName={clsx("rounded-[999px]", size === "small" && "flex h-[20px]")}
+      className={clsx(styles.switch, styles[size], isActive && styles.active, disabled && styles.disabled)}
+      rootClassName={clsx(
+        "rounded-[999px]",
+        size === "small" && "w-[40px] h-[20px]",
+        size === "medium" && "w-[50px] h-[25px]",
+        size === "large" && "w-[60px] h-[30px]"
+      )}
       disabled={disabled}
       {...props}
     />

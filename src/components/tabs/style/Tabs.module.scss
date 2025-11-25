@@ -1,0 +1,41 @@
+.tabs {
+    @apply text-white flex flex-col gap-4 p-4;
+}
+
+.tabsVertical {
+    max-width: 320px;
+}
+
+// List
+.tabsList {
+    @apply flex gap-2;
+}
+
+.tabsListVertical {
+    @apply flex-col;
+}
+
+.tabsListHorizontal {
+    @apply flex-row;
+}
+
+// Trigger
+.tabsTrigger {
+    @apply bg-white/10 hover:bg-white/20 active:bg-white/25 transition-colors px-4 py-2 rounded-lg text-sm font-medium outline-none;
+    @apply focus-visible:ring-2 focus-visible:ring-white/40;
+
+    &.triggerSelected {
+        @apply bg-white/25;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    }
+}
+
+// Content
+.tabsContent {
+    @apply rounded-xl bg-white/10 p-4 text-sm leading-relaxed;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+
+    &.contentHidden {
+        @apply opacity-0 pointer-events-none absolute h-0 w-0 overflow-hidden;
+    }
+}

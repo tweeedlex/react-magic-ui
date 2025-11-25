@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import "./style/Badge.scss";
+import styles from "./style/Badge.module.scss";
 import Glass from "../glass/Glass.tsx";
 
 export type BadgeVariant =
@@ -39,17 +39,16 @@ const Badge: React.FC<BadgeProps> = ({
     <Glass
       as="span"
       className={clsx(
-        "badge inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-white",
-        "px-3 py-1",
+        styles.badge,
         variantBackground[variant],
         className,
       )}
       rootClassName={"rounded-full"}
       {...props}
     >
-      {leadingIcon && <span className="badge__icon">{leadingIcon}</span>}
+      {leadingIcon && <span className={styles.badge__icon}>{leadingIcon}</span>}
       {children}
-      {trailingIcon && <span className="badge__icon">{trailingIcon}</span>}
+      {trailingIcon && <span className={styles.badge__icon}>{trailingIcon}</span>}
     </Glass>
   );
 };

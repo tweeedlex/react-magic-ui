@@ -1,5 +1,5 @@
 import React, { forwardRef, ComponentPropsWithoutRef } from "react";
-import "./style/Button.scss";
+import styles from "./style/Button.module.scss";
 import clsx from "clsx";
 import Glass from "../glass/Glass.tsx";
 
@@ -9,12 +9,6 @@ export type ButtonProps = ComponentPropsWithoutRef<"button"> & {
   variant?: "default" | "danger" | "link";
   size?: "small" | "medium" | "large";
   enableClickAnimation?: boolean;
-};
-
-const sizeStyles = {
-  small: "small text-sm",
-  medium: "medium text-lg",
-  large: "large text-md",
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
@@ -42,11 +36,10 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
       onClick={handleClick}
       enableLiquidAnimation={!disabled && enableClickAnimation}
       className={clsx(
-        "btn",
+        styles.btn,
         variant && `bg-${variant}`,
-        sizeStyles[size],
-        disabled ? "opacity-50 cursor-not-allowed" : "",
-        "hover:bg-white/30 active:bg-white/40",
+        styles[size],
+        disabled && styles.disabled,
         className,
       )}
       disabled={disabled}

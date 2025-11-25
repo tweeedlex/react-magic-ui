@@ -12,6 +12,7 @@ import React, {
 import { cn } from "../../func.ts";
 import Glass from "../glass/Glass.tsx";
 import Button from "../button/Button.tsx";
+import styles from "./style/Tabs.module.scss";
 
 type TabsOrientation = "horizontal" | "vertical";
 type TabsActivationMode = "auto" | "manual";
@@ -181,8 +182,8 @@ const TabsBase = forwardRef<HTMLDivElement, TabsProps>(
         <Glass
           ref={ref}
           className={cn(
-            "text-white flex flex-col gap-4 p-4",
-            orientation === "vertical" ? "max-w-[320px]" : "",
+            styles.tabs,
+            orientation === "vertical" ? styles.tabsVertical : "",
             className,
           )}
           {...rest}
@@ -210,8 +211,8 @@ const TabsList = forwardRef<HTMLDivElement, TabsListProps>(
         role="tablist"
         aria-orientation={orientation}
         className={cn(
-          "flex gap-2",
-          orientation === "vertical" ? "flex-col" : "flex-row",
+          styles.tabsList,
+          orientation === "vertical" ? styles.tabsListVertical : styles.tabsListHorizontal,
           className,
         )}
         {...rest}
@@ -413,8 +414,8 @@ const TabsTrigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
         size="small"
         enableClickAnimation={true}
         className={cn(
-          "!bg-white/10 hover:!bg-white/20 active:!bg-white/25 transition-colors px-4 py-2 rounded-lg text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-white/40",
-          isSelected ? "!bg-white/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]" : "",
+          styles.tabsTrigger,
+          isSelected ? styles.triggerSelected : "",
           className,
         )}
         aria-selected={isSelected}
@@ -457,8 +458,8 @@ const TabsContent = forwardRef<HTMLDivElement, TabsContentProps>(
         aria-labelledby={getTriggerId(value)}
         hidden={!isActive}
         className={cn(
-          "rounded-xl bg-white/10 p-4 text-sm leading-relaxed shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]",
-          !isActive ? "opacity-0 pointer-events-none absolute h-0 w-0 overflow-hidden" : "",
+          styles.tabsContent,
+          !isActive ? styles.contentHidden : "",
           className,
         )}
         {...rest}

@@ -12,6 +12,7 @@ import React, {
 import { createPortal } from "react-dom";
 import { cn } from "../../func.ts";
 import Glass from "../glass/Glass.tsx";
+import styles from "./style/Toast.module.scss";
 
 type ToastVariant = "default" | "success" | "error" | "info";
 
@@ -72,87 +73,43 @@ type ToastContextValue = {
   };
 };
 
-const defaultVariantClasses: Record<ToastVariant, string> = {
-  default:
-    "border-white/25 text-white shadow-[0_18px_40px_rgba(15,23,42,0.32)]",
-  success:
-    "bg-emerald-500/15 border-emerald-400/40 text-emerald-50 shadow-[0_18px_40px_rgba(16,185,129,0.28)]",
-  error:
-    "bg-rose-500/15 border-rose-400/40 text-rose-50 shadow-[0_18px_40px_rgba(244,63,94,0.3)]",
-  info: "bg-sky-500/15 border-sky-400/40 text-sky-50 shadow-[0_18px_40px_rgba(56,189,248,0.28)]",
+const variantClassMap: Record<ToastVariant, string> = {
+  default: styles.variantDefault,
+  success: styles.variantSuccess,
+  error: styles.variantError,
+  info: styles.variantInfo,
 };
 
-// const accentClasses: Record<ToastVariant, string> = {
-//   default: "bg-white/50",
-//   success: "bg-emerald-300",
-//   error: "bg-rose-300",
-//   info: "bg-sky-300",
-// };
-
-const animationStyles: Record<
-  ToastAnimation,
-  { initial: string; enter: string; exit: string; duration: number }
-> = {
-  "slide-from-right": {
-    initial: "translate-x-6 opacity-0",
-    enter: "translate-x-0 opacity-100",
-    exit: "translate-x-6 opacity-0",
-    duration: 220,
-  },
-  "slide-from-left": {
-    initial: "-translate-x-6 opacity-0",
-    enter: "translate-x-0 opacity-100",
-    exit: "-translate-x-6 opacity-0",
-    duration: 220,
-  },
-  "slide-from-bottom": {
-    initial: "translate-y-6 opacity-0",
-    enter: "translate-y-0 opacity-100",
-    exit: "translate-y-6 opacity-0",
-    duration: 240,
-  },
-  scale: {
-    initial: "scale-95 opacity-0",
-    enter: "scale-100 opacity-100",
-    exit: "scale-90 opacity-0",
-    duration: 200,
-  },
+const animationClassMap: Record<ToastAnimation, string> = {
+  "slide-from-right": styles.slideFromRight,
+  "slide-from-left": styles.slideFromLeft,
+  "slide-from-bottom": styles.slideFromBottom,
+  scale: styles.scale,
 };
 
-const positionStyles: Record<
-  ToastPosition,
-  { container: string; sort: "asc" | "desc" }
-> = {
-  "top-right": {
-    container:
-      "pointer-events-none fixed top-6 right-6 z-[1100] flex max-w-xs flex-col items-end gap-3 sm:max-w-sm md:max-w-md",
-    sort: "desc",
-  },
-  "top-left": {
-    container:
-      "pointer-events-none fixed top-6 left-6 z-[1100] flex max-w-xs flex-col items-start gap-3 sm:max-w-sm md:max-w-md",
-    sort: "desc",
-  },
-  "top-center": {
-    container:
-      "pointer-events-none fixed top-6 left-1/2 z-[1100] flex max-w-xs -translate-x-1/2 flex-col items-center gap-3 sm:max-w-sm md:max-w-md",
-    sort: "desc",
-  },
-  "bottom-right": {
-    container:
-      "pointer-events-none fixed bottom-6 right-6 z-[1100] flex max-w-xs flex-col items-end gap-3 sm:max-w-sm md:max-w-md",
-    sort: "asc",
-  },
-  "bottom-left": {
-    container:
-      "pointer-events-none fixed bottom-6 left-6 z-[1100] flex max-w-xs flex-col items-start gap-3 sm:max-w-sm md:max-w-md",
-    sort: "asc",
-  },
-  "bottom-center": {
-    container:
-      "pointer-events-none fixed bottom-6 left-1/2 z-[1100] flex max-w-xs -translate-x-1/2 flex-col items-center gap-3 sm:max-w-sm md:max-w-md",
-    sort: "asc",
-  },
+const positionClassMap: Record<ToastPosition, string> = {
+  "top-right": styles.topRight,
+  "top-left": styles.topLeft,
+  "top-center": styles.topCenter,
+  "bottom-right": styles.bottomRight,
+  "bottom-left": styles.bottomLeft,
+  "bottom-center": styles.bottomCenter,
+};
+
+const animationDurations: Record<ToastAnimation, number> = {
+  "slide-from-right": 220,
+  "slide-from-left": 220,
+  "slide-from-bottom": 240,
+  scale: 200,
+};
+
+const positionSorts: Record<ToastPosition, "asc" | "desc"> = {
+  "top-right": "desc",
+  "top-left": "desc",
+  "top-center": "desc",
+  "bottom-right": "asc",
+  "bottom-left": "asc",
+  "bottom-center": "asc",
 };
 
 const ToastContext = createContext<ToastContextValue | null>(null);
@@ -174,7 +131,7 @@ const ToastCard: React.FC<{
   const removeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const closed = useRef(false);
 
-  const animation = animationStyles[toast.animation];
+  const animPhaseClass = phase === "initial" ? styles.animInitial : phase === "enter" ? styles.animEnter : styles.animExit;
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
@@ -220,21 +177,16 @@ const ToastCard: React.FC<{
 
     removeTimer.current = setTimeout(() => {
       onRemove(toast.id);
-    }, animation.duration);
+    }, animationDurations[toast.animation]);
 
     return () => {
       if (removeTimer.current) {
         clearTimeout(removeTimer.current);
       }
     };
-  }, [animation.duration, onRemove, phase, toast]);
+  }, [animationDurations, onRemove, phase, toast]);
 
-  const animationClass =
-    phase === "initial"
-      ? animation.initial
-      : phase === "enter"
-      ? animation.enter
-      : animation.exit;
+  const animationClass = animationClassMap[toast.animation];
 
   return (
     <Glass
@@ -243,21 +195,22 @@ const ToastCard: React.FC<{
       enableLiquidAnimation={toast.enableLiquidAnimation}
       triggerAnimation={phase === "enter"}
       rootClassName={cn(
-        "pointer-events-auto w-full transition-all duration-200 ease-out",
-        defaultVariantClasses[toast.variant],
+        styles.toastCard,
+        variantClassMap[toast.variant],
         animationClass,
+        animPhaseClass,
       )}
     >
-      <div className="relative px-6 py-4">
-        <div className="flex items-start gap-4">
-          <div className="min-w-0 flex-1 space-y-1">
+      <div className={styles.toastContent}>
+        <div className={styles.toastInner}>
+          <div className={styles.toastTextContainer}>
             {toast.title && (
-              <p className="text-base font-semibold leading-tight">
+              <p className={styles.toastTitle}>
                 {toast.title}
               </p>
             )}
             {toast.description && (
-              <p className="text-sm leading-snug text-white/80">
+              <p className={styles.toastDescription}>
                 {toast.description}
               </p>
             )}
@@ -266,7 +219,7 @@ const ToastCard: React.FC<{
           <button
             type="button"
             aria-label="close toast"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/25 bg-white/10 text-sm font-medium text-white transition duration-150 hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/40"
+            className={styles.toastCloseButton}
             onClick={() => setPhase("exit")}
           >
             ×
@@ -337,9 +290,9 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
       prev.map((toast) =>
         toast.id === id
           ? {
-              ...toast,
-              dismissed: true,
-            }
+            ...toast,
+            dismissed: true,
+          }
           : toast,
       ),
     );
@@ -409,16 +362,15 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
                 return null;
               }
 
-              const config =
-                positionStyles[toastPosition] ?? positionStyles[position];
+              const config = positionSorts[toastPosition];
 
               const ordered =
-                config.sort === "desc"
+                config === "desc"
                   ? [...items].sort((a, b) => b.createdAt - a.createdAt)
                   : [...items].sort((a, b) => a.createdAt - b.createdAt);
 
               return (
-                <div key={toastPosition} className={config.container}>
+                <div key={toastPosition} className={cn(styles.toastContainer, positionClassMap[toastPosition])}>
                   {ordered.map((toast) => (
                     <ToastCard
                       key={toast.id}

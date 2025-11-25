@@ -1,0 +1,32 @@
+.btn {
+    @apply font-bold cursor-pointer outline-none inline-flex items-center justify-center transition-all;
+    @apply px-6 py-3 rounded-xl;
+    color: white;
+    transition: background-color 0.15s, box-shadow 0.3s;
+
+    &:hover {
+        @apply bg-white/30;
+    }
+
+    &:active {
+        @apply bg-white/40;
+    }
+}
+
+// Size variants
+.small {
+    @apply text-sm px-4 py-2;
+}
+
+.medium {
+    @apply text-lg px-6 py-3;
+}
+
+.large {
+    @apply text-base px-8 py-4;
+}
+
+// Disabled state
+.disabled {
+    @apply opacity-50 cursor-not-allowed;
+}

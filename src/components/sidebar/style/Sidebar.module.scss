@@ -1,0 +1,106 @@
+.sidebar {
+    @apply text-white flex flex-col gap-4 relative min-h-full;
+}
+
+// Size variants
+.small {
+    width: 200px;
+}
+
+.medium {
+    width: 260px;
+}
+
+.large {
+    width: 320px;
+}
+
+.collapsed {
+    width: 88px;
+}
+
+.paddingCollapsed {
+    @apply px-3;
+}
+
+.paddingExpanded {
+    @apply px-4;
+}
+
+.sidebarRoot {
+    @apply py-6 duration-200;
+    transition-property: width, padding;
+}
+
+// Header
+.sidebarHeader {
+    @apply flex items-center justify-between gap-2 pb-2 transition-all duration-200;
+
+    &.headerCollapsed {
+        @apply justify-center;
+    }
+}
+
+// Footer
+.sidebarFooter {
+    @apply flex items-center justify-between pt-2;
+}
+
+// Items
+.sidebarItems {
+    @apply flex flex-col gap-2 flex-1;
+}
+
+// Item
+.sidebarItem {
+    @apply flex items-center gap-3 w-full rounded-xl text-left font-medium transition-all duration-200;
+    @apply border-none outline-none bg-transparent text-inherit py-3;
+    @apply hover:bg-white/20 active:bg-white/25;
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:active:bg-transparent;
+    padding-left: 14px;
+    padding-right: 14px;
+
+    &.itemCollapsed {
+        @apply justify-center py-2.5 px-2.5;
+    }
+
+    &.itemActive {
+        @apply bg-white/25;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    }
+}
+
+.itemIcon {
+    @apply flex items-center justify-center rounded-lg w-9 h-9 bg-white/15;
+    box-shadow: 0 10px 20px rgba(15, 23, 42, 0.25);
+}
+
+.itemContent {
+    @apply flex items-center gap-2 flex-1 overflow-hidden;
+}
+
+.itemText {
+    @apply truncate;
+}
+
+.itemBadge {
+    @apply inline-flex items-center justify-center rounded-full text-xs font-semibold px-2 py-0.5;
+    @apply bg-white/25;
+    min-width: 24px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.itemFallback {
+    @apply flex items-center justify-center rounded-lg text-sm font-semibold w-8 h-8;
+    @apply bg-white/15;
+    box-shadow: 0 10px 20px rgba(15, 23, 42, 0.25);
+}
+
+// Toggle
+.sidebarToggle {
+    @apply flex items-center justify-center rounded-full transition-colors w-9 h-9;
+    @apply border-none outline-none bg-white/15 text-inherit;
+    @apply hover:bg-white/25 active:bg-white/30;
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40;
+}

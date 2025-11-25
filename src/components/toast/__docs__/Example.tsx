@@ -25,7 +25,16 @@ const Controls: FC = () => {
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-4">
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        gap: "0.75rem",
+        maxWidth: "56rem",
+        justifyContent: "center",
+      }}
+    >
       <Button text="Show default" onClick={() => trigger("default")} />
       <Button text="Show success" variant="link" onClick={() => trigger("success")} />
       <Button text="Show error" variant="danger" onClick={() => trigger("error")} />
@@ -57,5 +66,3 @@ const Example: FC = () => {
 };
 
 export default Example;
-
-

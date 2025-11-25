@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { cn } from "../../func.ts";
 import Glass from "../glass/Glass.tsx";
+import styles from "./style/Topbar.module.scss";
 
 type TopbarSize = "compact" | "comfortable" | "spacious";
 
@@ -26,31 +27,7 @@ const useTopbarContext = (component: string) => {
   return context;
 };
 
-const topbarSizeStyles: Record<TopbarSize, string> = {
-  compact: "min-h-[52px] px-4 py-2 gap-3 text-sm",
-  comfortable: "min-h-[64px] px-5 py-3 gap-4 text-base",
-  spacious: "min-h-[72px] px-6 py-4 gap-5 text-base",
-};
-
-const sectionGapStyles = {
-  tight: "gap-2",
-  regular: "gap-3",
-  relaxed: "gap-4",
-} as const;
-
-type SectionGap = keyof typeof sectionGapStyles;
-
-const dividerHeights: Record<TopbarSize, string> = {
-  compact: "h-8",
-  comfortable: "h-9",
-  spacious: "h-10",
-};
-
-const iconSizes: Record<TopbarSize, string> = {
-  compact: "w-9 h-9 text-base",
-  comfortable: "w-10 h-10 text-lg",
-  spacious: "w-11 h-11 text-xl",
-};
+type SectionGap = "tight" | "regular" | "relaxed";
 
 export type TopbarProps = ComponentPropsWithoutRef<"header"> & {
   size?: TopbarSize;
@@ -72,9 +49,9 @@ const TopbarBase = forwardRef<HTMLElement, TopbarProps>(
           as="header"
           ref={ref}
           className={cn(
-            "text-white flex items-center w-full rounded-2xl",
-            topbarSizeStyles[size],
-            elevated ? "shadow-[0_18px_40px_rgba(15,23,42,0.32)]" : "",
+            styles.topbar,
+            styles[size],
+            elevated ? styles.elevated : "",
             className,
           )}
           {...rest}
@@ -95,11 +72,17 @@ export type TopbarSectionProps = ComponentPropsWithoutRef<"div"> & {
   wrap?: boolean;
 };
 
-const alignClassName: Record<NonNullable<TopbarSectionProps["align"]>, string> = {
-  left: "justify-start",
-  center: "justify-center",
-  right: "justify-end",
-  between: "justify-between",
+const alignClassMap: Record<NonNullable<TopbarSectionProps["align"]>, string> = {
+  left: styles.alignLeft,
+  center: styles.alignCenter,
+  right: styles.alignRight,
+  between: styles.alignBetween,
+};
+
+const gapClassMap: Record<SectionGap, string> = {
+  tight: styles.gapTight,
+  regular: styles.gapRegular,
+  relaxed: styles.gapRelaxed,
 };
 
 const TopbarSection = forwardRef<HTMLDivElement, TopbarSectionProps>(
@@ -119,11 +102,11 @@ const TopbarSection = forwardRef<HTMLDivElement, TopbarSectionProps>(
       <div
         ref={ref}
         className={cn(
-          "flex items-center min-w-0",
-          wrap ? "flex-wrap" : "flex-nowrap",
-          sectionGapStyles[gap],
-          grow ? "flex-1 min-w-0" : "",
-          alignClassName[align],
+          styles.topbarSection,
+          wrap ? styles.sectionWrap : styles.sectionNoWrap,
+          gapClassMap[gap],
+          grow ? styles.sectionGrow : "",
+          alignClassMap[align],
           className,
         )}
         {...rest}
@@ -150,15 +133,16 @@ const TopbarBrand = forwardRef<HTMLDivElement, TopbarBrandProps>(
     return (
       <div
         ref={ref}
-        className={cn("flex items-center gap-3 min-w-0 text-white", className)}
+        className={cn(styles.topbarBrand, className)}
         {...rest}
       >
         {icon && (
           <span
             className={cn(
-              "flex items-center justify-center rounded-xl bg-white/15",
-              "shadow-[0_12px_30px_rgba(15,23,42,0.35)]",
-              iconSizes[size],
+              styles.brandIcon,
+              size === "compact" ? styles.brandIconCompact : "",
+              size === "comfortable" ? styles.brandIconComfortable : "",
+              size === "spacious" ? styles.brandIconSpacious : "",
               iconClassName,
             )}
             aria-hidden="true"
@@ -167,18 +151,18 @@ const TopbarBrand = forwardRef<HTMLDivElement, TopbarBrandProps>(
           </span>
         )}
 
-        <div className="flex flex-col min-w-0">
+        <div className={styles.brandContent}>
           {children ? (
             children
           ) : (
             <>
               {title && (
-                <span className="font-semibold tracking-tight truncate">
+                <span className={styles.brandTitle}>
                   {title}
                 </span>
               )}
               {subtitle && (
-                <span className="text-sm font-normal text-white/70 truncate">
+                <span className={styles.brandSubtitle}>
                   {subtitle}
                 </span>
               )}
@@ -203,7 +187,7 @@ const TopbarActions = forwardRef<HTMLDivElement, TopbarActionsProps>(
         ref={ref}
         align="right"
         gap={gap}
-        className={cn("text-sm font-medium", className)}
+        className={cn(styles.topbarActions, className)}
         {...rest}
       >
         {children}
@@ -224,8 +208,10 @@ const TopbarDivider = forwardRef<HTMLDivElement, TopbarDividerProps>(
       <div
         ref={ref}
         className={cn(
-          "w-px rounded-full bg-white/20",
-          dividerHeights[size],
+          styles.topbarDivider,
+          size === "compact" ? styles.dividerCompact : "",
+          size === "comfortable" ? styles.dividerComfortable : "",
+          size === "spacious" ? styles.dividerSpacious : "",
           className,
         )}
         aria-hidden="true"
