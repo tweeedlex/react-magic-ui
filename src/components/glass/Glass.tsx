@@ -13,13 +13,14 @@ export type GlassProps<T extends ElementType = "div"> = {
   as?: T;
   children?: React.ReactNode;
   rootClassName?: string;
+  rootStyle?: React.CSSProperties;
   enableLiquidAnimation?: boolean;
   triggerAnimation?: boolean;
 } & ComponentPropsWithoutRef<T>;
 
 const Glass = forwardRef(
   <T extends ElementType = "div">(
-    { as, children, className, rootClassName, enableLiquidAnimation = false, triggerAnimation = false, onClick, ...props }: GlassProps<T>,
+    { as, children, className, rootClassName, rootStyle, enableLiquidAnimation = false, triggerAnimation = false, onClick, ...props }: GlassProps<T>,
     ref: React.ForwardedRef<any>,
   ) => {
     const Component = as || "div";
@@ -85,6 +86,7 @@ const Glass = forwardRef(
             rootClassName,
             isAnimating && styles.glassAnimating
           )}
+          style={rootStyle}
         >
           <div className={clsx(styles.glassFilter, isAnimating && styles.glassFilterAnimate)}></div>
           <div className={styles.glassOverlay}></div>
