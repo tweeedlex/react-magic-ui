@@ -4,8 +4,15 @@ A React component library for creating stunning liquid glass effect UI component
 
 ## Installation
 
+1. Install the library using npm: 
 ```bash
 npm install react-magic-ui
+```
+
+2. Import styles in your main application file (e.g., `index.tsx` or `App.tsx`):
+
+```
+import 'react-magic-ui/dist/react-magic-ui.css'
 ```
 
 ## Usage
@@ -13,24 +20,22 @@ npm install react-magic-ui
 Import the components you need:
 
 ```tsx
-import { Button, Card, Input, Switch, Toast } from 'react-magic-ui';
+import { Button, Card } from 'react-magic-ui';
 
 function App() {
   return (
-    <div>
-      <Button variant="primary" size="medium">
+    <section>
+      <Button>
         Click me
       </Button>
       <Card>
         <h2>Beautiful Card</h2>
         <p>With liquid glass effect</p>
       </Card>
-    </div>
+    </section>
   );
 }
 ```
-
-> **Note:** Styles are automatically imported when you use the library. No need to manually import CSS files.
 
 ## Available Components
 
@@ -44,16 +49,18 @@ function App() {
 - **Badge** - Label and badge component
 - **Sidebar** - Navigation sidebar
 - **Topbar** - Top navigation bar
-- **Glass** - Base glass effect wrapper
+- **Checkbox** - Checkbox component
+- **Select** - Select component
+- **Slider** - Slider component
+- **Glass** - Base glass effect wrapper (used for creating custom components)
 
 ## Features
 
+- 📱 14 components for your basic needs
 - 🎨 Beautiful liquid glass effect
-- 🌈 Gradient backgrounds and animations
-- 📱 Fully responsive
-- ♿ Accessible components
-- 🎭 TypeScript support
+- 🌈 Liquid-like glassmorphism animations
 - 🔧 Customizable with props
+- 📦 Create your own custom components with Glass component
 
 ## Development
 

@@ -84,7 +84,7 @@ const Select: React.FC<SelectProps> = ({
                     disabled && styles.disabled,
                     isOpen && styles.open
                 )}
-                rootClassName="w-full"
+                rootClassName={styles.glassRoot}
                 disabled={disabled}
             >
                 <span className={clsx(styles.selectedValue, !selectedOption && styles.placeholder)}>

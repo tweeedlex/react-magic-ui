@@ -29,12 +29,8 @@ const Switch: React.FC<SwitchProps> = ({
       as="button"
       onClick={handleClick}
       className={clsx(styles.switch, styles[size], isActive && styles.active, disabled && styles.disabled)}
-      rootClassName={clsx(
-        "rounded-[999px]",
-        size === "small" && "w-[40px] h-[20px]",
-        size === "medium" && "w-[50px] h-[25px]",
-        size === "large" && "w-[60px] h-[30px]"
-      )}
+      rootClassName={clsx(styles[size])}
+      rootStyle={{ borderRadius: "999px" }}
       disabled={disabled}
       {...props}
     />

@@ -1,0 +1,54 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+import Example from "./Example.tsx";
+import * as Select from "./Select.stories.tsx";
+
+<Meta of={Select} title="Select" />
+
+# Select
+
+Select component with dropdown options.
+
+#### Example
+
+<Canvas of={Select.Default}/>
+
+## Usage
+
+```ts
+import {Select} from "react-glass-ui";
+import { useState } from "react";
+
+const Example = () => {
+  const [value, setValue] = useState("");
+
+  const options = [
+    { value: "option1", label: "Option 1" },
+    { value: "option2", label: "Option 2" },
+    { value: "option3", label: "Option 3" },
+  ];
+
+  return (
+      <Select
+        size={"medium"}
+        disabled={false}
+        options={options}
+        value={value}
+        onChange={setValue}
+        placeholder="Select an option"
+        enableClickAnimation={true}
+      />
+  );
+};
+
+export default Example;
+```
+
+#### Arguments
+
+- **disabled** - A boolean indicating whether the Select should be disabled or not. When disabled, the Select cannot be clicked or interacted with.
+- **size** - A string with one of three possible values: "small," "medium," or "large." It defines the size or dimensions of the Select.
+- **options** - An array of objects with `value` and `label` properties. Each object represents a selectable option in the dropdown.
+- **value** - A string representing the currently selected option's value. Use this to control the Select component.
+- **onChange** - A function that receives the selected option's value as a string parameter. It is called when the user selects an option from the dropdown.
+- **placeholder** - An optional string that displays placeholder text when no option is selected. Defaults to "Select an option".
+- **enableClickAnimation** - A boolean indicating whether to enable the liquid bounce animation on click

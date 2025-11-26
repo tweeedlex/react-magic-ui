@@ -32,6 +32,10 @@
     }
 }
 
+.glassRoot {
+    @apply w-full;
+}
+
 .selectedValue {
     @apply text-white font-normal leading-none;
     @apply flex-1;

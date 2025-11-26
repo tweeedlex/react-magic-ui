@@ -1,0 +1,52 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+import Example from "./Example.tsx";
+import * as Slider from "./Slider.stories.tsx";
+
+<Meta of={Slider} title="Slider" />
+
+# Slider
+
+Slider component for selecting a numeric value within a range.
+
+#### Example
+
+<Canvas of={Slider.Default}/>
+
+## Usage
+
+```ts
+import {Slider} from "react-glass-ui";
+import { useState } from "react";
+
+const Example = () => {
+  const [value, setValue] = useState(50);
+
+  return (
+      <Slider
+        size={"medium"}
+        disabled={false}
+        min={0}
+        max={100}
+        step={1}
+        value={value}
+        onChange={setValue}
+        showValue={false}
+        enableClickAnimation={true}
+      />
+  );
+};
+
+export default Example;
+```
+
+#### Arguments
+
+- **disabled** - A boolean indicating whether the Slider should be disabled or not. When disabled, the Slider cannot be clicked or dragged.
+- **size** - A string with one of three possible values: "small," "medium," or "large." It defines the size or dimensions of the Slider.
+- **min** - A number representing the minimum value of the Slider. Defaults to 0.
+- **max** - A number representing the maximum value of the Slider. Defaults to 100.
+- **step** - A number representing the increment step for the Slider value. Defaults to 1.
+- **value** - A number representing the current value of the Slider. Use this to control the Slider component.
+- **onChange** - A function that receives the new value as a number parameter. It is called when the user drags the slider or clicks on the track.
+- **showValue** - A boolean indicating whether to display the current value of the Slider. Defaults to false.
+- **enableClickAnimation** - A boolean indicating whether to enable the liquid bounce animation on click

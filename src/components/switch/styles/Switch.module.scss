@@ -1,9 +1,9 @@
+.glassRoot {
+    border-radius: 999px;
+}
+
 .switch {
     @apply cursor-pointer transition-all duration-300;
-    @apply bg-white/20 border-none outline-none;
-    width: 50px;
-    height: 25px;
-    border-radius: 999px;
     position: relative;
 
     &::after {
@@ -31,7 +31,10 @@
     }
 }
 
-// Size variants
+.glassRoot {
+    @apply rounded-[999px];
+}
+
 .small {
     width: 40px;
     height: 20px;
@@ -43,6 +46,10 @@
 
     &.active::after {
         left: 22px;
+    }
+
+    &.glassRoot {
+        @apply w-[40px] h-[20px];
     }
 }
 
@@ -58,6 +65,10 @@
     &.active::after {
         left: 27px;
     }
+
+    &.glassRoot {
+        @apply w-[50px] h-[25px];
+    }
 }
 
 .large {
@@ -71,5 +82,9 @@
 
     &.active::after {
         left: 32px;
+    }
+
+    &.glassRoot {
+        @apply w-[60px] h-[30px];
     }
 }

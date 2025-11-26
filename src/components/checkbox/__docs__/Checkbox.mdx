@@ -1,0 +1,46 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+import Example from "./Example.tsx";
+import * as Checkbox from "./Checkbox.stories.tsx";
+
+<Meta of={Checkbox} title="Checkbox" />
+
+# Checkbox
+
+Checkbox component with different props.
+
+#### Example
+
+<Canvas of={Checkbox.Default}/>
+
+## Usage
+
+```ts
+import {Checkbox} from "react-glass-ui";
+import { useState } from "react";
+
+const Example = () => {
+  const [checked, setChecked] = useState(false);
+
+  return (
+      <Checkbox
+        size={"medium"}
+        disabled={false}
+        checked={checked}
+        onChange={setChecked}
+        label="Check me!"
+        enableClickAnimation={true}
+      />
+  );
+};
+
+export default Example;
+```
+
+#### Arguments
+
+- **disabled** - A boolean indicating whether the Checkbox should be disabled or not. When disabled, the Checkbox cannot be clicked or interacted with.
+- **size** - A string with one of three possible values: "small," "medium," or "large." It defines the size or dimensions of the Checkbox.
+- **checked** - A boolean indicating whether the Checkbox is checked or not. When checked, the Checkbox displays a checkmark icon.
+- **onChange** - A function that receives the new checked state as a boolean parameter. It is called when the user toggles the Checkbox.
+- **label** - An optional string that displays a text label next to the Checkbox. When clicked, it toggles the Checkbox state.
+- **enableClickAnimation** - A boolean indicating whether to enable the liquid bounce animation on click
