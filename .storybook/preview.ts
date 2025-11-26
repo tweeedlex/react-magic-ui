@@ -21,12 +21,10 @@ const preview: Preview = {
             backgroundSize: "cover",
           },
         },
-
         light: {
           name: "light",
           value: "#ffffff",
         },
-
         image: {
           name: "image",
           value:
@@ -42,7 +40,6 @@ const preview: Preview = {
           value:
             'url("https://images.unsplash.com/photo-1683657535824-5b570c7a1749?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D") center center / cover no-repeat fixed ',
         },
-
         dark: {
           name: "dark",
           value: "#000000",
@@ -55,7 +52,7 @@ const preview: Preview = {
   },
   initialGlobals: {
     backgrounds: {
-      value: "gradient",
+      value: "imageNature",
     },
   },
 };

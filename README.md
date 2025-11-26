@@ -15,6 +15,12 @@ npm install react-magic-ui
 import 'react-magic-ui/dist/react-magic-ui.css'
 ```
 
+## Documentation
+
+📚 **[View Live Component Examples in Storybook](https://magic-ui-storybook.tappers.tech/)**
+
+Explore all components with interactive examples, props documentation, and live code previews in our Storybook.
+
 ## Usage
 
 Import the components you need:
