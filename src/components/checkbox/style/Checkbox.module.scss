@@ -1,0 +1,105 @@
+.checkboxContainer {
+    @apply inline-flex items-center gap-2 cursor-pointer;
+
+    &.disabled {
+        @apply opacity-50 cursor-not-allowed;
+    }
+}
+
+.checkbox {
+    @apply cursor-pointer transition-all duration-300;
+    @apply border-none outline-none;
+    @apply flex items-center justify-center;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+
+    &.disabled {
+        @apply opacity-50 cursor-not-allowed;
+    }
+}
+
+.checkIcon {
+    @apply text-white;
+    @apply transition-all duration-200;
+    width: 100%;
+    height: 100%;
+    padding: 2px;
+}
+
+.label {
+    @apply text-white font-normal leading-none;
+    user-select: none;
+}
+
+.glassRoot {
+    @apply inline-block rounded-md;
+}
+
+// Size variants
+.small {
+    &.glassRoot {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+    }
+
+    .checkbox {
+        width: 100%;
+        height: 100%;
+        border-radius: 4px;
+    }
+
+    .checkIcon {
+        padding: 1px;
+    }
+
+    &~.label {
+        font-size: 12px;
+    }
+}
+
+.medium {
+    &.glassRoot {
+        width: 20px;
+        height: 20px;
+        border-radius: 6px;
+    }
+
+    .checkbox {
+        width: 100%;
+        height: 100%;
+        border-radius: 6px;
+    }
+
+    .checkIcon {
+        padding: 2px;
+    }
+
+    &~.label {
+        font-size: 15px;
+    }
+}
+
+.large {
+    &.glassRoot {
+        width: 24px;
+        height: 24px;
+        border-radius: 8px;
+    }
+
+    .checkbox {
+        width: 100%;
+        height: 100%;
+        border-radius: 8px;
+    }
+
+    .checkIcon {
+        padding: 3px;
+    }
+
+    &~.label {
+        font-size: 18px;
+    }
+}

@@ -9,3 +9,6 @@ export * from './modal';
 export * from './toast';
 export * from './tabs';
 export * from './badge';
+export * from './checkbox';
+export * from './select';
+export * from './slider';

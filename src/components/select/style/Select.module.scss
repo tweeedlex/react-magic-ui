@@ -1,0 +1,137 @@
+.selectContainer {
+    @apply relative inline-block w-full;
+
+    &.disabled {
+        @apply opacity-50 cursor-not-allowed;
+    }
+}
+
+.selectButton {
+    @apply cursor-pointer transition-all duration-300;
+    @apply border-none outline-none;
+    @apply flex items-center justify-between;
+    @apply w-full text-left;
+    @apply text-white;
+    /* Ensure text is white */
+    position: relative;
+    display: flex;
+    /* Explicit flex */
+    align-items: center;
+    /* Explicit align */
+    justify-content: space-between;
+    /* Explicit justify */
+    color: white;
+    /* Explicit color */
+
+    &.open {
+        // Active state handled by Glass
+    }
+
+    &.disabled {
+        @apply opacity-50 cursor-not-allowed;
+    }
+}
+
+.selectedValue {
+    @apply text-white font-normal leading-none;
+    @apply flex-1;
+    color: white;
+
+    &.placeholder {
+        @apply text-white/75;
+        color: rgba(255, 255, 255, 0.75);
+    }
+}
+
+.arrow {
+    @apply text-white/75 transition-transform duration-300;
+    @apply ml-2 flex-shrink-0;
+    color: rgba(255, 255, 255, 0.75);
+
+    &.arrowOpen {
+        @apply rotate-180;
+    }
+}
+
+.dropdown {
+    @apply absolute left-0 right-0 mt-2;
+    @apply rounded-lg overflow-hidden;
+    @apply z-50;
+    @apply border border-white/20;
+    max-height: 240px;
+    overflow-y: auto;
+
+    /* Custom scrollbar for glass effect */
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        @apply bg-white/10 rounded;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        @apply bg-white/30 rounded;
+
+        &:hover {
+            @apply bg-white/40;
+        }
+    }
+}
+
+.option {
+    @apply w-full text-left cursor-pointer;
+    @apply bg-transparent border-none outline-none;
+    @apply text-white font-normal;
+    @apply transition-all duration-200;
+    @apply hover:bg-white/20;
+    color: white;
+
+    &.selected {
+        @apply bg-white/30;
+    }
+
+    &:not(:last-child) {
+        @apply border-b border-white/10;
+    }
+}
+
+// Size variants
+.small {
+
+    &.selectButton,
+    &.option {
+        font-size: 12px;
+        padding: 7px 15px;
+    }
+
+    &.dropdown {
+        margin-top: 4px;
+    }
+}
+
+.medium {
+
+    &.selectButton,
+    &.option {
+        font-size: 15px;
+        padding: 9px 20px;
+    }
+
+    &.dropdown {
+        margin-top: 8px;
+    }
+}
+
+.large {
+
+    &.selectButton,
+    &.option {
+        font-size: 18px;
+        padding: 14px 20px;
+    }
+
+    &.dropdown {
+        margin-top: 12px;
+    }
+}

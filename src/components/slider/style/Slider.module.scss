@@ -1,0 +1,113 @@
+.sliderContainer {
+    @apply w-full relative select-none;
+    height: 30px;
+    display: flex;
+    align-items: center;
+
+    &.disabled {
+        @apply opacity-50 cursor-not-allowed;
+    }
+}
+
+.sliderTrack {
+    @apply relative cursor-pointer w-full;
+    height: 6px;
+}
+
+.trackBackground {
+    @apply absolute w-full h-full;
+    @apply rounded-full;
+    background: rgba(255, 255, 255, 0.15);
+    overflow: hidden;
+}
+
+.trackFill {
+    @apply absolute left-0 top-0 h-full;
+    background: rgba(255, 255, 255, 0.6);
+    @apply rounded-full;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.thumb {
+    @apply absolute top-1/2 left-0;
+    @apply cursor-grab;
+    transform: translate(-50%, -50%);
+
+    /* Capsule Shape */
+    width: 36px;
+    height: 20px;
+    border-radius: 999px;
+
+    /* Glass Effect */
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+
+    box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.1),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+
+    transition: transform 0.1s ease;
+    z-index: 10;
+
+    &.dragging {
+        @apply cursor-grabbing;
+        transform: translate(-50%, -50%) scale(1.1);
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    &:hover {
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+}
+
+// Size variants
+.small {
+    .sliderTrack {
+        height: 4px;
+    }
+
+    .thumb {
+        width: 28px;
+        height: 16px;
+    }
+}
+
+.medium {
+    .sliderTrack {
+        height: 6px;
+    }
+
+    .thumb {
+        width: 36px;
+        height: 20px;
+    }
+}
+
+.large {
+    .sliderTrack {
+        height: 8px;
+    }
+
+    .thumb {
+        width: 44px;
+        height: 24px;
+    }
+}
+
+// Disabled state
+.disabled {
+    .sliderTrack {
+        @apply cursor-not-allowed;
+    }
+
+    .thumb {
+        @apply cursor-not-allowed;
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .trackFill {
+        background: rgba(255, 255, 255, 0.2);
+    }
+}
