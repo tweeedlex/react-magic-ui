@@ -1,7 +1,6 @@
 import React, { useState, useRef, MouseEvent } from "react";
 import styles from "./style/Slider.module.scss";
 import clsx from "clsx";
-import Glass from "../glass/Glass.tsx";
 
 export type SliderProps = {
     disabled?: boolean;
