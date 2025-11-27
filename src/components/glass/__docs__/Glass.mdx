@@ -1,0 +1,170 @@
+import { Canvas, Meta, Story } from '@storybook/blocks';
+import * as GlassStories from './Glass.stories';
+
+<Meta of={GlassStories} />
+
+# Glass
+
+A beautiful glass morphism component with optional liquid animation effects.
+
+## Features
+
+- **Glass Morphism Effect**: Creates a frosted glass appearance with blur and transparency
+- **Liquid Animation**: Interactive click-based liquid ripple effect
+- **Programmatic Animation**: Trigger animations programmatically via props
+- **Polymorphic Component**: Render as any HTML element using the `as` prop
+- **Customizable**: Full control over styles and animations
+
+## Basic Usage
+
+```tsx
+import Glass from "./components/glass/Glass";
+
+function App() {
+  return (
+    <Glass>
+      <h2>Glass Effect Content</h2>
+      <p>Beautiful glass morphism design</p>
+    </Glass>
+  );
+}
+```
+
+## Examples
+
+### Default Glass Effect
+
+<Canvas of={GlassStories.Default} />
+
+Basic glass morphism effect without animations.
+
+### With Liquid Animation
+
+<Canvas of={GlassStories.WithLiquidAnimation} />
+
+Click on the glass component to see the liquid animation effect. The ripple originates from where you click.
+
+### Programmatic Animation
+
+<Canvas of={GlassStories.ProgrammaticAnimation} />
+
+Animation triggered programmatically via the `triggerAnimation` prop. The ripple appears at the center.
+
+### Custom Content
+
+<Canvas of={GlassStories.CustomContent} />
+
+Customize the appearance with custom styles and content.
+
+### As Button Element
+
+<Canvas of={GlassStories.AsButton} />
+
+Render the glass component as a button element with full interactivity.
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `as` | `ElementType` | `"div"` | The HTML element to render as |
+| `children` | `React.ReactNode` | - | Content to display inside the glass component |
+| `rootClassName` | `string` | - | Additional CSS class for the root container |
+| `rootStyle` | `React.CSSProperties` | - | Inline styles for the root container |
+| `enableLiquidAnimation` | `boolean` | `false` | Enable click-based liquid animation effect |
+| `triggerAnimation` | `boolean` | `false` | Programmatically trigger liquid animation |
+| `className` | `string` | - | CSS class for the content wrapper |
+| `onClick` | `function` | - | Click handler (works with or without liquid animation) |
+
+## Advanced Usage
+
+### Polymorphic Usage
+
+```tsx
+// As a div (default)
+<Glass>Content</Glass>
+
+// As a button
+<Glass as="button" onClick={handleClick}>
+  Click Me
+</Glass>
+
+// As a section
+<Glass as="section">
+  <h1>Section Title</h1>
+</Glass>
+```
+
+### With Custom Styles
+
+```tsx
+<Glass
+  rootClassName="custom-glass"
+  rootStyle={{
+    padding: "40px",
+    borderRadius: "16px",
+    minHeight: "300px",
+  }}
+>
+  <h2>Customized Glass</h2>
+</Glass>
+```
+
+### Controlled Animation
+
+```tsx
+function AnimatedGlass() {
+  const [animate, setAnimate] = useState(false);
+
+  const handleTrigger = () => {
+    setAnimate(true);
+    setTimeout(() => setAnimate(false), 100);
+  };
+
+  return (
+    <>
+      <button onClick={handleTrigger}>Trigger Animation</button>
+      <Glass triggerAnimation={animate}>
+        <h2>Controlled Animation</h2>
+      </Glass>
+    </>
+  );
+}
+```
+
+## CSS Variables
+
+You can customize the glass appearance using CSS variables:
+
+```css
+:root {
+  --lg-bg-color: rgba(255, 255, 255, 0.10);
+  --lg-highlight: rgba(255, 255, 255, 0.25);
+  --lg-text: #ffffff;
+  --lg-hover-glow: rgba(255, 255, 255, 0.2);
+}
+```
+
+## Animation Details
+
+The liquid animation includes:
+- **Squish Effect**: Container squishes in a liquid-like motion
+- **Ripple Effect**: Radial ripple spreads from click point
+- **Distortion**: SVG filter creates organic distortion
+- **Glow Effect**: Specular highlights intensify during animation
+
+Duration: 800ms with custom cubic-bezier easing
+
+## Accessibility
+
+- Use semantic HTML elements via the `as` prop
+- Ensure sufficient color contrast for text content
+- Add appropriate ARIA attributes when needed
+- Consider reduced motion preferences for animations
+
+## Best Practices
+
+1. Use on colorful or gradient backgrounds for best visual effect
+2. Keep content readable by ensuring proper contrast
+3. Use `enableLiquidAnimation` sparingly for interactive elements
+4. Consider performance when using multiple animated instances
+5. Provide fallback styles for browsers without backdrop-filter support
