@@ -70,6 +70,8 @@ function App() {
 - 🔧 Customizable with props
 - 📦 Create your own custom components with Glass component
 
+>  ⚠️ NOTE: Safari and Firefox only partially support the effect (displacement will not be visible)
+
 ## Development
 
 ```bash
