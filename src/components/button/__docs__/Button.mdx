@@ -20,14 +20,15 @@ import { Button } from "react-glass-ui";
 const Example = () => {
   return (
       <Button
-        size={"small"}
         onClick={()=> console.log("Clicked")}
         variant={"default"}
+        size={"medium"}
       >
         Click me!
       </Button>
   );
 };
+
 
 export default Example;
 ```
@@ -36,9 +37,10 @@ export default Example;
 
 - **text** _`string`_ - A string that represents the text content of the button.
 - **children** _`React.ReactNode`_ - Content to render inside the button. Takes priority over `text` prop if both are provided.
-- **variant** _`"default" | "danger" | "link"`_ - The visual style variant of the button.
+- **variant** _`"default" | "positive" | "negative" | "warning"`_ - The visual style variant of the button. Uses colors from tailwind.config.
 - **disabled** _`boolean`_ - A boolean indicating whether the button should be disabled or not. When disabled, the button cannot be clicked or interacted with.
 - **size** _`"small" | "medium" | "large"`_ - Defines the size or dimensions of the button. Default is `"medium"`.
+- **rounded** _`boolean`_ - Makes the button circular. When true, the button will have a 1:1 aspect ratio with rounded corners. Default is `false`.
 - **onClick** _`(event: React.MouseEvent<HTMLButtonElement>) => void`_ - A function that is called when the button is clicked.
 - **enableClickAnimation** _`boolean`_ - A boolean indicating whether to enable the liquid bounce animation on click. Default is `true`.
 - **className** _`string`_ - Additional CSS classes to apply to the button.
