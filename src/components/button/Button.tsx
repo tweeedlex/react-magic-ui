@@ -6,9 +6,10 @@ import Glass from "../glass/Glass.tsx";
 export type ButtonProps = ComponentPropsWithoutRef<"button"> & {
   text?: string;
   children?: React.ReactNode;
-  variant?: "default" | "danger" | "link";
+  variant?: "default" | "positive" | "negative" | "warning";
   size?: "small" | "medium" | "large";
   enableClickAnimation?: boolean;
+  rounded?: boolean;
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
@@ -19,6 +20,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
   children,
   onClick,
   enableClickAnimation = true,
+  rounded = false,
   className,
   ...props
 }, ref) => {
@@ -40,8 +42,10 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
         variant && `bg-${variant}`,
         styles[size],
         disabled && styles.disabled,
+        rounded && styles.rounded,
         className,
       )}
+      rootClassName={rounded && styles.roundedRoot}
       disabled={disabled}
       {...props}
     >

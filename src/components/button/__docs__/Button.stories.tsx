@@ -19,22 +19,43 @@ export const Default: Story = {
   },
 };
 
-export const Danger: Story = {
+export const Positive: Story = {
   args: {
     text: "Button",
-    variant: "danger",
+    variant: "positive",
     disabled: false,
     size: "medium",
     onClick: () => console.log("Button"),
   },
 };
 
-export const Link: Story = {
+export const Negative: Story = {
   args: {
     text: "Button",
-    variant: "link",
+    variant: "negative",
     disabled: false,
     size: "medium",
     onClick: () => console.log("Button"),
+  },
+};
+
+export const Warning: Story = {
+  args: {
+    text: "Button",
+    variant: "warning",
+    disabled: false,
+    size: "medium",
+    onClick: () => console.log("Button"),
+  },
+};
+
+export const Rounded: Story = {
+  args: {
+    text: "+",
+    variant: "positive",
+    disabled: false,
+    size: "medium",
+    rounded: true,
+    onClick: () => console.log("Rounded Button"),
   },
 };

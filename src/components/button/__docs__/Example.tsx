@@ -7,6 +7,7 @@ const Example: FC<ButtonProps> = ({
                                     variant = "default",
                                     size = "small",
                                     text = "Button",
+                                    rounded = false
                                   }) => {
   return (
     <div
@@ -23,6 +24,7 @@ const Example: FC<ButtonProps> = ({
         disabled={disabled}
         onClick={onClick}
         variant={variant}
+        rounded={rounded}
       />
     </div>
   );

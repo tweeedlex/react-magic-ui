@@ -18,9 +18,9 @@ describe("Button component", () => {
   });
 
   it("applies variant and size specific classes", () => {
-    render(<Button text="danger" variant="danger" size="small" />);
+    render(<Button text="negative" variant="negative" size="small" />);
     const button = screen.getByRole("button") as HTMLButtonElement;
-    expect(button.className).toContain("bg-danger");
+    expect(button.className).toContain("bg-negative");
     expect(button.className).toContain("small");
     expect(button.className).toContain("text-sm");
   });

@@ -23,10 +23,32 @@
 }
 
 .large {
-    @apply text-base px-8 py-4;
+    @apply text-xl px-8 py-4;
 }
 
 // Disabled state
 .disabled {
     @apply opacity-50 cursor-not-allowed;
+}
+
+// Rounded variant
+.roundedRoot {
+    border-radius: 50% !important;
+    aspect-ratio: 1;
+}
+
+.rounded {
+    @apply aspect-square p-0;
+
+    &.small {
+        @apply w-8 h-8;
+    }
+
+    &.medium {
+        @apply w-12 h-12;
+    }
+
+    &.large {
+        @apply w-16 h-16;
+    }
 }
