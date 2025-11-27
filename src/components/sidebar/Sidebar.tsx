@@ -3,7 +3,6 @@ import React, {
   ReactNode,
   forwardRef,
   useCallback,
-  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -74,7 +73,6 @@ const SidebarBase = forwardRef<HTMLElement, SidebarProps>(
   ) => {
     const isCollapsedControlled = collapsedProp !== undefined;
     const [collapsedState, setCollapsedState] = useState(defaultCollapsed);
-    const [shouldAnimate, setShouldAnimate] = useState(false);
 
     const collapsed = isCollapsedControlled ? collapsedProp : collapsedState;
 
@@ -116,20 +114,6 @@ const SidebarBase = forwardRef<HTMLElement, SidebarProps>(
       [isActiveControlled, onSelectItem],
     );
 
-    // Trigger liquid animation on collapse/expand
-    useEffect(() => {
-      if (enableLiquidAnimation && collapsible) {
-        // Reset animation state
-        setShouldAnimate(false);
-
-        // Trigger animation after a short delay
-        const timer = setTimeout(() => {
-          setShouldAnimate(true);
-        }, 50);
-
-        return () => clearTimeout(timer);
-      }
-    }, [collapsed, enableLiquidAnimation, collapsible]);
 
     const contextValue = useMemo<SidebarContextValue>(
       () => ({
@@ -152,7 +136,7 @@ const SidebarBase = forwardRef<HTMLElement, SidebarProps>(
           as="aside"
           ref={ref}
           enableLiquidAnimation={false}
-          triggerAnimation={enableLiquidAnimation && shouldAnimate}
+          triggerAnimation={false}
           className={clsx(
             styles.sidebar,
             paddingXClass,
