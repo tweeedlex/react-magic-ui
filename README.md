@@ -88,6 +88,10 @@ npm run build
 npm test
 ```
 
+## Contributing
+Please read the [contributing guide](/CONTRIBUTING.md).
+
+
 ## License
 
 MIT © [@tweeedlex](https://github.com/tweeedlex)
