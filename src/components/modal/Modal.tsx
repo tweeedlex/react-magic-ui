@@ -148,8 +148,9 @@ const Modal: React.FC<ModalProps> = ({
   const showHeader = Boolean(title || description || onClose || onOpenChange);
 
   return createPortal(
-    <div className={styles.modalContainer}>
+    <div className={styles.modalContainer} data-testid="modal-container">
       <div
+        data-testid="modal-overlay"
         aria-hidden="true"
         className={styles.modalOverlay}
         onClick={

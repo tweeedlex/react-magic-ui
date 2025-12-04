@@ -39,8 +39,8 @@ describe("Modal component", () => {
   it("calls onOpenChange when overlay clicked", () => {
     const { onOpenChange } = renderModal();
 
-    const overlay = document.querySelector(".modal-overlay");
-    expect(overlay).not.toBeNull();
+    const overlay = screen.getByTestId("modal-overlay");
+    expect(overlay).toBeInTheDocument();
 
     if (overlay) {
       fireEvent.click(overlay);
@@ -52,8 +52,8 @@ describe("Modal component", () => {
   it("does not close when overlay click disabled", () => {
     const { onOpenChange } = renderModal({ closeOnOverlay: false });
 
-    const overlay = document.querySelector(".modal-overlay");
-    expect(overlay).not.toBeNull();
+    const overlay = screen.getByTestId("modal-overlay");
+    expect(overlay).toBeInTheDocument();
 
     if (overlay) {
       fireEvent.click(overlay);
@@ -74,7 +74,7 @@ describe("Modal component", () => {
     render(
       <Modal
         open
-        onOpenChange={() => {}}
+        onOpenChange={() => { }}
         title="Glass modal"
         description="Keeps the focus on your content."
       >
@@ -82,15 +82,15 @@ describe("Modal component", () => {
       </Modal>,
     );
 
-    const modalContainer = screen.getByRole('dialog').closest('.modal-container');
-    expect(modalContainer!.parentElement!.tagName).toBe("BODY");
+    const modalContainer = screen.getByTestId("modal-container");
+    expect(modalContainer.parentElement!.tagName).toBe("BODY");
   });
 
   it("locks body scroll while open and restores on close", () => {
     const { rerender } = render(
       <Modal
         open
-        onOpenChange={() => {}}
+        onOpenChange={() => { }}
         title="Glass modal"
         description="Keeps the focus on your content."
       >
@@ -103,7 +103,7 @@ describe("Modal component", () => {
     rerender(
       <Modal
         open={false}
-        onOpenChange={() => {}}
+        onOpenChange={() => { }}
         title="Glass modal"
         description="Keeps the focus on your content."
       >

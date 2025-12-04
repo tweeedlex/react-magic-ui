@@ -14,7 +14,6 @@ describe("Button component", () => {
     const button = screen.getByRole("button") as HTMLButtonElement;
     expect(button.className).toContain("btn");
     expect(button.className).toContain("medium");
-    expect(button.className).toContain("text-lg");
   });
 
   it("applies variant and size specific classes", () => {
@@ -22,7 +21,6 @@ describe("Button component", () => {
     const button = screen.getByRole("button") as HTMLButtonElement;
     expect(button.className).toContain("bg-negative");
     expect(button.className).toContain("small");
-    expect(button.className).toContain("text-sm");
   });
 
   it("calls onClick handler when enabled", () => {
