@@ -1,4 +1,10 @@
 # react-magic-ui
+[![npm version](https://img.shields.io/npm/v/react-magic-ui.svg)](https://www.npmjs.com/package/react-magic-ui)
+[![npm downloads](https://img.shields.io/npm/dm/react-magic-ui.svg)](https://www.npmjs.com/package/react-magic-ui)
+[![license](https://img.shields.io/npm/l/react-magic-ui.svg)](https://github.com/tweeedlex/react-magic-ui/blob/main/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/tweeedlex/react-magic-ui.svg)](https://github.com/tweeedlex/react-magic-ui/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/tweeedlex/react-magic-ui.svg)](https://github.com/tweeedlex/react-magic-ui/issues)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/tweeedlex/react-magic-ui/blob/main/CONTRIBUTING.md)
 
 A React component library for creating stunning liquid glass effect UI components.
 
