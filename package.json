@@ -1,6 +1,6 @@
 {
   "name": "react-magic-ui",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A React component library for building magical user interfaces with liquid glass effect",
   "author": "@tweeedlex",
   "license": "MIT",
@@ -13,7 +13,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tweeedxlex/react-magic-ui.git"
+    "url": "git+https://github.com/tweeedlex/react-magic-ui.git"
   },
   "bugs": {
     "url": "https://github.com/tweeedlex/react-magic-ui/issues"
