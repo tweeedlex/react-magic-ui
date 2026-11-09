@@ -119,6 +119,7 @@ const preview: Preview = {
         order: [
           "Introduction",
           "Glass",
+          "GlassText",
           "Button",
           "Badge",
           "Card",

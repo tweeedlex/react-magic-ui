@@ -1,0 +1,99 @@
+/* ==========================================================================
+   GlassText — glyphs cut out of liquid glass (iOS 26 lock screen clock).
+   Layers, bottom to top:
+     __glass  backdrop-filter, clipped to the glyph outlines (SVG clipPath)
+     __ink    the real text, transparent, with a soft top highlight
+     __rim    SVG copy of the text, stroked with a light edge gradient
+   ========================================================================== */
+
+.rmu-glass-text {
+  /* dark ink area (light theme default): the glass darkens what it covers */
+  --rmu-gt-filter: blur(4px) saturate(190%) brightness(.72);
+  --rmu-gt-fill: rgb(0 0 0 / .06);
+  --rmu-gt-hi: rgb(255 255 255 / .3);
+  --rmu-gt-shadow: rgb(0 0 0 / .14);
+
+  position: relative;
+  display: inline-block;
+  isolation: isolate;
+  white-space: nowrap;
+  font-family: var(--rmu-font);
+}
+.rmu-glass-text--tinted { --rmu-gt-fill: color-mix(in srgb, var(--rmu-gt-tint) 38%, transparent); }
+
+/* light ink area (dark photo, dark theme): the glass brightens */
+:where([data-glass-tone="light"], .dark, [data-theme="dark"]) .rmu-glass-text,
+.rmu-glass-text[data-glass-tone="light"] {
+  --rmu-gt-filter: blur(4px) saturate(200%) brightness(1.4);
+  --rmu-gt-fill: rgb(255 255 255 / .14);
+  --rmu-gt-hi: rgb(255 255 255 / .45);
+  --rmu-gt-shadow: rgb(0 0 0 / .22);
+}
+:where([data-glass-tone="dark"]) .rmu-glass-text,
+.rmu-glass-text[data-glass-tone="dark"] {
+  --rmu-gt-filter: blur(4px) saturate(190%) brightness(.72);
+  --rmu-gt-fill: rgb(0 0 0 / .06);
+  --rmu-gt-hi: rgb(255 255 255 / .3);
+  --rmu-gt-shadow: rgb(0 0 0 / .14);
+}
+:where([data-glass-tone]) .rmu-glass-text--tinted,
+.rmu-glass-text--tinted[data-glass-tone] {
+  --rmu-gt-fill: color-mix(in srgb, var(--rmu-gt-tint) 38%, transparent);
+}
+
+/* the glass and the rim overhang the line box: glyphs can be taller than it */
+.rmu-glass-text__glass,
+.rmu-glass-text__rim {
+  position: absolute;
+  inset: -.5em;
+  pointer-events: none;
+}
+
+.rmu-glass-text__glass {
+  background: var(--rmu-gt-fill);
+  -webkit-backdrop-filter: var(--rmu-gt-filter);
+  backdrop-filter: var(--rmu-gt-filter);
+}
+
+/* zero-size marker on the first glyph's baseline, measured by GlassText */
+.rmu-glass-text__probe {
+  display: inline-block;
+  width: 0;
+  height: 0;
+}
+
+.rmu-glass-text__ink {
+  position: relative;
+  color: transparent;
+  background: linear-gradient(170deg, var(--rmu-gt-hi) 0%, transparent 42%, transparent 75%,
+    color-mix(in srgb, var(--rmu-gt-hi) 40%, transparent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  /* an inherited shadow would show through the clear glyphs */
+  text-shadow: none;
+}
+
+.rmu-glass-text__rim {
+  width: calc(100% + 1em);
+  height: calc(100% + 1em);
+  overflow: visible;
+  filter: drop-shadow(0 1px 3px var(--rmu-gt-shadow));
+}
+.rmu-glass-text__rim text {
+  fill: none;
+  stroke-width: max(1px, .012em);
+}
+
+/* until measured (server render, first frame): plain text in the inherited colour */
+.rmu-glass-text:not([data-ready]) .rmu-glass-text__glass,
+.rmu-glass-text:not([data-ready]) .rmu-glass-text__rim { visibility: hidden; }
+.rmu-glass-text:not([data-ready]) .rmu-glass-text__ink { color: inherit; background: none; }
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .rmu-glass-text__glass, .rmu-glass-text__rim { display: none; }
+  .rmu-glass-text__ink { color: inherit; background: none; }
+}
+@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
+  .rmu-glass-text__glass, .rmu-glass-text__rim { display: none; }
+  .rmu-glass-text__ink { color: inherit; background: none; }
+}

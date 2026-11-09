@@ -1,0 +1,37 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+import * as GlassTextStories from "./GlassText.stories.tsx";
+
+<Meta of={GlassTextStories} title="GlassText" />
+
+# GlassText
+
+Text made of liquid glass, like the iOS 26 lock screen clock. Each glyph blurs and brightens what is behind it and has a light rim on its edges. Use it for large display text, such as a clock or a hero title, over a photo or a gradient.
+
+<Canvas of={GlassTextStories.Clock} />
+
+## Usage
+
+```tsx
+import { GlassText } from "react-magic-ui";
+
+<GlassText as="h1" tone="light" style={{ fontSize: 120, fontWeight: 700 }}>
+  9:41
+</GlassText>
+```
+
+The text stays real text: it can be selected, copied and read by screen readers. Size and weight come from your CSS; the glass follows them.
+
+#### Props
+
+- **children** _`string | number`_ - The text. One line: it never wraps.
+- **as** _`"span" | "div" | "p" | "h1" … "h6"`_ - Element to render. Default `"span"`.
+- **tone** _`"auto" | "light" | "dark"`_ - `"light"` brightens the glass (over dark photos, dark theme); `"dark"` darkens it. `"auto"` follows `data-glass-tone` and the theme.
+- **tint** _`string`_ - Tint the glass with any CSS colour.
+- Plus every HTML attribute, `className`, `style` and `ref`.
+
+#### Notes
+
+- Pick big, bold type: below about 40px the glyphs are too thin to show the glass.
+- Browsers without `backdrop-filter`, and users with reduced transparency, get plain text in the inherited colour.
+
+<Canvas of={GlassTextStories.OnLight} />

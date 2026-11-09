@@ -64,6 +64,7 @@ UI components come from react-magic-ui. Read node_modules/react-magic-ui/llms.tx
 - **Modal** — sheet that keeps the page scrollbar
 - **Toast** — `ToastProvider` + `useToast()`
 - **Topbar**, **Sidebar** — navigation bars
+- **GlassText** — glass glyphs, like the iOS 26 lock screen clock
 - **Glass** — the material itself, for your own surfaces
 
 ## Theming
