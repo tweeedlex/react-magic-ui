@@ -15,6 +15,8 @@ export default defineConfig({
     },
     rollupOptions: {
       external: (id: string) => [...Object.keys(dependencies), ...Object.keys(peerDependencies)].some((dep) => id === dep || id.startsWith(`${dep}/`)),
+      // every component uses hooks: mark the bundle as client code for React Server Components (Next.js app router)
+      output: { banner: '"use client";' },
     },
     sourcemap: true,
     emptyOutDir: true,

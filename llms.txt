@@ -1,0 +1,191 @@
+# react-magic-ui
+
+> Liquid glass React components in the style of Apple iOS 26. Plain CSS, React 18/19, TypeScript types and JSDoc on every prop. This file is the short guide for AI agents and people new to the kit. Also shipped in the package: `node_modules/react-magic-ui/llms.txt`.
+
+## Setup
+
+```bash
+npm install react-magic-ui
+```
+
+```tsx
+// once, at the app entry (main.tsx, app/layout.tsx, _app.tsx)
+import "react-magic-ui/style.css";
+```
+
+- Components are client components (the bundle starts with `"use client"`), so they work in the Next.js app router and render on the server without touching `window`.
+- Font: system SF Pro on Apple devices, Inter (bundled, loaded by the JS import) elsewhere.
+- Glass needs something behind it. Put the UI over an image, video, gradient or colourful page. Over a flat colour, glass just looks grey.
+
+## Rules (follow these, they are how iOS 26 does it)
+
+1. **Don't put glass on glass yourself.** Nesting is handled: any kit component inside another glass surface (Card, Topbar, Sidebar, Modal…) renders as an inner layer of it automatically. Never wrap a `Card` in a `Glass` just for looks.
+2. **One prominent action per screen or bar**, on the trailing side. Everything else is `variant="glass"` (the default).
+3. **Red is a role, not a style.** Use `destructive` for delete/remove. There are no success/warning/info buttons or badges.
+4. **Status colours belong to toasts**, not buttons: `showToast({ variant: "success" | "error" | "info" })`.
+5. **Badges**: a glass label (`<Badge>Beta</Badge>`) or the red notification count (`variant="notification"`).
+6. **Switches are green when on**, as on iOS. Change with `tint` only for a reason (brand colour).
+7. **Content panels** that hold lots of text can use `material="frosted"` (softer blur, no lens). Controls and bars stay `"glass"`.
+8. **Every value control is controlled or uncontrolled** with the same names:
+   - booleans: `checked` / `defaultChecked` / `onCheckedChange` (Switch, Checkbox)
+   - values: `value` / `defaultValue` / `onValueChange` (Select, Slider, Tabs)
+   - open state: `open` / `onOpenChange` (Modal, Select's `onOpenChange`)
+9. **Accessibility**: icon-only buttons need `aria-label`; Switch, Slider and Select need `aria-label` or a visible `<label>`.
+
+## Theme and ink
+
+- Dark theme: add class `dark` (or `data-theme="dark"`) on `<html>` or any ancestor.
+- Ink (text colour on glass): `tone="auto" | "light" | "dark"` on a component, or `data-glass-tone="light" | "dark"` on any ancestor for a whole area. Use `tone="light"` (light text) over dark photos in the light theme.
+- Colours are CSS variables you can override on `:root`:
+  `--rmu-accent` (prominent buttons, slider fill; default `--rmu-blue`), `--rmu-blue`, `--rmu-green`, `--rmu-red`, `--rmu-orange`, `--rmu-gray`, `--rmu-font`.
+- Every component takes `className` and `style` on its root, and forwards `ref`.
+
+## Components
+
+### Button
+```tsx
+<Button onClick={cancel}>Cancel</Button>
+<Button variant="prominent" onClick={save}>Done</Button>
+<Button destructive onClick={remove}>Delete</Button>
+<Button variant="prominent" destructive>Delete account</Button>
+<Button variant="prominent" tint="var(--rmu-green)">Answer</Button>
+<Button rounded aria-label="Search"><SearchIcon /></Button>
+```
+Props: `variant` `"glass" | "prominent"` (default glass), `destructive`, `tint` (any CSS colour), `size` `"small" | "medium" | "large"` (32/44/52px), `rounded` (circle icon button), `text` or `children`, plus all `<button>` props.
+
+### Badge
+```tsx
+<Badge>Beta</Badge>
+<Badge tint="var(--rmu-blue)">New</Badge>
+<Badge variant="notification" aria-label="3 unread">3</Badge>
+```
+Props: `variant` `"default" | "notification"`, `tint`, `leadingIcon`, `trailingIcon`.
+
+### Card
+```tsx
+<Card>
+  <h3>Settings</h3>
+  <Switch aria-label="Wi-Fi" />
+</Card>
+```
+Props: `size` `"small" | "medium" | "large"`, `direction` `"column" | "row"`, `align`, `justify`, `gap` (px), `material` `"glass" | "frosted"`.
+
+### Input
+```tsx
+<Input placeholder="Search" leadingIcon={<SearchIcon />} value={q} onChange={(e) => setQ(e.target.value)} />
+```
+Props: all `<input>` props (`ref` and `className` go to the `<input>`), `size`, `leadingIcon`, `trailingIcon`, `invalid`, `wrapperClassName`, `wrapperStyle`.
+
+### Switch
+```tsx
+<Switch aria-label="Wi-Fi" checked={wifi} onCheckedChange={setWifi} />
+```
+Props: `checked`, `defaultChecked`, `onCheckedChange`, `tint`, `size`, `disabled`.
+
+### Checkbox
+```tsx
+<Checkbox label="Remember me" checked={remember} onCheckedChange={setRemember} />
+```
+Props: `checked`, `defaultChecked`, `onCheckedChange`, `label`, `size`, `disabled`.
+
+### Slider
+```tsx
+<Slider aria-label="Volume" value={volume} onValueChange={setVolume} showValue />
+```
+Props: `value`, `defaultValue` (50), `onValueChange`, `min` (0), `max` (100), `step` (1), `size`, `showValue`, `disabled`. Keyboard: arrows, Page Up/Down, Home/End.
+
+### Select
+```tsx
+<Select
+  aria-label="Size"
+  options={[{ value: "s", label: "Small" }, { value: "l", label: "Large" }]}
+  value={size}
+  onValueChange={setSize}
+  name="size" // optional: posts with a <form>
+/>
+```
+Props: `options` (`{ value, label, disabled? }[]`), `value`, `defaultValue`, `onValueChange`, `onOpenChange`, `placeholder`, `name`, `size`, `disabled`, `id`. `ref` points at the trigger button.
+
+### Tabs
+```tsx
+<Tabs defaultValue="day">
+  <Tabs.List aria-label="Range">
+    <Tabs.Trigger value="day">Day</Tabs.Trigger>
+    <Tabs.Trigger value="week">Week</Tabs.Trigger>
+  </Tabs.List>
+  <Tabs.Content value="day">…</Tabs.Content>
+  <Tabs.Content value="week">…</Tabs.Content>
+</Tabs>
+```
+Props: `value`, `defaultValue`, `onValueChange`, `activationMode` `"auto" | "manual"`, `orientation`. `Tabs.Content` takes `lazyMount`.
+
+### Modal
+```tsx
+<Modal
+  open={open}
+  onOpenChange={setOpen}
+  title="Delete photo?"
+  description="This can't be undone."
+  footer={<>
+    <Button onClick={() => setOpen(false)}>Cancel</Button>
+    <Button variant="prominent" destructive onClick={remove}>Delete</Button>
+  </>}
+/>
+```
+Props: `open`, `onOpenChange` / `onClose`, `title`, `description`, `footer`, `children`, `size` `"sm" | "md" | "lg"`, `closeOnOverlay`, `closeOnEsc`, `lockScroll` (keeps the scrollbar, blocks page scroll), `portalContainer`. Portals to `document.body` and keeps the theme and tone of where it's declared.
+
+### Toast
+```tsx
+// once near the root
+<ToastProvider position="top-right" duration={4000}>
+  <App />
+</ToastProvider>
+
+// anywhere below
+const { showToast, dismissToast, clearToasts } = useToast();
+showToast({ variant: "success", title: "Saved", description: "Synced to iCloud." });
+```
+Toast fields: `title`, `description`, `variant` `"default" | "success" | "error" | "info"`, `duration` (ms, `Infinity` to keep), `position`, `animation` `"slide-from-right" | "slide-from-left" | "slide-from-bottom" | "scale"`, `id`, `onClose`. `showToast` returns the id.
+
+### Topbar
+```tsx
+<Topbar size="compact">
+  <Topbar.Brand icon={<Logo />} title="My app" subtitle="Dashboard" />
+  <Topbar.Section grow><Input placeholder="Search" /></Topbar.Section>
+  <Topbar.Actions>
+    <Button size="small">Share</Button>
+    <Button size="small" variant="prominent">New</Button>
+  </Topbar.Actions>
+</Topbar>
+```
+Parts: `Topbar.Brand`, `Topbar.Section` (`grow`, `align`, `gap`, `wrap`), `Topbar.Actions` (`gap`), `Topbar.Divider`. Props: `size` `"compact" | "comfortable" | "spacious"`, `elevated`.
+
+### Sidebar
+```tsx
+<Sidebar collapsible activeItemId={page} onSelectItem={setPage}>
+  <Sidebar.Header>My app<Sidebar.Toggle /></Sidebar.Header>
+  <Sidebar.Items>
+    <Sidebar.Item itemId="home" icon={<HomeIcon />}>Home</Sidebar.Item>
+    <Sidebar.Item itemId="inbox" icon={<InboxIcon />} badge={<Badge variant="notification">3</Badge>}>Inbox</Sidebar.Item>
+  </Sidebar.Items>
+  <Sidebar.Footer>v2.0</Sidebar.Footer>
+</Sidebar>
+```
+Props: `activeItemId`, `defaultActiveItemId`, `onSelectItem(itemId, event)`, `collapsible`, `collapsed`, `defaultCollapsed`, `onToggle`, `size`. Collapsed, it shows icons only.
+
+### Glass (build your own surface)
+```tsx
+<Glass className="player" style={{ padding: 16, borderRadius: 24 }}>Now playing</Glass>
+<Glass as="button" interactive onClick={play}>Play</Glass>
+```
+Props: `as` (any element or component), `interactive` (hover + press spring), `selected`, `material`, `tone`, `lens` (rim refraction, Chromium only; other browsers get flat glass), `layer` `"auto" | "surface" | "inner"`. Use `layer="surface"` for floating things that must stay real glass (popovers). `useGlassDepth()` tells a custom component whether it sits on glass.
+
+## Types
+
+Every prop type is exported: `ButtonProps`, `ButtonVariant`, `BadgeProps`, `SelectOption`, `ToastDefinition`, `ToastVariant`, `GlassTone`, `ModalSize` and so on.
+
+## Links
+
+- Storybook: https://react-magic-ui-docs.netlify.app/
+- Demo: https://react-magic-ui-demo.netlify.app/
+- Source: https://github.com/tweeedlex/react-magic-ui

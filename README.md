@@ -6,80 +6,73 @@
 [![GitHub issues](https://img.shields.io/github/issues/tweeedlex/react-magic-ui.svg)](https://github.com/tweeedlex/react-magic-ui/issues)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/tweeedlex/react-magic-ui/blob/main/CONTRIBUTING.md)
 
-A React component library for creating stunning liquid glass effect UI components.
+Liquid glass React components in the style of Apple iOS 26. Plain CSS, typed, with JSDoc on every prop.
 
 ![Screenshot](https://raw.githubusercontent.com/tweeedlex/react-magic-ui/main/public/assets/demo.png)
 
-### [🚀 Live demo](https://react-magic-ui-demo.netlify.app/)
-Here you can mess with the components. Enjoy!
+### [🚀 Live demo](https://react-magic-ui-demo.netlify.app/) · [📚 Storybook](https://react-magic-ui-docs.netlify.app/)
 
 ## Installation
 
-1. Install the library using npm: 
 ```bash
 npm install react-magic-ui
 ```
 
-2. Import styles in your main application file (e.g., `index.tsx` or `App.tsx`):
+Import the styles once, at your app entry (`main.tsx`, `app/layout.tsx`, `_app.tsx`):
 
+```ts
+import "react-magic-ui/style.css";
 ```
-import 'react-magic-ui/dist/react-magic-ui.css'
-```
 
-## Documentation
-
-### [📚 Live Component Examples in Storybook](https://react-magic-ui-docs.netlify.app/)
-
-Explore all components with interactive examples, props documentation, and live code previews in our Storybook.
+Works with React 18 and 19. The bundle is marked `"use client"`, so it drops into the Next.js app router as is.
 
 ## Usage
 
-Import the components you need:
-
 ```tsx
-import { Button, Card } from 'react-magic-ui';
+import { Button, Card, Switch } from "react-magic-ui";
 
-function App() {
+function Settings() {
+  const [wifi, setWifi] = useState(true);
   return (
-    <section>
-      <Button>
-        Click me
-      </Button>
-      <Card>
-        <h2>Beautiful Card</h2>
-        <p>With liquid glass effect</p>
-      </Card>
-    </section>
+    <Card>
+      <h3>Settings</h3>
+      <Switch aria-label="Wi-Fi" checked={wifi} onCheckedChange={setWifi} />
+      <Button variant="prominent">Done</Button>
+    </Card>
   );
 }
 ```
 
-## Available Components
+Glass needs something behind it: put the UI over an image, video or gradient.
 
-- **Button** - Customizable button with liquid glass effect
-- **Card** - Container with glassmorphism styling
-- **Input** - Styled input field
-- **Switch** - Toggle switch component
-- **Toast** - Notification toast messages
-- **Modal** - Modal dialog component
-- **Tabs** - Tabbed interface component
-- **Badge** - Label and badge component
-- **Sidebar** - Navigation sidebar
-- **Topbar** - Top navigation bar
-- **Checkbox** - Checkbox component
-- **Select** - Select component
-- **Slider** - Slider component
-- **Glass** - Base glass effect wrapper (used for creating custom components)
+## Using it with AI agents
 
-## Features
+The package ships [`llms.txt`](./llms.txt): setup, the iOS 26 rules (no glass on glass, one prominent action, red only for destructive), and a copy-paste example for every component. Point your agent at `node_modules/react-magic-ui/llms.txt`, or add a line like this to your `AGENTS.md` / `CLAUDE.md`:
 
-- 📱 14 components for your basic needs
-- 🎨 Beautiful liquid glass effect
-- 🌈 Liquid-like glassmorphism animations
-- 🔧 Customizable with props
-- 📦 Create your own custom components with Glass component
+```md
+UI components come from react-magic-ui. Read node_modules/react-magic-ui/llms.txt before using them.
+```
 
->  ⚠️ NOTE: Safari and Firefox only partially support the effect (displacement will not be visible)
+## Components
+
+- **Button** — `glass` and `prominent` styles, `destructive` role, custom `tint`
+- **Badge** — glass label or red notification count
+- **Card** — glass or frosted panel for content
+- **Input** — capsule text field with icons
+- **Switch**, **Checkbox**, **Slider**, **Select** — controls with one naming scheme (`checked`/`onCheckedChange`, `value`/`onValueChange`)
+- **Tabs** — segmented control with a sliding pill
+- **Modal** — sheet that keeps the page scrollbar
+- **Toast** — `ToastProvider` + `useToast()`
+- **Topbar**, **Sidebar** — navigation bars
+- **Glass** — the material itself, for your own surfaces
+
+## Theming
+
+- Dark theme: class `dark` (or `data-theme="dark"`) on any ancestor.
+- Text colour on glass: `tone="light" | "dark"` on a component, or `data-glass-tone` on any ancestor.
+- Colours are CSS variables: `--rmu-accent`, `--rmu-blue`, `--rmu-green`, `--rmu-red`, `--rmu-orange`, `--rmu-gray`, `--rmu-font`.
+
+> The rim refraction (lens) needs Chromium. Safari and Firefox get the same glass without the bend at the edge.
 
 ## Featured In
 - 📰 [[Medium] JavaScript in Plain English](https://javascript.plainenglish.io/react-magic-ui-e4289a3a0e8b)
@@ -107,3 +100,8 @@ Please read the [contributing guide](/CONTRIBUTING.md).
 ## License
 
 MIT © [@tweeedlex](https://github.com/tweeedlex)
+
+### Third-party
+
+- Icons from [Framework7 Icons](https://github.com/framework7io/framework7-icons), MIT © Vladimir Kharlampidi.
+- [Inter](https://rsms.me/inter/) font via [Fontsource](https://fontsource.org/fonts/inter), SIL Open Font License 1.1.

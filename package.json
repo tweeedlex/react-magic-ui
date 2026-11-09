@@ -26,7 +26,8 @@
     "./style.css": "./dist/react-magic-ui.css"
   },
   "files": [
-    "/dist"
+    "/dist",
+    "llms.txt"
   ],
   "repository": {
     "type": "git",
@@ -100,6 +101,6 @@
     "react-dom": ">=18"
   },
   "sideEffects": [
-    "*.css"
+    "**/*.css"
   ]
 }
