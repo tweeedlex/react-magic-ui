@@ -37,6 +37,16 @@ export const Spacious: Story = {
   },
 };
 
+/** Bare title, glass only on the controls (like an iOS navigation bar). */
+export const BareBrand: Story = {
+  args: { size: "compact", brandGlass: false },
+};
+
+/** The old look: one glass capsule across the full width. */
+export const Bar: Story = {
+  args: { variant: "bar", search: true },
+};
+
 export const Flat: Story = {
   args: {
     elevated: false,

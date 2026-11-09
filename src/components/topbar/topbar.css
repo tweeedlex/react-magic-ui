@@ -1,16 +1,52 @@
-/* floating glass bar (iOS 26 toolbars float, they don't span edge to edge) */
 .rmu-topbar-topbar {
   display: flex;
   align-items: center;
   box-sizing: border-box;
   width: 100%;
+}
+
+/* sizes: island/bar height, inner inset, text */
+.rmu-topbar-compact     { --rmu-topbar-h: 48px; --rmu-topbar-pad: 6px;  --rmu-topbar-brand-pad: 16px; --rmu-topbar-icon: 30px; gap: 12px; font-size: 14px; --rmu-topbar-tracking: var(--rmu-tracking-14); }
+.rmu-topbar-comfortable { --rmu-topbar-h: 60px; --rmu-topbar-pad: 8px;  --rmu-topbar-brand-pad: 20px; --rmu-topbar-icon: 36px; gap: 16px; font-size: 15px; --rmu-topbar-tracking: var(--rmu-tracking-15); }
+.rmu-topbar-spacious    { --rmu-topbar-h: 72px; --rmu-topbar-pad: 10px; --rmu-topbar-brand-pad: 24px; --rmu-topbar-icon: 42px; gap: 20px; font-size: 16px; --rmu-topbar-tracking: var(--rmu-tracking-16); }
+
+/* variant="bar": one floating glass capsule (iOS 26 toolbars don't span edge to edge) */
+.rmu-topbar-bar {
+  min-height: var(--rmu-topbar-h);
+  padding: var(--rmu-topbar-pad) calc(var(--rmu-topbar-pad) + 2px) var(--rmu-topbar-pad) var(--rmu-topbar-brand-pad);
   border-radius: 999px;
 }
-.rmu-topbar-elevated { --rmu-edge-extra: 0 12px 32px rgb(0 0 0 / .14); box-shadow: var(--rmu-edge), var(--rmu-edge-extra); }
+.rmu-topbar-bar.rmu-topbar-spacious { border-radius: 28px; }
+.rmu-topbar-bar.rmu-topbar-elevated { --rmu-edge-extra: 0 12px 32px rgb(0 0 0 / .14); box-shadow: var(--rmu-edge), var(--rmu-edge-extra); }
 
-.rmu-topbar-compact     { min-height: 48px; padding: 6px 8px 6px 16px; gap: 12px; font-size: 14px; --rmu-topbar-tracking: var(--rmu-tracking-14); }
-.rmu-topbar-comfortable { min-height: 60px; padding: 8px 10px 8px 20px; gap: 16px; font-size: 15px; --rmu-topbar-tracking: var(--rmu-tracking-15); }
-.rmu-topbar-spacious    { min-height: 72px; padding: 10px 12px 10px 24px; gap: 20px; font-size: 16px; border-radius: 28px; --rmu-topbar-tracking: var(--rmu-tracking-16); }
+/* variant="islands": no bar; glass only where there is content */
+.rmu-topbar-islands { background: none; }
+.rmu-topbar-island {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  box-sizing: border-box;
+  min-height: var(--rmu-topbar-h);
+  padding: var(--rmu-topbar-pad);
+  border-radius: 999px;
+}
+.rmu-topbar-islandElevated { --rmu-edge-extra: 0 8px 24px rgb(0 0 0 / .14); box-shadow: var(--rmu-edge), var(--rmu-edge-extra); }
+.rmu-topbar-topbarBrand.rmu-topbar-island { flex: 0 1 auto; padding-inline: var(--rmu-topbar-brand-pad); }
+/* the icon sits concentric with the capsule end: same inset on three sides */
+.rmu-topbar-topbarBrand.rmu-topbar-brandIslandWithIcon { padding-left: calc((var(--rmu-topbar-h) - var(--rmu-topbar-icon)) / 2); }
+.rmu-topbar-island .rmu-topbar-brandIcon { border-radius: 999px; }
+/* a lone button in the islands variant is an island itself: match the height
+   (also when wrapped in a link: <a href><Button/></a>) */
+.rmu-topbar-islands > .rmu-button,
+.rmu-topbar-islands > a > .rmu-button,
+.rmu-topbar-islands .rmu-topbar-topbarSection > .rmu-button,
+.rmu-topbar-islands .rmu-topbar-topbarSection > a > .rmu-button {
+  height: var(--rmu-topbar-h);
+  padding-inline: var(--rmu-topbar-brand-pad);
+}
+.rmu-topbar-islands .rmu-button.rmu-button--rounded { padding: 0; }
+
+.rmu-topbar-topbarGroup { display: flex; align-items: center; min-width: 0; }
 
 .rmu-topbar-topbarSection { display: flex; align-items: center; min-width: 0; }
 .rmu-topbar-sectionGrow   { flex: 1; min-width: 0; }
