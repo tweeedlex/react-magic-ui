@@ -8,7 +8,7 @@
 
 Liquid glass React components in the style of Apple iOS 26. Plain CSS, typed, with JSDoc on every prop.
 
-![Screenshot](https://raw.githubusercontent.com/tweeedlex/react-magic-ui/main/public/assets/demo.png)
+![Screenshot](https://raw.githubusercontent.com/tweeedlex/react-magic-ui/main/public/assets/demo.jpg)
 
 ### [🚀 Live demo](https://react-magic-ui-demo.netlify.app/) · [📚 Storybook](https://react-magic-ui-docs.netlify.app/)
 

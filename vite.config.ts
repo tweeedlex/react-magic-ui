@@ -35,8 +35,9 @@ export default defineConfig({
       name: 'remove-demo-assets',
       closeBundle() {
         try {
-          const demoPath = join(process.cwd(), 'dist', 'assets', 'demo.png');
-          rmSync(demoPath, { force: true });
+          for (const name of ['demo.png', 'demo.jpg']) {
+            rmSync(join(process.cwd(), 'dist', 'assets', name), { force: true });
+          }
         } catch { /* empty */ }
       },
     },
