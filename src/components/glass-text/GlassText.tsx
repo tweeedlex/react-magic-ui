@@ -27,13 +27,29 @@ export type GlassTextProps = Omit<React.HTMLAttributes<HTMLElement>, "children">
 type Origin = { x: number; y: number };
 
 /**
+ * Chromium drops the clip-path (and mask) of a backdrop-filter element when
+ * an ancestor clips its overflow with rounded corners: the glass then fills
+ * its whole box. Inside such a box GlassText draws frosted glyphs instead.
+ */
+const insideRoundedClip = (el: HTMLElement) => {
+  for (let node = el.parentElement; node && node !== document.body; node = node.parentElement) {
+    const cs = getComputedStyle(node);
+    if ((cs.overflowX !== "visible" || cs.overflowY !== "visible") && /[1-9]/.test(cs.borderRadius)) return true;
+  }
+  return false;
+};
+
+/**
  * Text made of liquid glass, like the iOS 26 lock screen clock: each glyph
  * bends and brightens what is behind it, with a light rim on its edges.
  * Meant for large display text (clocks, hero titles) over a photo or
  * gradient. The text stays real text: selectable, read by screen readers.
  *
  * Browsers without backdrop-filter, and the reduced-transparency setting,
- * get plain text in the inherited colour.
+ * get plain text in the inherited colour. Inside a box that clips its
+ * overflow with rounded corners (`overflow: hidden` + `border-radius`)
+ * Chromium cannot cut the glass to the glyphs, so it draws frosted glyphs
+ * without the blur there.
  *
  * @example
  * <GlassText as="h1" tone="light" style={{ fontSize: 120, fontWeight: 700 }}>9:41</GlassText>
@@ -52,6 +68,7 @@ const GlassText = forwardRef<HTMLElement, GlassTextProps>(
     // where the first glyph's baseline sits inside the glass layer; the SVG
     // copies of the text (clip shape and rim) are drawn from that point
     const [origin, setOrigin] = useState<Origin | null>(null);
+    const [flat, setFlat] = useState(false);
 
     useIsoLayoutEffect(() => {
       const root = rootRef.current;
@@ -61,6 +78,7 @@ const GlassText = forwardRef<HTMLElement, GlassTextProps>(
       const measure = () => {
         const next = { x: probe.offsetLeft - glass.offsetLeft, y: probe.offsetTop - glass.offsetTop };
         setOrigin((prev) => (prev && prev.x === next.x && prev.y === next.y ? prev : next));
+        setFlat(insideRoundedClip(root));
       };
       measure();
       const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(measure) : null;
@@ -84,6 +102,7 @@ const GlassText = forwardRef<HTMLElement, GlassTextProps>(
         style={vars ? { ...vars, ...style } : style}
         data-glass-tone={tone === "auto" ? undefined : tone}
         data-ready={origin ? "" : undefined}
+        data-flat={flat ? "" : undefined}
         {...rest}
       >
         <span ref={glassRef} className="rmu-glass-text__glass" aria-hidden="true" style={{ clipPath: `url(#${clipId})` }} />

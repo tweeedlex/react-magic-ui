@@ -181,7 +181,7 @@ Props: `activeItemId`, `defaultActiveItemId`, `onSelectItem(itemId, event)`, `co
 ```tsx
 <GlassText as="h1" tone="light" style={{ fontSize: 120, fontWeight: 700 }}>9:41</GlassText>
 ```
-Glyphs made of glass, like the iOS 26 lock screen clock. One line, big bold type (40px+), over a photo or gradient. Props: `children` (string or number), `as` (`"span"`, `"h1"`…), `tone`, `tint`. Stays real text for selection and screen readers; falls back to plain text without backdrop-filter or with reduced transparency.
+Glyphs made of glass, like the iOS 26 lock screen clock. One line, big bold type (40px+), over a photo or gradient. Props: `children` (string or number), `as` (`"span"`, `"h1"`…), `tone`, `tint`. Stays real text for selection and screen readers; falls back to plain text without backdrop-filter or with reduced transparency. Inside a box with `overflow: hidden` and `border-radius` Chromium can't cut the glass to the glyphs, so GlassText draws frosted glyphs there; keep it out of such boxes for the full effect.
 
 ### Glass (build your own surface)
 ```tsx

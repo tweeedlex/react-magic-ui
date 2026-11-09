@@ -24,6 +24,26 @@ describe("GlassText", () => {
     expect(root.querySelector(`clipPath[id="${id}"] text`)?.textContent).toBe("Hello");
   });
 
+  it("falls back to frosted glyphs inside a rounded box that clips", () => {
+    const { container } = render(
+      <div style={{ overflow: "hidden", borderRadius: 12 }}>
+        <div>
+          <GlassText>9:41</GlassText>
+        </div>
+      </div>,
+    );
+    expect(container.querySelector(".rmu-glass-text")?.hasAttribute("data-flat")).toBe(true);
+  });
+
+  it("keeps the real glass in a plain or square-clipped box", () => {
+    const { container } = render(
+      <div style={{ overflow: "hidden" }}>
+        <GlassText>9:41</GlassText>
+      </div>,
+    );
+    expect(container.querySelector(".rmu-glass-text")?.hasAttribute("data-flat")).toBe(false);
+  });
+
   it("passes tone, tint and ref through", () => {
     const ref = React.createRef<HTMLElement>();
     render(<GlassText ref={ref} tone="light" tint="red">12</GlassText>);

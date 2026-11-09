@@ -27,7 +27,14 @@ body {
 .sb-stage--docs {
   min-height: 280px;
   padding: 48px 32px;
+  overflow: visible;
 }
+/* the docs canvas clips with rounded corners, which stops Chromium from
+   cutting backdrop-filter glass to a shape (GlassText); round the stage
+   instead and let the canvas show it as is */
+.sbdocs-preview:has(.sb-stage),
+.sbdocs-preview:has(.sb-stage) .docs-story { overflow: visible; }
+.sbdocs-preview:has(.sb-stage) .sb-stage--docs { border-radius: 11px; }
 
 .sb-stage__content {
   display: flex;

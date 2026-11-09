@@ -12,6 +12,7 @@
   --rmu-gt-fill: rgb(0 0 0 / .06);
   --rmu-gt-hi: rgb(255 255 255 / .3);
   --rmu-gt-shadow: rgb(0 0 0 / .14);
+  --rmu-gt-flat: rgb(0 0 0 / .16);
 
   position: relative;
   display: inline-block;
@@ -28,6 +29,7 @@
   --rmu-gt-fill: rgb(255 255 255 / .14);
   --rmu-gt-hi: rgb(255 255 255 / .45);
   --rmu-gt-shadow: rgb(0 0 0 / .22);
+  --rmu-gt-flat: rgb(255 255 255 / .26);
 }
 :where([data-glass-tone="dark"]) .rmu-glass-text,
 .rmu-glass-text[data-glass-tone="dark"] {
@@ -35,6 +37,7 @@
   --rmu-gt-fill: rgb(0 0 0 / .06);
   --rmu-gt-hi: rgb(255 255 255 / .3);
   --rmu-gt-shadow: rgb(0 0 0 / .14);
+  --rmu-gt-flat: rgb(0 0 0 / .16);
 }
 :where([data-glass-tone]) .rmu-glass-text--tinted,
 .rmu-glass-text--tinted[data-glass-tone] {
@@ -82,6 +85,14 @@
 .rmu-glass-text__rim text {
   fill: none;
   stroke-width: max(1px, .012em);
+}
+
+/* inside a rounded box that clips its overflow the glass can't be cut to the
+   glyphs (Chromium), so the glyphs get a frosted fill instead of the blur */
+.rmu-glass-text[data-flat] .rmu-glass-text__glass { display: none; }
+.rmu-glass-text[data-flat] .rmu-glass-text__ink { background-color: var(--rmu-gt-flat); }
+.rmu-glass-text--tinted[data-flat] .rmu-glass-text__ink {
+  background-color: color-mix(in srgb, var(--rmu-gt-tint) 45%, transparent);
 }
 
 /* until measured (server render, first frame): plain text in the inherited colour */
