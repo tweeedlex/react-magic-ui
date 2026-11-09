@@ -86,7 +86,12 @@ describe("Modal component", () => {
     expect(modalContainer.parentElement!.tagName).toBe("BODY");
   });
 
-  it("locks body scroll while open and restores on close", () => {
+  it("blocks page wheel scroll while open, keeps the scrollbar, unlocks on close", () => {
+    const wheel = () => {
+      const event = new WheelEvent("wheel", { bubbles: true, cancelable: true, deltaY: 100 });
+      document.body.dispatchEvent(event);
+      return event.defaultPrevented;
+    };
     const { rerender } = render(
       <Modal
         open
@@ -98,7 +103,8 @@ describe("Modal component", () => {
       </Modal>,
     );
 
-    expect(document.body.style.overflow).toBe("hidden");
+    expect(document.body.style.overflow).toBe("");
+    expect(wheel()).toBe(true);
 
     rerender(
       <Modal
@@ -111,7 +117,7 @@ describe("Modal component", () => {
       </Modal>,
     );
 
-    expect(document.body.style.overflow).toBe("");
+    expect(wheel()).toBe(false);
   });
 });
 

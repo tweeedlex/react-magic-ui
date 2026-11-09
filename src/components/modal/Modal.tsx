@@ -15,6 +15,7 @@ import { scoped } from "../../core/classes";
 import "./modal.css";
 import { Xmark } from "../../core/icons";
 import { syncGlassContext, useIsClient } from "../../core/portal";
+import { lockPageScroll } from "../../core/scroll-lock";
 
 const styles = scoped("rmu-modal");
 
@@ -104,17 +105,11 @@ const Modal: React.FC<ModalProps> = ({
   }, [onClose, onOpenChange]);
 
   useEffect(() => {
-    if (!open || !lockScroll || typeof document === "undefined") {
+    if (!open || !lockScroll || typeof window === "undefined") {
       return;
     }
-
-    const { style } = document.body;
-    const previousOverflow = style.overflow;
-    style.overflow = "hidden";
-
-    return () => {
-      style.overflow = previousOverflow;
-    };
+    // the page keeps its scrollbar; only the dialog itself can scroll
+    return lockPageScroll(() => contentRef.current);
   }, [lockScroll, open]);
 
   useEffect(() => {
@@ -190,10 +185,10 @@ const Modal: React.FC<ModalProps> = ({
       <Glass
         ref={contentRef as React.Ref<Element>}
         layer="surface"
-        // sheets hold text over anything: thicker material, lens kept on the rim
+        // sheets hold text over anything: dense frosting, lens kept on the rim
         material="frosted"
         lens
-        className={cn(styles.modalContent, styles[size], className)}
+        className={cn("rmu-glass--dense", styles.modalContent, styles[size], className)}
         role="dialog"
         aria-modal="true"
         aria-labelledby={labelledBy}
