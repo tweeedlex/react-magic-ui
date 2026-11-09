@@ -6,9 +6,13 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import Glass, { GlassProps } from "../glass/Glass";
+import Glass, { GlassStyleProps } from "../glass/Glass";
 import clsx from "clsx";
-import styles from "./style/Sidebar.module.scss";
+import { scoped } from "../../core/classes";
+import "./sidebar.css";
+import { ChevronLeft } from "../../core/icons";
+
+const styles = scoped("rmu-sidebar");
 
 type SidebarSize = "small" | "medium" | "large";
 
@@ -48,7 +52,7 @@ export type SidebarProps = ComponentPropsWithoutRef<"aside"> & {
     itemId: string,
     event: React.MouseEvent<HTMLButtonElement>,
   ) => void;
-} & GlassProps;
+} & Omit<GlassStyleProps, "layer">;
 
 const SidebarBase = forwardRef<HTMLElement, SidebarProps>(
   (
@@ -138,11 +142,9 @@ const SidebarBase = forwardRef<HTMLElement, SidebarProps>(
       <SidebarContext.Provider value={contextValue}>
         <Glass
           as="aside"
-          ref={ref}
-          enableLiquidAnimation={false}
-          triggerAnimation={false}
-          className={clsx(styles.sidebar, paddingXClass, className)}
-          rootClassName={clsx(widthClass, styles.sidebarRoot)}
+          ref={ref as React.Ref<Element>}
+          layer="surface"
+          className={clsx(styles.sidebar, widthClass, paddingXClass, className)}
           {...rest}
         >
           {children}
@@ -277,6 +279,7 @@ const SidebarItem = forwardRef<HTMLButtonElement, SidebarItemProps>(
         onClick={handleClick}
         disabled={disabled}
         aria-label={ariaLabel}
+        aria-current={isActive ? "page" : undefined}
         {...restProps}
       >
         {icon && (
@@ -329,7 +332,10 @@ const SidebarToggle = forwardRef<HTMLButtonElement, SidebarToggleProps>(
         onClick={handleClick}
         {...rest}
       >
-        <span aria-hidden="true">{collapsed ? "»" : "«"}</span>
+        <ChevronLeft
+          className={clsx("rmu-icon", styles.toggleIcon)}
+          style={{ rotate: collapsed ? "180deg" : "0deg" }}
+        />
       </button>
     );
   },

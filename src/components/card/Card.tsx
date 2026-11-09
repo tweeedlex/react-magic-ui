@@ -1,46 +1,54 @@
-import React from "react";
-import { cn } from "../../func";
-import styles from "./style/Card.module.scss";
-import Glass, { GlassProps } from "../glass/Glass";
+import { ComponentPropsWithoutRef, forwardRef } from "react";
+import clsx from "clsx";
+import Glass, { GlassStyleProps } from "../glass/Glass";
+import "./card.css";
 
-export type CardProps = {
-  children?: React.ReactNode | string;
-  size?: "small" | "medium" | "large";
-  direction?: "column" | "row";
-  align?: "center" | "start" | "end";
-  justify?: "center" | "start" | "end" | "space-between" | "space-around";
-} & React.HTMLAttributes<HTMLDivElement> & GlassProps;
+export type CardProps = ComponentPropsWithoutRef<"div"> &
+  GlassStyleProps & {
+    /** Padding and corner radius: small 12/18, medium 20/26, large 28/34. Default `"medium"`. */
+    size?: "small" | "medium" | "large";
+    /** Flex direction of the content. Default `"column"`. */
+    direction?: "column" | "row";
+    /** `align-items`. Default `"stretch"`. */
+    align?: "center" | "start" | "end" | "stretch";
+    /** `justify-content`. Default `"start"`. */
+    justify?: "center" | "start" | "end" | "space-between" | "space-around";
+    /** Gap between children in px. Default 12. */
+    gap?: number;
+  };
 
-const Card: React.FC<CardProps> = ({
-  children,
-  size = "medium",
-  direction = "col",
-  align,
-  justify,
-  ...props
-}) => {
-  const alignClass = align ? styles[`items${align.charAt(0).toUpperCase() + align.slice(1)}`] : styles.itemsStart;
-  const justifyClass = justify
-    ? styles[`justify${justify === "space-between" ? "Between" : justify === "space-around" ? "Around" : justify.charAt(0).toUpperCase() + justify.slice(1)}`]
-    : styles.justifyStart;
-
-  const classNames = cn(
-    styles.card,
-    styles[size],
-    direction === "row" ? styles.flexRow : styles.flexCol,
-    alignClass,
-    justifyClass,
-  );
-
-
-  return (
+/**
+ * Glass panel for grouping content. Components inside it render as inner
+ * layers of this glass (no glass-on-glass blur).
+ *
+ * @example
+ * <Card>
+ *   <h3>Settings</h3>
+ *   <Switch aria-label="Wi-Fi" />
+ * </Card>
+ */
+const Card = forwardRef<HTMLDivElement, CardProps>(
+  (
+    { children, size = "medium", direction = "column", align = "stretch", justify = "start", gap, className, style, ...props },
+    ref,
+  ) => (
     <Glass
-      className={classNames}
+      ref={ref}
+      className={clsx("rmu-card", `rmu-card--${size}`, className)}
+      style={{
+        flexDirection: direction,
+        alignItems: align === "start" || align === "end" ? `flex-${align}` : align,
+        justifyContent: justify === "start" || justify === "end" ? `flex-${justify}` : justify,
+        ...(gap !== undefined ? { gap } : null),
+        ...style,
+      }}
       {...props}
     >
       {children}
     </Glass>
-  );
-};
+  ),
+);
+
+Card.displayName = "Card";
 
 export default Card;

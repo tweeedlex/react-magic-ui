@@ -9,26 +9,57 @@ import React, {
 } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "../../func";
-import { Glass, GlassProps } from "../glass";
-import styles from "./style/Modal.module.scss";
+import Glass, { GlassStyleProps } from "../glass/Glass";
+import { scoped } from "../../core/classes";
+import "./modal.css";
+import { Xmark } from "../../core/icons";
+
+const styles = scoped("rmu-modal");
 
 type ModalSize = "sm" | "md" | "lg";
 
-export type ModalProps = ComponentPropsWithoutRef<"div"> & {
+export type ModalProps = Omit<ComponentPropsWithoutRef<"div">, "title"> & {
+  /** Whether the modal is shown. */
   open: boolean;
+  /** Called when the user dismisses it (close button, overlay, Escape). */
   onClose?: () => void;
+  /** Same as `onClose`, called with `false`. */
   onOpenChange?: (open: boolean) => void;
   title?: ReactNode;
   description?: ReactNode;
+  /** Actions row at the bottom, e.g. Cancel / Confirm buttons. */
   footer?: ReactNode;
+  /** Default `true`. */
   closeOnOverlay?: boolean;
+  /** Default `true`. */
   closeOnEsc?: boolean;
+  /** Stop the page scrolling while open. Default `true`. */
   lockScroll?: boolean;
+  /** Max width: sm 400px, md 520px, lg 680px. Default `"md"`. */
   size?: ModalSize;
+  /** Spring the panel in and out. Default `true`. */
   enableLiquidAnimation?: boolean;
+  /** Where to portal. Default `document.body`. */
   portalContainer?: HTMLElement | null;
-} & GlassProps;
+} & Pick<GlassStyleProps, "tone" | "lens">;
 
+const EXIT_MS = 220;
+
+/**
+ * Glass dialog over a dimmed backdrop. Springs in, fades out.
+ *
+ * @example
+ * <Modal
+ *   open={open}
+ *   onClose={() => setOpen(false)}
+ *   title="Delete photo?"
+ *   description="This can't be undone."
+ *   footer={<>
+ *     <Button onClick={() => setOpen(false)}>Cancel</Button>
+ *     <Button variant="negative" onClick={remove}>Delete</Button>
+ *   </>}
+ * />
+ */
 const Modal: React.FC<ModalProps> = ({
   open,
   onClose,
@@ -49,7 +80,11 @@ const Modal: React.FC<ModalProps> = ({
 }) => {
   const [mounted, setMounted] = useState(false);
   const [container, setContainer] = useState<HTMLElement | null>(null);
-  const [shouldAnimate, setShouldAnimate] = useState(false);
+  // stays rendered for the exit animation after `open` turns false
+  const [present, setPresent] = useState(open);
+  if (open && !present) setPresent(true);
+  const shown = open || (present && enableLiquidAnimation);
+  const closing = shown && !open;
   const contentRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
   const descriptionId = useId();
@@ -120,24 +155,13 @@ const Modal: React.FC<ModalProps> = ({
     }
   }, [open]);
 
-  // Trigger liquid animation when modal opens
   useEffect(() => {
-    if (open && enableLiquidAnimation) {
-      // Reset animation state first
-      setShouldAnimate(false);
+    if (open || !present) return;
+    const timer = setTimeout(() => setPresent(false), enableLiquidAnimation ? EXIT_MS : 0);
+    return () => clearTimeout(timer);
+  }, [open, present, enableLiquidAnimation]);
 
-      // Trigger animation after a short delay to ensure modal is rendered
-      const timer = setTimeout(() => {
-        setShouldAnimate(true);
-      }, 50);
-
-      return () => clearTimeout(timer);
-    } else {
-      setShouldAnimate(false);
-    }
-  }, [open, enableLiquidAnimation]);
-
-  if (!open || !mounted || !container) {
+  if (!shown || !mounted || !container) {
     return null;
   }
 
@@ -146,7 +170,14 @@ const Modal: React.FC<ModalProps> = ({
   const showHeader = Boolean(title || description || onClose || onOpenChange);
 
   return createPortal(
-    <div className={styles.modalContainer} data-testid="modal-container">
+    <div
+      className={cn(
+        styles.modalContainer,
+        enableLiquidAnimation && styles.animated,
+        closing && styles.closing,
+      )}
+      data-testid="modal-container"
+    >
       <div
         data-testid="modal-overlay"
         aria-hidden="true"
@@ -161,9 +192,8 @@ const Modal: React.FC<ModalProps> = ({
       />
 
       <Glass
-        ref={contentRef}
-        enableLiquidAnimation={false}
-        triggerAnimation={enableLiquidAnimation && shouldAnimate}
+        ref={contentRef as React.Ref<Element>}
+        layer="surface"
         className={cn(styles.modalContent, styles[size], className)}
         role="dialog"
         aria-modal="true"
@@ -199,7 +229,7 @@ const Modal: React.FC<ModalProps> = ({
                 aria-label="close modal"
                 onClick={handleClose}
               >
-                <span aria-hidden="true">x</span>
+                <Xmark className="rmu-icon" width={15} height={15} />
               </button>
             )}
           </div>

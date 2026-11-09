@@ -1,0 +1,158 @@
+/* floating glass panel, like the iPadOS 26 sidebar */
+.rmu-sidebar-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-sizing: border-box;
+  min-height: 100%;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  border-radius: 28px;
+  overflow: hidden;
+  transition: width .5s var(--rmu-spring-soft), padding .5s var(--rmu-spring-soft);
+}
+.rmu-sidebar-small     { width: 200px; }
+.rmu-sidebar-medium    { width: 260px; }
+.rmu-sidebar-large     { width: 320px; }
+.rmu-sidebar-collapsed { width: 72px; }
+.rmu-sidebar-paddingExpanded  { padding-left: 10px; padding-right: 10px; }
+.rmu-sidebar-paddingCollapsed { padding-left: 10px; padding-right: 10px; }
+
+.rmu-sidebar-sidebarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 6px 4px;
+}
+.rmu-sidebar-headerCollapsed { justify-content: center; padding: 0 0 4px; }
+
+/* collapsed: only the toggle stays in the header and footer, labels go */
+.rmu-sidebar-collapsed .rmu-sidebar-sidebarHeader > :not(.rmu-sidebar-sidebarToggle),
+.rmu-sidebar-collapsed .rmu-sidebar-sidebarFooter > :not(.rmu-sidebar-sidebarToggle) { display: none; }
+.rmu-sidebar-collapsed .rmu-sidebar-sidebarFooter:not(:has(.rmu-sidebar-sidebarToggle)) { display: none; }
+.rmu-sidebar-collapsed .rmu-sidebar-sidebarFooter { justify-content: center; padding-inline: 0; }
+
+.rmu-sidebar-sidebarFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 6px 0;
+  border-top: .5px solid var(--rmu-separator);
+}
+
+.rmu-sidebar-sidebarItems {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.rmu-sidebar-sidebarItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 40px;
+  margin: 0;
+  padding: 4px 10px;
+  border: 0;
+  border-radius: 14px;
+  background: transparent;
+  color: var(--rmu-ink);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: background .2s ease, scale .4s var(--rmu-spring);
+}
+.rmu-sidebar-sidebarItem:not(:disabled):hover { background: var(--rmu-fill-hover); }
+.rmu-sidebar-sidebarItem:not(:disabled):active { scale: .97; transition-duration: .2s, .15s; }
+.rmu-sidebar-sidebarItem:disabled { opacity: .4; cursor: not-allowed; }
+.rmu-sidebar-sidebarItem:focus-visible { outline: 2.5px solid var(--rmu-focus); outline-offset: 1px; }
+.rmu-sidebar-itemActive,
+.rmu-sidebar-itemActive:not(:disabled):hover {
+  background: var(--rmu-fill-sel);
+  box-shadow: inset 0 0 0 .5px var(--rmu-stroke);
+  font-weight: 600;
+}
+.rmu-sidebar-itemActive .rmu-sidebar-itemIcon { color: var(--rmu-accent); opacity: 1; mix-blend-mode: normal; }
+.rmu-sidebar-itemCollapsed { justify-content: center; padding: 4px; }
+
+.rmu-sidebar-itemIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  color: var(--rmu-ink-solid);
+  opacity: var(--rmu-ink-a);
+  mix-blend-mode: var(--rmu-blend);
+}
+.rmu-sidebar-itemIcon svg { width: 20px; height: 20px; }
+
+.rmu-sidebar-itemContent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+.rmu-sidebar-itemText {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  mix-blend-mode: var(--rmu-blend);
+}
+.rmu-sidebar-itemBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 20px;
+  padding: 0 7px;
+  box-sizing: border-box;
+  border-radius: 999px;
+  background: var(--rmu-fill);
+  color: var(--rmu-ink2);
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.rmu-sidebar-itemFallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  background: var(--rmu-fill);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.rmu-sidebar-sidebarToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--rmu-fill);
+  color: inherit;
+  cursor: pointer;
+  transition: background .2s ease, scale .4s var(--rmu-spring);
+}
+.rmu-sidebar-sidebarToggle:hover { background: var(--rmu-fill-hover); }
+.rmu-sidebar-sidebarToggle:active { scale: .9; }
+.rmu-sidebar-sidebarToggle:focus-visible { outline: 2.5px solid var(--rmu-focus); outline-offset: 2px; }
+.rmu-sidebar-toggleIcon { width: 18px; height: 18px; transition: rotate .45s var(--rmu-spring); }

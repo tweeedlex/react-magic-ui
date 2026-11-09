@@ -1,119 +1,171 @@
-import styles from "./style/Glass.module.scss";
 import React, {
-  forwardRef,
-  ElementType,
   ComponentPropsWithoutRef,
-  useState,
-  useRef,
+  ElementType,
+  createContext,
+  forwardRef,
   useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
 } from "react";
 import clsx from "clsx";
+import { Lens, lensSupported } from "../../core/lens";
+import "./glass.css";
 
-export type GlassProps<T extends ElementType = "div"> = {
-  as?: T;
-  children?: React.ReactNode;
+/** How many real glass surfaces are above this one. */
+const GlassDepthContext = createContext(0);
+
+/**
+ * Where the surface sits in the glass hierarchy.
+ * - `"auto"` — real glass at the top level; an inner layer when nested inside another Glass.
+ * - `"surface"` — always real glass (floating things: modals, toasts, menus, popovers).
+ * - `"inner"` — always an inner layer: a lighter fill of the glass it sits on, no second blur.
+ */
+export type GlassLayer = "auto" | "surface" | "inner";
+
+/**
+ * Ink (text/icon colour) on the glass.
+ * - `"auto"` — follows the theme (dark ink in light theme, light ink in dark theme).
+ * - `"light"` — light ink and a darker tint; use over dark images in a light theme.
+ * - `"dark"` — dark ink and a light tint, even in dark theme.
+ */
+export type GlassTone = "auto" | "light" | "dark";
+
+/** Props every glass component accepts. */
+export type GlassStyleProps = {
+  /** Ink colour on the glass. Default `"auto"`. Can also be set for a whole subtree with `data-glass-tone` on any ancestor. */
+  tone?: GlassTone;
+  /** Bend the backdrop at the rim (Chromium only, other browsers get flat glass). Default `true`. */
+  lens?: boolean;
+  /** Position in the glass hierarchy. Default `"auto"`. */
+  layer?: GlassLayer;
+  /** @deprecated Use `className` — the glass is one element now. */
   rootClassName?: string;
+  /** @deprecated Use `style` — the glass is one element now. */
   rootStyle?: React.CSSProperties;
+  /** @deprecated Use `interactive`. */
   enableLiquidAnimation?: boolean;
+  /** Plays a short "settle" animation every time it turns `true`. */
   triggerAnimation?: boolean;
-} & ComponentPropsWithoutRef<T>;
+};
 
-const Glass = forwardRef(
-  <T extends ElementType = "div">(
-    { as, children, className, rootClassName, rootStyle, enableLiquidAnimation = false, triggerAnimation = false, onClick, ...props }: GlassProps<T>,
-    ref: React.ForwardedRef<any>,
-  ) => {
-    const Component = as || "div";
-    const [isAnimating, setIsAnimating] = useState(false);
-    const [ripplePosition, setRipplePosition] = useState({ x: 0, y: 0 });
-    const containerRef = useRef<HTMLDivElement>(null);
+type GlassOwnProps<T extends ElementType> = GlassStyleProps & {
+  /** Element or component to render. Default `"div"`. */
+  as?: T;
+  /** Hover brightens the tint, press springs the surface. Use for clickable glass. */
+  interactive?: boolean;
+  /** Selected state of an interactive inner layer (brighter fill + stroke). */
+  selected?: boolean;
+  children?: React.ReactNode;
+};
 
-    const handleClick = useCallback((event: React.MouseEvent<any>) => {
-      if (enableLiquidAnimation && containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        const x = ((event.clientX - rect.left) / rect.width) * 100;
-        const y = ((event.clientY - rect.top) / rect.height) * 100;
+export type GlassProps<T extends ElementType = "div"> = GlassOwnProps<T> &
+  Omit<ComponentPropsWithoutRef<T>, keyof GlassOwnProps<T>>;
 
-        setRipplePosition({ x, y });
-        setIsAnimating(true);
+function setRef<T>(ref: React.Ref<T> | undefined, value: T) {
+  if (typeof ref === "function") ref(value);
+  else if (ref) (ref as React.MutableRefObject<T>).current = value;
+}
 
-        setTimeout(() => setIsAnimating(false), 800);
-      }
+function useLens(ref: React.RefObject<HTMLElement | null>, enabled: boolean) {
+  useEffect(() => {
+    const el = ref.current;
+    if (!enabled || !el || !lensSupported()) return;
+    const lens = new Lens(el);
+    void lens.update();
+    return () => lens.destroy();
+  }, [enabled, ref]);
+}
 
-      if (onClick) {
-        onClick(event);
-      }
-    }, [enableLiquidAnimation, onClick]);
+function GlassImpl<T extends ElementType = "div">(
+  {
+    as,
+    tone = "auto",
+    lens = true,
+    layer = "auto",
+    interactive,
+    selected,
+    rootClassName,
+    rootStyle,
+    enableLiquidAnimation,
+    triggerAnimation,
+    className,
+    style,
+    children,
+    ...rest
+  }: GlassProps<T>,
+  ref: React.ForwardedRef<Element>,
+) {
+  const Component: ElementType = as || "div";
+  const depth = useContext(GlassDepthContext);
+  const inner = layer === "inner" || (layer === "auto" && depth > 0);
+  const isInteractive = interactive ?? enableLiquidAnimation ?? false;
 
-    // Handle programmatic animation trigger (independent of enableLiquidAnimation)
-    React.useEffect(() => {
-      if (triggerAnimation) {
-        // Center the ripple for programmatic triggers
-        setRipplePosition({ x: 50, y: 50 });
-        setIsAnimating(true);
+  const localRef = useRef<HTMLElement | null>(null);
+  const composedRef = useCallback(
+    (node: HTMLElement | null) => {
+      localRef.current = node;
+      setRef(ref, node);
+    },
+    [ref],
+  );
+  useLens(localRef, lens && !inner);
 
-        const timer = setTimeout(() => setIsAnimating(false), 800);
-        return () => clearTimeout(timer);
-      }
-    }, [triggerAnimation]);
+  // a one-shot settle animation, retriggered each time the flag turns on
+  const [pulse, setPulse] = useState(0);
+  const [lastTrigger, setLastTrigger] = useState(triggerAnimation);
+  if (triggerAnimation !== lastTrigger) {
+    setLastTrigger(triggerAnimation);
+    if (triggerAnimation) setPulse((p) => p + 1);
+  }
 
-    return (
-      <>
-        <svg style={{ display: "none" }}>
-          <filter id="lg-dist" x="0%" y="0%" width="100%" height="100%">
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.005 0.005"
-              numOctaves="5"
-              seed="92"
-              result="noise"
-            />
-            <feGaussianBlur in="noise" stdDeviation="2" result="blurred" />
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="blurred"
-              scale="80"
-              xChannelSelector="R"
-              yChannelSelector="G"
-            />
-          </filter>
-        </svg>
+  return (
+    <GlassDepthContext.Provider value={inner ? depth : depth + 1}>
+      <Component
+        ref={composedRef}
+        className={clsx(
+          "rmu-glass",
+          inner && "rmu-glass--inner",
+          isInteractive && "rmu-glass--interactive",
+          selected && "rmu-glass--selected",
+          pulse > 0 && (pulse % 2 ? "rmu-glass--pulse-a" : "rmu-glass--pulse-b"),
+          rootClassName,
+          className,
+        )}
+        style={rootStyle ? { ...rootStyle, ...style } : style}
+        data-glass-tone={tone === "auto" ? undefined : tone}
+        {...rest}
+      >
+        {children}
+      </Component>
+    </GlassDepthContext.Provider>
+  );
+}
 
-        <div
-          ref={containerRef}
-          className={clsx(
-            styles.glassContainer,
-            rootClassName,
-            isAnimating && styles.glassAnimating
-          )}
-          style={rootStyle}
-        >
-          <div className={clsx(styles.glassFilter, isAnimating && styles.glassFilterAnimate)}></div>
-          <div className={styles.glassOverlay}></div>
-          <div className={styles.glassSpecular}></div>
-          {isAnimating && (
-            <div
-              className={styles.glassRipple}
-              style={{
-                left: `${ripplePosition.x}%`,
-                top: `${ripplePosition.y}%`,
-              }}
-            />
-          )}
-          <Component
-            {...props}
-            ref={ref}
-            onClick={handleClick}
-            className={clsx(styles.glassContent, className)}
-          >
-            {children}
-          </Component>
-        </div>
-      </>
-    );
-  },
-);
+/**
+ * The liquid glass material. Every component in the kit is built on it;
+ * use it directly for custom surfaces.
+ *
+ * Nest freely: a Glass inside a Glass renders as an inner layer of the outer
+ * one (one real glass level, like iOS 26), unless you set `layer="surface"`.
+ *
+ * @example
+ * <Glass className="my-panel" style={{ padding: 16, borderRadius: 24 }}>
+ *   <h3>Now playing</h3>
+ * </Glass>
+ *
+ * @example Clickable glass
+ * <Glass as="button" interactive onClick={play}>Play</Glass>
+ */
+const Glass = forwardRef(GlassImpl) as (<T extends ElementType = "div">(
+  props: GlassProps<T> & { ref?: React.Ref<Element> },
+) => React.ReactElement | null) & { displayName?: string };
 
 Glass.displayName = "Glass";
+
+/** Reads whether the current component is rendered on top of glass. */
+// eslint-disable-next-line react-refresh/only-export-components
+export const useGlassDepth = () => useContext(GlassDepthContext);
 
 export default Glass;

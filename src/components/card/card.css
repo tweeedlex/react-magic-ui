@@ -1,0 +1,9 @@
+.rmu-card {
+  display: flex;
+  gap: 12px;
+  box-sizing: border-box;
+}
+.rmu-card--small  { padding: 12px; border-radius: 18px; }
+.rmu-card--medium { padding: 20px; border-radius: 26px; }
+.rmu-card--large  { padding: 28px; border-radius: 34px; }
+.rmu-card :where(h1, h2, h3, h4, p) { margin: 0; }

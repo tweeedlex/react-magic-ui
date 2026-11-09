@@ -12,14 +12,14 @@ describe("Button component", () => {
   it("applies default styling when no variant or size provided", () => {
     render(<Button text="default styles" />);
     const button = screen.getByRole("button") as HTMLButtonElement;
-    expect(button.className).toContain("btn");
+    expect(button.className).toContain("rmu-button");
     expect(button.className).toContain("medium");
   });
 
   it("applies variant and size specific classes", () => {
     render(<Button text="negative" variant="negative" size="small" />);
     const button = screen.getByRole("button") as HTMLButtonElement;
-    expect(button.className).toContain("bg-negative");
+    expect(button.className).toContain("rmu-button--negative");
     expect(button.className).toContain("small");
   });
 

@@ -6,8 +6,11 @@ import React, {
   useMemo,
 } from "react";
 import { cn } from "../../func";
-import Glass, { GlassProps } from "../glass/Glass";
-import styles from "./style/Topbar.module.scss";
+import Glass, { GlassStyleProps } from "../glass/Glass";
+import { scoped } from "../../core/classes";
+import "./topbar.css";
+
+const styles = scoped("rmu-topbar");
 
 type TopbarSize = "compact" | "comfortable" | "spacious";
 
@@ -31,8 +34,9 @@ type SectionGap = "tight" | "regular" | "relaxed";
 
 export type TopbarProps = ComponentPropsWithoutRef<"header"> & {
   size?: TopbarSize;
+  /** Soft drop shadow under the bar. Default `true`. */
   elevated?: boolean;
-} & GlassProps;
+} & Omit<GlassStyleProps, "layer">;
 
 const TopbarBase = forwardRef<HTMLElement, TopbarProps>(
   ({ size = "comfortable", elevated = true, className, children, ...rest }, ref) => {
@@ -47,7 +51,8 @@ const TopbarBase = forwardRef<HTMLElement, TopbarProps>(
       <TopbarContext.Provider value={value}>
         <Glass
           as="header"
-          ref={ref}
+          ref={ref as React.Ref<Element>}
+          layer="surface"
           className={cn(
             styles.topbar,
             styles[size],

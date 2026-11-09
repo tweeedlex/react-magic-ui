@@ -1,0 +1,29 @@
+.rmu-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 0;
+  margin: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-family: var(--rmu-font);
+  font-weight: 590;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.rmu-button > * { mix-blend-mode: var(--rmu-blend); }
+.rmu-button > svg { color: var(--rmu-ink-solid); opacity: var(--rmu-ink-a); flex: none; }
+
+.rmu-button--small  { height: 32px; padding: 0 14px; font-size: 14px; }
+.rmu-button--medium { height: 44px; padding: 0 20px; font-size: 17px; }
+.rmu-button--large  { height: 52px; padding: 0 26px; font-size: 17px; }
+
+.rmu-button--rounded { padding: 0; aspect-ratio: 1; }
+.rmu-button--rounded.rmu-button--small  { width: 32px; }
+.rmu-button--rounded.rmu-button--medium { width: 44px; }
+.rmu-button--rounded.rmu-button--large  { width: 52px; }
+
+.rmu-button--disabled { opacity: .45; }

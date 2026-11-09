@@ -1,116 +1,129 @@
-import React, { useState, useRef, MouseEvent } from "react";
-import styles from "./style/Slider.module.scss";
+import React, { useRef, useState } from "react";
 import clsx from "clsx";
+import Glass, { GlassStyleProps } from "../glass/Glass";
+import "./slider.css";
 
-export type SliderProps = {
-    disabled?: boolean;
-    size?: "small" | "medium" | "large";
-    min?: number;
-    max?: number;
-    step?: number;
-    value?: number;
-    onChange?: (value: number) => void;
-    showValue?: boolean;
-    enableClickAnimation?: boolean;
+export type SliderProps = Pick<GlassStyleProps, "tone"> & {
+  /** Controlled value. */
+  value?: number;
+  /** Initial value when uncontrolled. Default 50. */
+  defaultValue?: number;
+  /** Called while dragging and on keyboard changes. */
+  onChange?: (value: number) => void;
+  min?: number;
+  max?: number;
+  step?: number;
+  disabled?: boolean;
+  /** Track thickness / thumb size. Default `"medium"`. */
+  size?: "small" | "medium" | "large";
+  /** Show the current value after the track. */
+  showValue?: boolean;
+  className?: string;
+  style?: React.CSSProperties;
+  "aria-label"?: string;
+  /** @deprecated No effect. */
+  enableClickAnimation?: boolean;
 };
 
+/**
+ * iOS-style slider: thin glass track, accent fill, white capsule thumb that
+ * swells while dragged. Keyboard: arrows, Page Up/Down, Home/End.
+ *
+ * @example
+ * <Slider aria-label="Volume" value={vol} onChange={setVol} />
+ */
 const Slider: React.FC<SliderProps> = ({
-    size = "medium",
-    disabled,
-    min = 0,
-    max = 100,
-    step = 1,
-    value = 50,
-    onChange,
-    showValue = false,
-    enableClickAnimation = true,
-    ...props
+  size = "medium",
+  disabled,
+  min = 0,
+  max = 100,
+  step = 1,
+  value,
+  defaultValue = 50,
+  onChange,
+  showValue = false,
+  tone,
+  className,
+  style,
+  "aria-label": ariaLabel,
 }) => {
-    const [isDragging, setIsDragging] = useState(false);
-    const sliderRef = useRef<HTMLDivElement>(null);
+  const [inner, setInner] = useState(defaultValue);
+  const [dragging, setDragging] = useState(false);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const current = value ?? inner;
+  const pct = max === min ? 0 : ((current - min) / (max - min)) * 100;
 
-    const percentage = ((value - min) / (max - min)) * 100;
+  const commit = (v: number) => {
+    const clamped = Math.max(min, Math.min(max, Math.round((v - min) / step) * step + min));
+    const fixed = Number(clamped.toFixed(6));
+    if (fixed === current) return;
+    if (value === undefined) setInner(fixed);
+    onChange?.(fixed);
+  };
 
-    const updateValue = (clientX: number) => {
-        if (!sliderRef.current || disabled) return;
+  const fromPointer = (clientX: number) => {
+    const el = trackRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    commit(min + ((clientX - r.left) / r.width) * (max - min));
+  };
 
-        const rect = sliderRef.current.getBoundingClientRect();
-        const offsetX = clientX - rect.left;
-        const width = rect.width;
-        let newPercentage = (offsetX / width) * 100;
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (disabled) return;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    setDragging(true);
+    fromPointer(e.clientX);
+  };
 
-        // Clamp percentage between 0 and 100
-        newPercentage = Math.max(0, Math.min(100, newPercentage));
-
-        // Calculate new value
-        let newValue = min + (newPercentage / 100) * (max - min);
-
-        // Apply step
-        newValue = Math.round(newValue / step) * step;
-
-        // Clamp value between min and max
-        newValue = Math.max(min, Math.min(max, newValue));
-
-        if (onChange && newValue !== value) {
-            onChange(newValue);
-        }
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (disabled) return;
+    const big = (max - min) / 10;
+    const map: Record<string, number> = {
+      ArrowRight: current + step, ArrowUp: current + step,
+      ArrowLeft: current - step, ArrowDown: current - step,
+      PageUp: current + big, PageDown: current - big,
+      Home: min, End: max,
     };
+    if (e.key in map) {
+      e.preventDefault();
+      commit(map[e.key]);
+    }
+  };
 
-    const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
-        if (disabled) return;
-        setIsDragging(true);
-        updateValue(e.clientX);
-    };
-
-    const handleMouseMove = (e: globalThis.MouseEvent) => {
-        if (isDragging && !disabled) {
-            updateValue(e.clientX);
-        }
-    };
-
-    const handleMouseUp = () => {
-        setIsDragging(false);
-    };
-
-    React.useEffect(() => {
-        if (isDragging) {
-            document.addEventListener("mousemove", handleMouseMove);
-            document.addEventListener("mouseup", handleMouseUp);
-        }
-
-        return () => {
-            document.removeEventListener("mousemove", handleMouseMove);
-            document.removeEventListener("mouseup", handleMouseUp);
-        };
-    }, [isDragging]);
-
-    return (
-        <div
-            className={clsx(
-                styles.sliderContainer,
-                styles[size],
-                disabled && styles.disabled
-            )}
-            {...props}
-        >
-            <div
-                ref={sliderRef}
-                className={clsx(styles.sliderTrack, styles[size])}
-                onMouseDown={handleMouseDown}
-            >
-                <div className={clsx(styles.trackBackground, styles[size])}>
-                    <div
-                        className={styles.trackFill}
-                        style={{ width: `${percentage}%` }}
-                    />
-                </div>
-                <div
-                    className={clsx(styles.thumb, isDragging && styles.dragging)}
-                    style={{ left: `${percentage}%` }}
-                />
-            </div>
-        </div>
-    );
+  return (
+    <div
+      className={clsx("rmu-slider", `rmu-slider--${size}`, dragging && "rmu-slider--dragging", disabled && "rmu-slider--disabled", className)}
+      style={style}
+    >
+      <div
+        ref={trackRef}
+        className="rmu-slider__hit"
+        onPointerDown={onPointerDown}
+        onPointerMove={(e) => dragging && fromPointer(e.clientX)}
+        onPointerUp={() => setDragging(false)}
+        onPointerCancel={() => setDragging(false)}
+      >
+        <Glass tone={tone} lens={false} className="rmu-slider__track">
+          <span className="rmu-slider__fill" style={{ width: `${pct}%` }} />
+        </Glass>
+        <span
+          className="rmu-slider__thumb rmu-focusable"
+          style={{ left: `${pct}%` }}
+          role="slider"
+          tabIndex={disabled ? -1 : 0}
+          aria-label={ariaLabel}
+          aria-valuemin={min}
+          aria-valuemax={max}
+          aria-valuenow={current}
+          aria-disabled={disabled || undefined}
+          onKeyDown={onKeyDown}
+        />
+      </div>
+      {showValue && <span className="rmu-slider__value">{current}</span>}
+    </div>
+  );
 };
+
+Slider.displayName = "Slider";
 
 export default Slider;

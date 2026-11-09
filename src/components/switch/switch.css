@@ -1,0 +1,45 @@
+.rmu-switch {
+  --w: 64px; --h: 28px; --tw: 38px; --pad: 2px;
+  width: var(--w);
+  height: var(--h);
+  flex: none;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.rmu-switch--small  { --w: 52px; --h: 24px; --tw: 32px; }
+.rmu-switch--large  { --w: 76px; --h: 34px; --tw: 46px; }
+
+.rmu-switch__fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--rmu-green);
+  opacity: 0;
+  scale: .6 1;
+  transition: opacity .25s ease, scale .45s var(--rmu-spring-soft);
+}
+.rmu-switch--on .rmu-switch__fill { opacity: 1; scale: 1; }
+
+/* the knob is a white pill; it stretches while pressed and springs across */
+.rmu-switch__thumb {
+  position: absolute;
+  top: var(--pad);
+  left: var(--pad);
+  width: var(--tw);
+  height: calc(var(--h) - 2 * var(--pad));
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 0 0 .5px rgb(0 0 0 / .04), 0 3px 8px rgb(0 0 0 / .15), 0 1px 1px rgb(0 0 0 / .1);
+  transition: translate .5s var(--rmu-spring), width .3s var(--rmu-spring-soft);
+}
+.rmu-switch--on .rmu-switch__thumb {
+  translate: calc(var(--w) - var(--tw) - 2 * var(--pad)) 0;
+}
+.rmu-switch:active:not(:disabled) .rmu-switch__thumb { width: calc(var(--tw) + 8px); }
+.rmu-switch--on:active:not(:disabled) .rmu-switch__thumb { translate: calc(var(--w) - var(--tw) - 8px - 2 * var(--pad)) 0; }
+
+.rmu-switch--disabled { opacity: .45; cursor: not-allowed; }

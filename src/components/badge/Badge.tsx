@@ -1,57 +1,51 @@
-import React from "react";
+import React, { ComponentPropsWithoutRef, forwardRef } from "react";
 import clsx from "clsx";
-import styles from "./style/Badge.module.scss";
-import Glass, { GlassProps } from "../glass/Glass";
+import Glass, { GlassStyleProps } from "../glass/Glass";
+import "./badge.css";
 
-export type BadgeVariant =
-  | "default"
-  | "positive"
-  | "negative"
-  | "warning"
-  | "info"
-  | "neutral";
+export type BadgeVariant = "default" | "positive" | "negative" | "warning" | "info" | "neutral";
 
-export type BadgeProps = React.HTMLAttributes<HTMLSpanElement> & {
-  children?: React.ReactNode;
-  variant?: BadgeVariant;
-  leadingIcon?: React.ReactNode;
-  trailingIcon?: React.ReactNode;
-} & GlassProps;
+export type BadgeProps = ComponentPropsWithoutRef<"span"> &
+  GlassStyleProps & {
+    /** `"default"` is clear glass; the rest are tinted with a status colour. */
+    variant?: BadgeVariant;
+    leadingIcon?: React.ReactNode;
+    trailingIcon?: React.ReactNode;
+  };
 
-const variantBackground = {
-  default: "",
-  positive: "bg-positive",
-  negative: "bg-negative",
-  warning: "bg-warning",
-  info: "bg-info",
-  neutral: "bg-neutral",
-} as const;
-
-const Badge: React.FC<BadgeProps> = ({
-  children,
-  className,
-  variant = "default",
-  leadingIcon,
-  trailingIcon,
-  ...props
-}) => {
-  return (
-    <Glass
-      as="span"
-      className={clsx(
-        styles.badge,
-        variantBackground[variant],
-        className,
-      )}
-      rootClassName={"rounded-full"}
-      {...props}
-    >
-      {leadingIcon && <span className={styles.badge__icon}>{leadingIcon}</span>}
-      {children}
-      {trailingIcon && <span className={styles.badge__icon}>{trailingIcon}</span>}
-    </Glass>
-  );
+const tints: Partial<Record<BadgeVariant, string>> = {
+  positive: "var(--rmu-green)",
+  negative: "var(--rmu-red)",
+  warning: "var(--rmu-orange)",
+  info: "var(--rmu-blue)",
+  neutral: "var(--rmu-gray)",
 };
 
-export default Badge;
+/**
+ * Small capsule label.
+ *
+ * @example
+ * <Badge variant="positive">Online</Badge>
+ */
+const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
+  ({ children, className, style, variant = "default", leadingIcon, trailingIcon, ...props }, ref) => {
+    const tint = tints[variant];
+    return (
+      <Glass
+        as="span"
+        ref={ref}
+        className={clsx("rmu-badge", `rmu-badge--${variant}`, tint && "rmu-tinted", className)}
+        style={tint ? ({ "--rmu-tint": tint, ...style } as React.CSSProperties) : style}
+        {...props}
+      >
+        {leadingIcon && <span className="rmu-icon rmu-badge__icon">{leadingIcon}</span>}
+        {children}
+        {trailingIcon && <span className="rmu-icon rmu-badge__icon">{trailingIcon}</span>}
+      </Glass>
+    );
+  },
+);
 
+Badge.displayName = "Badge";
+
+export default Badge;

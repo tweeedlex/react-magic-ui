@@ -18,7 +18,7 @@ describe("Badge component", () => {
   it("applies specific variant classes", () => {
     render(<Badge variant="positive">done</Badge>);
     const badge = screen.getByText("done");
-    expect(badge.className).toContain("bg-positive");
+    expect(badge.className).toContain("rmu-badge--positive");
   });
 
   it("renders leading and trailing icons", () => {

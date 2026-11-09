@@ -3,7 +3,7 @@ import dts from "vite-plugin-dts";
 import { rmSync } from "fs";
 import { join } from "path";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const { dependencies:  peerDependencies } =  require('./package.json')
+const { dependencies, peerDependencies } = require('./package.json')
 
 export default defineConfig({
   build: {
@@ -14,7 +14,7 @@ export default defineConfig({
       formats: ["cjs", "es"],
     },
     rollupOptions: {
-      external: [...Object.keys(peerDependencies)],
+      external: (id: string) => [...Object.keys(dependencies), ...Object.keys(peerDependencies)].some((dep) => id === dep || id.startsWith(`${dep}/`)),
     },
     sourcemap: true,
     emptyOutDir: true,

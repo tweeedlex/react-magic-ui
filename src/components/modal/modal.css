@@ -1,0 +1,106 @@
+.rmu-modal-modalContainer {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+  font-family: var(--rmu-font);
+}
+
+.rmu-modal-modalOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / .22);
+}
+
+.rmu-modal-modalContent {
+  --rmu-d: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  max-height: calc(100vh - 80px);
+  padding: 24px;
+  border-radius: 34px;
+  outline: none;
+  overflow: hidden;
+}
+.rmu-modal-sm { max-width: 400px; }
+.rmu-modal-md { max-width: 520px; }
+.rmu-modal-lg { max-width: 680px; }
+
+/* spring in from slightly smaller; quick fade out */
+.rmu-modal-animated .rmu-modal-modalOverlay { animation: rmu-modal-fade .3s ease both; }
+.rmu-modal-animated .rmu-modal-modalContent { animation: rmu-modal-in .55s var(--rmu-spring-soft) both; }
+.rmu-modal-closing .rmu-modal-modalOverlay { animation: rmu-modal-fade .22s ease reverse both; }
+.rmu-modal-closing .rmu-modal-modalContent { animation: rmu-modal-out .22s ease both; }
+.rmu-modal-closing { pointer-events: none; }
+@keyframes rmu-modal-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes rmu-modal-in   { from { opacity: 0; scale: .86; } to { opacity: 1; scale: 1; } }
+@keyframes rmu-modal-out  { from { opacity: 1; scale: 1; } to { opacity: 0; scale: .94; } }
+
+.rmu-modal-modalHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.rmu-modal-modalHeading { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.rmu-modal-modalTitle {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -.01em;
+  mix-blend-mode: var(--rmu-blend);
+}
+.rmu-modal-modalDescription {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--rmu-ink2);
+  mix-blend-mode: var(--rmu-blend);
+}
+
+.rmu-modal-modalClose {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  margin: -2px -4px 0 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--rmu-fill);
+  color: inherit;
+  cursor: pointer;
+  transition: background .2s ease, scale .4s var(--rmu-spring);
+}
+.rmu-modal-modalClose:hover { background: var(--rmu-fill-hover); }
+.rmu-modal-modalClose:active { scale: .88; }
+.rmu-modal-modalClose:focus-visible { outline: 2.5px solid var(--rmu-focus); outline-offset: 2px; }
+
+.rmu-modal-modalBody {
+  margin-top: 16px;
+  font-size: 15px;
+  line-height: 1.5;
+  overflow-y: auto;
+}
+.rmu-modal-modalFooter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+.rmu-modal-modalFooter > * { flex: 1 1 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rmu-modal-modalContainer * { animation-duration: 0s !important; }
+}

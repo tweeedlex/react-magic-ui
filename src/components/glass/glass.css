@@ -1,0 +1,278 @@
+/* ==========================================================================
+   react-magic-ui — liquid glass material
+   A surface opts in with .rmu-glass. It changes only four things:
+   background (tint), backdrop-filter (material + rim lens), box-shadow (edge),
+   color (ink).
+
+   Theme:  dark when an ancestor has class "dark" or data-theme="dark".
+   Tone:   data-glass-tone="light" | "dark" on the surface or any ancestor.
+   ========================================================================== */
+
+@property --rmu-d     { syntax: '<number>';     inherits: false; initial-value: 0.85; }
+@property --rmu-hov   { syntax: '<percentage>'; inherits: false; initial-value: 0%; }
+@property --rmu-tr    { syntax: '<number>';     inherits: false; initial-value: 255; }
+@property --rmu-tg    { syntax: '<number>';     inherits: false; initial-value: 255; }
+@property --rmu-tb    { syntax: '<number>';     inherits: false; initial-value: 255; }
+@property --rmu-a0    { syntax: '<number>';     inherits: false; initial-value: 0.06; }
+@property --rmu-a1    { syntax: '<number>';     inherits: false; initial-value: 0.22; }
+@property --rmu-sat   { syntax: '<number>';     inherits: false; initial-value: 180; }
+@property --rmu-bd    { syntax: '<number>';     inherits: false; initial-value: 0.06; }
+@property --rmu-ik    { syntax: '<number>';     inherits: true;  initial-value: 1; }
+@property --rmu-ink-solid  { syntax: '<color>';  inherits: true; initial-value: rgb(0 0 0); }
+@property --rmu-ink-a      { syntax: '<number>'; inherits: true; initial-value: 0.86; }
+@property --rmu-ink2-solid { syntax: '<color>';  inherits: true; initial-value: rgb(60 60 67); }
+@property --rmu-ink2-a     { syntax: '<number>'; inherits: true; initial-value: 0.7; }
+/* user tint scale, 0..1.5 (1 = material as designed) */
+@property --rmu-tint-scale { syntax: '<number>'; inherits: true; initial-value: 1; }
+
+:root {
+  /* system colours */
+  --rmu-blue: rgb(0 122 255);
+  --rmu-green: rgb(52 199 89);
+  --rmu-red: rgb(255 59 48);
+  --rmu-orange: rgb(255 149 0);
+  --rmu-gray: rgb(142 142 147);
+  --rmu-accent: var(--rmu-blue);
+  --rmu-focus: rgb(0 122 255 / .75);
+
+  --rmu-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter Variable", "Segoe UI Variable Text",
+    "Segoe UI", system-ui, sans-serif;
+
+  /* motion */
+  --rmu-spring: cubic-bezier(.32, 1.42, .52, 1);   /* bouncy settle */
+  --rmu-spring-soft: cubic-bezier(.25, 1.18, .5, 1);
+  --rmu-ease: cubic-bezier(.2, .8, .2, 1);
+  --rmu-dur: .45s;
+}
+:where(.dark, [data-theme="dark"]) {
+  --rmu-blue: rgb(10 132 255);
+  --rmu-green: rgb(48 209 88);
+  --rmu-red: rgb(255 69 58);
+  --rmu-orange: rgb(255 159 10);
+}
+
+/* ---- State A: light theme, light glass, dark ink (default) --------------- */
+.rmu-glass {
+  --rmu-tr: 255; --rmu-tg: 255; --rmu-tb: 255;
+  --rmu-a0: .06; --rmu-a1: .22;
+  --rmu-sat: 180; --rmu-bd: .06; --rmu-ik: 1;
+  --rmu-ink-solid: rgb(0 0 0);       --rmu-ink-a: .86;
+  --rmu-ink2-solid: rgb(60 60 67);   --rmu-ink2-a: .70;
+  --rmu-blend: multiply;
+  --rmu-fill: rgb(255 255 255 / .34);
+  --rmu-fill-hover: rgb(255 255 255 / .42);
+  --rmu-fill-sel: rgb(255 255 255 / .76);
+  --rmu-stroke: rgb(255 255 255 / .9);
+  --rmu-separator: rgb(60 60 67 / .18);
+  --rmu-edge:
+    inset 1.5px 1.5px 1px -1px rgb(255 255 255 / .95),
+    inset -1.5px -1.5px 1px -1px rgb(255 255 255 / .55),
+    inset 0 0 0 .5px rgb(255 255 255 / .30),
+    0 0 0 .5px rgb(0 0 0 / .06),
+    0 6px 24px rgb(0 0 0 / .08);
+}
+
+/* ---- State B: light ink over a dark area -------------------------------- */
+:where([data-glass-tone="light"]) .rmu-glass {
+  --rmu-tr: 16; --rmu-tg: 18; --rmu-tb: 22;
+  --rmu-a0: .10; --rmu-a1: .30;
+  --rmu-sat: 170; --rmu-bd: -.15; --rmu-ik: .4;
+  --rmu-ink-solid: rgb(255 255 255);   --rmu-ink-a: .94;
+  --rmu-ink2-solid: rgb(235 235 245);  --rmu-ink2-a: .64;
+  --rmu-blend: plus-lighter;
+  --rmu-fill: rgb(255 255 255 / .12);
+  --rmu-fill-hover: rgb(255 255 255 / .16);
+  --rmu-fill-sel: rgb(255 255 255 / .28);
+  --rmu-stroke: rgb(255 255 255 / .35);
+  --rmu-separator: rgb(255 255 255 / .16);
+  --rmu-edge:
+    inset 0 1px 0 0 rgb(255 255 255 / .22),
+    inset 0 0 0 .5px rgb(255 255 255 / .08),
+    0 0 0 .5px rgb(0 0 0 / .28),
+    0 6px 24px rgb(0 0 0 / .14);
+}
+
+/* ---- State C: dark theme (light ink) ------------------------------------- */
+:where(.dark, [data-theme="dark"]) .rmu-glass {
+  --rmu-tr: 20; --rmu-tg: 20; --rmu-tb: 24;
+  --rmu-a0: .16; --rmu-a1: .38;
+  --rmu-sat: 160; --rmu-bd: -.2; --rmu-ik: .33;
+  --rmu-ink-solid: rgb(255 255 255);   --rmu-ink-a: .94;
+  --rmu-ink2-solid: rgb(235 235 245);  --rmu-ink2-a: .64;
+  --rmu-blend: plus-lighter;
+  --rmu-fill: rgb(255 255 255 / .10);
+  --rmu-fill-hover: rgb(255 255 255 / .14);
+  --rmu-fill-sel: rgb(255 255 255 / .24);
+  --rmu-stroke: rgb(255 255 255 / .3);
+  --rmu-separator: rgb(255 255 255 / .14);
+  --rmu-edge:
+    inset 1.5px 1.5px 1px -1px rgb(255 255 255 / .32),
+    inset -1.5px -1.5px 1px -1px rgb(255 255 255 / .18),
+    inset 0 0 0 .5px rgb(255 255 255 / .10),
+    0 0 0 .5px rgb(0 0 0 / .40),
+    0 6px 24px rgb(0 0 0 / .28);
+}
+
+/* explicit tone on the surface itself wins over the theme */
+.rmu-glass[data-glass-tone="light"] {
+  --rmu-tr: 16; --rmu-tg: 18; --rmu-tb: 22;
+  --rmu-a0: .10; --rmu-a1: .30;
+  --rmu-sat: 170; --rmu-bd: -.15; --rmu-ik: .4;
+  --rmu-ink-solid: rgb(255 255 255);   --rmu-ink-a: .94;
+  --rmu-ink2-solid: rgb(235 235 245);  --rmu-ink2-a: .64;
+  --rmu-blend: plus-lighter;
+  --rmu-fill: rgb(255 255 255 / .12);
+  --rmu-fill-hover: rgb(255 255 255 / .16);
+  --rmu-fill-sel: rgb(255 255 255 / .28);
+  --rmu-stroke: rgb(255 255 255 / .35);
+  --rmu-separator: rgb(255 255 255 / .16);
+  --rmu-edge:
+    inset 0 1px 0 0 rgb(255 255 255 / .22),
+    inset 0 0 0 .5px rgb(255 255 255 / .08),
+    0 0 0 .5px rgb(0 0 0 / .28),
+    0 6px 24px rgb(0 0 0 / .14);
+}
+.rmu-glass[data-glass-tone="dark"] {
+  --rmu-tr: 255; --rmu-tg: 255; --rmu-tb: 255;
+  --rmu-a0: .06; --rmu-a1: .22;
+  --rmu-sat: 180; --rmu-bd: .06; --rmu-ik: 1;
+  --rmu-ink-solid: rgb(0 0 0);       --rmu-ink-a: .86;
+  --rmu-ink2-solid: rgb(60 60 67);   --rmu-ink2-a: .70;
+  --rmu-blend: multiply;
+  --rmu-fill: rgb(255 255 255 / .34);
+  --rmu-fill-hover: rgb(255 255 255 / .42);
+  --rmu-fill-sel: rgb(255 255 255 / .76);
+  --rmu-stroke: rgb(255 255 255 / .9);
+  --rmu-separator: rgb(60 60 67 / .18);
+  --rmu-edge:
+    inset 1.5px 1.5px 1px -1px rgb(255 255 255 / .95),
+    inset -1.5px -1.5px 1px -1px rgb(255 255 255 / .55),
+    inset 0 0 0 .5px rgb(255 255 255 / .30),
+    0 0 0 .5px rgb(0 0 0 / .06),
+    0 6px 24px rgb(0 0 0 / .08);
+}
+
+/* ---- The four declarations ---------------------------------------------- */
+.rmu-glass {
+  --rmu-alpha: calc((var(--rmu-a0) + (var(--rmu-a1) - var(--rmu-a0)) * var(--rmu-d)) * var(--rmu-tint-scale));
+  --rmu-bright: calc(1 + var(--rmu-bd) * min(var(--rmu-tint-scale), 1));
+  --rmu-ink: color-mix(in srgb, var(--rmu-ink-solid) calc(var(--rmu-ink-a) * 100%), transparent);
+  --rmu-ink2: color-mix(in srgb, var(--rmu-ink2-solid) calc(var(--rmu-ink2-a) * 100%), transparent);
+
+  background: color-mix(in srgb,
+    rgb(var(--rmu-tr) var(--rmu-tg) var(--rmu-tb) / var(--rmu-alpha)),
+    rgb(255 255 255 / var(--rmu-alpha)) var(--rmu-hov));
+  -webkit-backdrop-filter: blur(2px) saturate(calc(var(--rmu-sat) * 1%)) brightness(var(--rmu-bright));
+  backdrop-filter: blur(2px) saturate(calc(var(--rmu-sat) * 1%)) brightness(var(--rmu-bright)) var(--rmu-lens,);
+  box-shadow: var(--rmu-edge);
+  color: var(--rmu-ink);
+
+  position: relative;
+  isolation: isolate;
+  font-family: var(--rmu-font);
+  -webkit-font-smoothing: antialiased;
+  transition:
+    --rmu-hov .2s ease,
+    --rmu-tr .45s ease, --rmu-tg .45s ease, --rmu-tb .45s ease,
+    --rmu-a0 .45s ease, --rmu-a1 .45s ease, --rmu-sat .45s ease, --rmu-bd .45s ease, --rmu-ik .45s ease,
+    --rmu-ink-solid .35s ease, --rmu-ink-a .35s ease, --rmu-ink2-solid .35s ease, --rmu-ink2-a .35s ease,
+    box-shadow .45s ease;
+}
+
+/* Inner light: radial highlight from the top left, glows inside the rim. */
+.rmu-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(130% 150% at 0% 0%,
+    rgb(255 255 255 / calc(.30 * var(--rmu-ik))), rgb(255 255 255 / 0) 55%);
+  box-shadow:
+    inset 2px 3px 6px -3px rgb(255 255 255 / calc(.55 * var(--rmu-ik))),
+    inset 0 -3px 7px -4px rgb(0 0 0 / calc(.10 * var(--rmu-ik)));
+}
+
+/* ---- Inner layer: glass on glass is a lighter layer, never a second blur - */
+.rmu-glass--inner {
+  background: color-mix(in srgb, var(--rmu-fill), rgb(255 255 255 / .5) var(--rmu-hov));
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: inset 0 0 0 .5px color-mix(in srgb, var(--rmu-stroke) 40%, transparent);
+}
+.rmu-glass--inner::before { opacity: .35; }
+.rmu-glass--inner.rmu-glass--selected {
+  background: var(--rmu-fill-sel);
+  box-shadow: inset 0 0 0 .5px var(--rmu-stroke), 0 1px 4px rgb(0 0 0 / .08);
+}
+
+/* ---- Frosted: menus and popovers read over anything (iOS 26 menus) ------ */
+.rmu-glass.rmu-glass--frosted {
+  --rmu-a0: .55; --rmu-a1: .68;
+  -webkit-backdrop-filter: blur(22px) saturate(190%) brightness(var(--rmu-bright));
+  backdrop-filter: blur(22px) saturate(190%) brightness(var(--rmu-bright)) var(--rmu-lens,);
+}
+
+/* ---- Tinted glass (prominent / status colours) --------------------------- */
+.rmu-glass.rmu-tinted {
+  --rmu-ink-solid: rgb(255 255 255); --rmu-ink-a: 1;
+  --rmu-ink2-solid: rgb(255 255 255); --rmu-ink2-a: .8;
+  --rmu-blend: normal;
+  background: color-mix(in srgb,
+    color-mix(in srgb, var(--rmu-tint) 82%, transparent),
+    rgb(255 255 255 / .3) var(--rmu-hov));
+}
+
+/* ---- Interaction: brighten instead of lifting a shadow; spring on press -- */
+.rmu-glass--interactive {
+  cursor: pointer;
+  transition-property: --rmu-hov, --rmu-tr, --rmu-tg, --rmu-tb, --rmu-a0, --rmu-a1, --rmu-sat, --rmu-bd, --rmu-ik,
+    --rmu-ink-solid, --rmu-ink-a, --rmu-ink2-solid, --rmu-ink2-a, box-shadow, scale;
+  transition-duration: .2s, .45s, .45s, .45s, .45s, .45s, .45s, .45s, .45s, .35s, .35s, .35s, .35s, .45s, .5s;
+  transition-timing-function: ease, ease, ease, ease, ease, ease, ease, ease, ease, ease, ease, ease, ease, ease, var(--rmu-spring);
+}
+.rmu-glass--interactive:hover { --rmu-hov: 14%; }
+.rmu-glass--interactive:active { --rmu-hov: 26%; scale: 1.04; transition-duration: .2s, .45s, .45s, .45s, .45s, .45s, .45s, .45s, .45s, .35s, .35s, .35s, .35s, .45s, .18s; }
+.rmu-glass--interactive:is(:disabled, [aria-disabled="true"]) { --rmu-hov: 0%; scale: 1; cursor: not-allowed; }
+
+/* one-shot settle (triggerAnimation) */
+.rmu-glass--pulse-a { animation: rmu-settle-a .6s var(--rmu-spring-soft); }
+.rmu-glass--pulse-b { animation: rmu-settle-b .6s var(--rmu-spring-soft); }
+@keyframes rmu-settle-a { from { scale: .94; } to { scale: 1; } }
+@keyframes rmu-settle-b { from { scale: .94; } to { scale: 1; } }
+
+/* ---- Ink helpers --------------------------------------------------------- */
+.rmu-ink { color: var(--rmu-ink); mix-blend-mode: var(--rmu-blend); }
+.rmu-ink2 { color: var(--rmu-ink2); mix-blend-mode: var(--rmu-blend); }
+/* icons: opaque colour, the whole icon faded with opacity */
+.rmu-icon { color: var(--rmu-ink-solid); opacity: var(--rmu-ink-a); mix-blend-mode: var(--rmu-blend); display: inline-flex; flex: none; }
+
+.rmu-focusable:focus-visible,
+.rmu-glass:is(button, a, [tabindex]):focus-visible {
+  outline: 2.5px solid var(--rmu-focus);
+  outline-offset: 2px;
+}
+
+/* ---- Accessibility fallbacks --------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .rmu-glass, .rmu-glass * { transition-duration: 0s !important; animation-duration: 0s !important; }
+  .rmu-glass--interactive:active { scale: 1; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .rmu-glass:not(.rmu-glass--inner):not(.rmu-tinted) {
+    background: rgb(var(--rmu-tr) var(--rmu-tg) var(--rmu-tb));
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+@media (forced-colors: active) {
+  .rmu-glass {
+    background: Canvas;
+    color: CanvasText;
+    backdrop-filter: none;
+    border: 1px solid CanvasText;
+  }
+  .rmu-glass::before { display: none; }
+  .rmu-icon { color: CanvasText; opacity: 1; }
+}

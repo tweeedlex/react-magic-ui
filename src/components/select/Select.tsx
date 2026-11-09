@@ -1,136 +1,205 @@
-import React, { useState, useRef, useEffect } from "react";
-import styles from "./style/Select.module.scss";
+import React, { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { inheritedGlassContext } from "../../core/portal";
 import clsx from "clsx";
-import Glass from "../glass/Glass";
+import Glass, { GlassStyleProps } from "../glass/Glass";
+import "./select.css";
+import { Checkmark, ChevronDown } from "../../core/icons";
 
 export type SelectOption = {
-    value: string;
-    label: string;
+  value: string;
+  label: string;
+  disabled?: boolean;
 };
 
-export type SelectProps = {
-  disabled?: boolean;
-  size?: "small" | "medium" | "large";
+export type SelectProps = Pick<GlassStyleProps, "tone" | "lens"> & {
+  /** The choices. */
   options: SelectOption[];
+  /** Controlled selected value. */
   value?: string;
+  /** Initial value when uncontrolled. */
+  defaultValue?: string;
+  /** Called with the chosen option's `value`. */
   onChange?: (value: string) => void;
+  /** Shown when nothing is selected. Default `"Select an option"`. */
   placeholder?: string;
+  disabled?: boolean;
+  /** Height: small 32px, medium 44px, large 52px. Default `"medium"`. */
+  size?: "small" | "medium" | "large";
+  className?: string;
+  style?: React.CSSProperties;
+  id?: string;
+  "aria-label"?: string;
+  /** @deprecated No effect. */
   enableClickAnimation?: boolean;
 };
 
+/**
+ * Glass capsule that opens a floating glass menu.
+ *
+ * @example
+ * <Select
+ *   options={[{ value: "s", label: "Small" }, { value: "l", label: "Large" }]}
+ *   value={size}
+ *   onChange={setSize}
+ * />
+ */
 const Select: React.FC<SelectProps> = ({
-    size = "medium",
-    disabled,
-    options,
-    value,
-    onChange,
-    placeholder = "Select an option",
-    enableClickAnimation = true,
-    ...props
+  size = "medium",
+  disabled,
+  options,
+  value,
+  defaultValue,
+  onChange,
+  placeholder = "Select an option",
+  tone,
+  lens,
+  className,
+  style,
+  id,
+  "aria-label": ariaLabel,
 }) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const selectRef = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(false);
+  const [inner, setInner] = useState(defaultValue);
+  const [active, setActive] = useState(-1);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  // the menu is portalled to <body> (glass can't sample the page from inside other glass)
+  const [pos, setPos] = useState<{ top: number; left: number; width: number } | null>(null);
+  const listId = useId();
 
-    const selectedOption = options.find((opt) => opt.value === value);
+  const current = value ?? inner;
+  const selected = options.find((o) => o.value === current);
 
-    const handleToggle = () => {
-        if (!disabled) {
-            setIsOpen(!isOpen);
-        }
+  // opening highlights the current option
+  const openMenu = (next: boolean) => {
+    if (next) setActive(Math.max(0, options.findIndex((o) => o.value === current)));
+    setOpen(next);
+  };
+
+  const choose = (opt: SelectOption) => {
+    if (opt.disabled) return;
+    if (value === undefined) setInner(opt.value);
+    onChange?.(opt.value);
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      const t = e.target as Node;
+      if (rootRef.current?.contains(t) || menuRef.current?.contains(t)) return;
+      setOpen(false);
     };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [open]);
 
-    const handleSelect = (optionValue: string) => {
-        if (onChange) {
-            onChange(optionValue);
-        }
-        setIsOpen(false);
+  // keep the menu under the trigger while the page scrolls or resizes
+  useLayoutEffect(() => {
+    if (!open) return;
+    const measure = () => {
+      const r = rootRef.current?.getBoundingClientRect();
+      if (r) setPos({ top: r.bottom + 8, left: r.left, width: r.width });
     };
+    measure();
+    window.addEventListener("scroll", measure, true);
+    window.addEventListener("resize", measure);
+    return () => {
+      window.removeEventListener("scroll", measure, true);
+      window.removeEventListener("resize", measure);
+    };
+  }, [open]);
 
-    // Close dropdown when clicking outside
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
-                setIsOpen(false);
-            }
-        };
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (disabled) return;
+    if (!open && (e.key === "ArrowDown" || e.key === "ArrowUp" || e.key === "Enter" || e.key === " ")) {
+      e.preventDefault();
+      openMenu(true);
+      return;
+    }
+    if (!open) return;
+    const step = (dir: 1 | -1) => {
+      let i = active;
+      for (let n = 0; n < options.length; n++) {
+        i = (i + dir + options.length) % options.length;
+        if (!options[i].disabled) break;
+      }
+      setActive(i);
+    };
+    if (e.key === "ArrowDown") { e.preventDefault(); step(1); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); step(-1); }
+    else if (e.key === "Enter" || e.key === " ") { e.preventDefault(); if (options[active]) choose(options[active]); }
+    else if (e.key === "Escape" || e.key === "Tab") setOpen(false);
+  };
 
-        if (isOpen) {
-            document.addEventListener("mousedown", handleClickOutside);
-        }
+  return (
+    <div
+      ref={rootRef}
+      className={clsx("rmu-select", `rmu-select--${size}`, disabled && "rmu-select--disabled", className)}
+      style={style}
+    >
+      <Glass
+        as="button"
+        type="button"
+        id={id}
+        tone={tone}
+        lens={lens}
+        interactive={!disabled}
+        disabled={disabled}
+        aria-label={ariaLabel}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={open ? listId : undefined}
+        onClick={() => !disabled && openMenu(!open)}
+        onKeyDown={onKeyDown}
+        className="rmu-select__trigger"
+      >
+        <span className={clsx("rmu-select__value", !selected && "rmu-select__placeholder")}>
+          {selected ? selected.label : placeholder}
+        </span>
+        <ChevronDown className={clsx("rmu-icon rmu-select__chevron", open && "rmu-select__chevron--open")} />
+      </Glass>
 
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [isOpen]);
-
-    return (
-        <div
-            ref={selectRef}
-            className={clsx(
-                styles.selectContainer,
-                styles[size],
-                disabled && styles.disabled
-            )}
-            {...props}
+      {open && !disabled && pos && typeof document !== "undefined" && createPortal(
+        <div {...inheritedGlassContext(rootRef.current)}>
+        <Glass
+          ref={menuRef as React.Ref<Element>}
+          layer="surface"
+          tone={tone}
+          lens={lens}
+          className={clsx("rmu-glass--frosted rmu-select__menu", `rmu-select__menu--${size}`)}
+          style={{ top: pos.top, left: pos.left, minWidth: pos.width }}
+          role="listbox"
+          id={listId}
         >
-            <Glass
-                enableLiquidAnimation={enableClickAnimation}
-                as="button"
-                type="button"
-                onClick={handleToggle}
-                className={clsx(
-                    styles.selectButton,
-                    styles[size],
-                    disabled && styles.disabled,
-                    isOpen && styles.open
-                )}
-                rootClassName={styles.glassRoot}
-                disabled={disabled}
+          {options.map((opt, i) => (
+            <div
+              key={opt.value}
+              role="option"
+              aria-selected={opt.value === current}
+              aria-disabled={opt.disabled || undefined}
+              className={clsx(
+                "rmu-select__option",
+                i === active && "rmu-select__option--active",
+                opt.disabled && "rmu-select__option--disabled",
+              )}
+              onMouseEnter={() => setActive(i)}
+              onClick={() => choose(opt)}
             >
-                <span className={clsx(styles.selectedValue, !selectedOption && styles.placeholder)}>
-                    {selectedOption ? selectedOption.label : placeholder}
-                </span>
-                <svg
-                    className={clsx(styles.arrow, isOpen && styles.arrowOpen)}
-                    width="12"
-                    height="8"
-                    viewBox="0 0 12 8"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path
-                        d="M1 1L6 6L11 1"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    />
-                </svg>
-            </Glass>
-
-            {isOpen && !disabled && (
-                <Glass
-                    enableLiquidAnimation={false}
-                    rootClassName={clsx(styles.dropdown, styles[size])}
-                >
-                    {options.map((option) => (
-                        <button
-                            key={option.value}
-                            type="button"
-                            className={clsx(
-                                styles.option,
-                                styles[size],
-                                option.value === value && styles.selected
-                            )}
-                            onClick={() => handleSelect(option.value)}
-                        >
-                            {option.label}
-                        </button>
-                    ))}
-                </Glass>
-            )}
-        </div>
-    );
+              <Checkmark className="rmu-icon rmu-select__tick"
+                style={{ visibility: opt.value === current ? "visible" : "hidden" }} />
+              <span className="rmu-ink">{opt.label}</span>
+            </div>
+          ))}
+        </Glass>
+        </div>,
+        document.body,
+      )}
+    </div>
+  );
 };
+
+Select.displayName = "Select";
 
 export default Select;

@@ -1,0 +1,42 @@
+.rmu-input {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  border-radius: 999px;
+  cursor: text;
+  transition: outline-color .2s ease;
+  outline: 2.5px solid transparent;
+  outline-offset: 2px;
+}
+.rmu-input--small  { height: 32px; padding: 0 12px; font-size: 14px; }
+.rmu-input--medium { height: 44px; padding: 0 16px; font-size: 17px; }
+.rmu-input--large  { height: 52px; padding: 0 20px; font-size: 17px; }
+
+.rmu-input:focus-within { outline-color: var(--rmu-focus); }
+.rmu-input:hover:not(:focus-within):not(.rmu-input--disabled) { --rmu-hov: 10%; }
+.rmu-input--invalid, .rmu-input--invalid:focus-within { outline-color: var(--rmu-red); }
+
+.rmu-input__field {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  letter-spacing: -0.01em;
+  color: var(--rmu-ink);
+  caret-color: var(--rmu-accent);
+  mix-blend-mode: var(--rmu-blend);
+}
+.rmu-input__field::placeholder { color: var(--rmu-ink2); opacity: 1; }
+.rmu-input__field::-webkit-search-cancel-button { -webkit-appearance: none; }
+
+.rmu-input__icon { width: 1.1em; height: 1.1em; align-items: center; justify-content: center; }
+.rmu-input__icon > svg { width: 100%; height: 100%; }
+
+.rmu-input--disabled { opacity: .45; cursor: not-allowed; }
+.rmu-input--disabled .rmu-input__field { cursor: not-allowed; }

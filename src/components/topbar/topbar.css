@@ -1,0 +1,60 @@
+/* floating glass bar (iOS 26 toolbars float, they don't span edge to edge) */
+.rmu-topbar-topbar {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  border-radius: 999px;
+}
+.rmu-topbar-elevated { --rmu-edge-extra: 0 12px 32px rgb(0 0 0 / .14); box-shadow: var(--rmu-edge), var(--rmu-edge-extra); }
+
+.rmu-topbar-compact     { min-height: 48px; padding: 6px 8px 6px 16px; gap: 12px; font-size: 14px; }
+.rmu-topbar-comfortable { min-height: 60px; padding: 8px 10px 8px 20px; gap: 16px; font-size: 15px; }
+.rmu-topbar-spacious    { min-height: 72px; padding: 10px 12px 10px 24px; gap: 20px; font-size: 16px; border-radius: 28px; }
+
+.rmu-topbar-topbarSection { display: flex; align-items: center; min-width: 0; }
+.rmu-topbar-sectionGrow   { flex: 1; min-width: 0; }
+.rmu-topbar-sectionWrap   { flex-wrap: wrap; }
+.rmu-topbar-sectionNoWrap { flex-wrap: nowrap; }
+.rmu-topbar-gapTight   { gap: 8px; }
+.rmu-topbar-gapRegular { gap: 12px; }
+.rmu-topbar-gapRelaxed { gap: 16px; }
+.rmu-topbar-alignLeft    { justify-content: flex-start; }
+.rmu-topbar-alignCenter  { justify-content: center; }
+.rmu-topbar-alignRight   { justify-content: flex-end; }
+.rmu-topbar-alignBetween { justify-content: space-between; }
+
+.rmu-topbar-topbarBrand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.rmu-topbar-brandIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  border-radius: 10px;
+  background: var(--rmu-accent);
+  color: #fff;
+  box-shadow: inset 0 .5px 0 rgb(255 255 255 / .4), 0 2px 6px rgb(0 0 0 / .15);
+}
+.rmu-topbar-brandIconCompact     { width: 30px; height: 30px; font-size: 15px; border-radius: 9px; }
+.rmu-topbar-brandIconComfortable { width: 36px; height: 36px; font-size: 17px; }
+.rmu-topbar-brandIconSpacious    { width: 42px; height: 42px; font-size: 20px; border-radius: 12px; }
+.rmu-topbar-brandContent { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; }
+.rmu-topbar-brandTitle {
+  font-weight: 600;
+  letter-spacing: -.01em;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  mix-blend-mode: var(--rmu-blend);
+}
+.rmu-topbar-brandSubtitle {
+  font-size: .85em;
+  color: var(--rmu-ink2);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  mix-blend-mode: var(--rmu-blend);
+}
+
+.rmu-topbar-topbarActions { margin-left: auto; font-weight: 500; }
+
+.rmu-topbar-topbarDivider { width: .5px; align-self: center; background: var(--rmu-separator); }
+.rmu-topbar-dividerCompact     { height: 24px; }
+.rmu-topbar-dividerComfortable { height: 28px; }
+.rmu-topbar-dividerSpacious    { height: 32px; }

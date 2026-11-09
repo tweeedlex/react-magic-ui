@@ -1,0 +1,39 @@
+.rmu-checkbox {
+  --s: 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--rmu-font);
+  font-size: 15px;
+}
+.rmu-checkbox--small { --s: 18px; font-size: 14px; }
+.rmu-checkbox--large { --s: 26px; font-size: 17px; }
+
+.rmu-checkbox__box {
+  width: var(--s);
+  height: var(--s);
+  flex: none;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: calc(var(--s) * .3);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: scale .45s var(--rmu-spring);
+}
+.rmu-checkbox__box:active:not(:disabled) { scale: .88; transition-duration: .15s; }
+
+.rmu-checkbox__check {
+  width: 68%;
+  height: 68%;
+  color: #fff;
+  /* filled glyph: wipe it in left to right instead of drawing a stroke */
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path .3s var(--rmu-ease);
+}
+.rmu-checkbox__box--on .rmu-checkbox__check { clip-path: inset(0 0 0 0); transition-delay: .05s; }
+
+.rmu-checkbox__label { cursor: pointer; user-select: none; color: inherit; }
+.rmu-checkbox--disabled { opacity: .45; }
+.rmu-checkbox--disabled :is(.rmu-checkbox__box, .rmu-checkbox__label) { cursor: not-allowed; }

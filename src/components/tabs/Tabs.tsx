@@ -5,14 +5,18 @@ import React, {
   useCallback,
   useEffect,
   useId,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
 import { cn } from "../../func";
-import Glass, { GlassProps } from "../glass/Glass";
-import Button from "../button/Button";
-import styles from "./style/Tabs.module.scss";
+import Glass, { GlassStyleProps } from "../glass/Glass";
+
+import { scoped } from "../../core/classes";
+import "./tabs.css";
+
+const styles = scoped("rmu-tabs");
 
 type TabsOrientation = "horizontal" | "vertical";
 type TabsActivationMode = "auto" | "manual";
@@ -58,7 +62,9 @@ export type TabsProps = ComponentPropsWithoutRef<"div"> & {
   onValueChange?: (next: string) => void;
   activationMode?: TabsActivationMode;
   orientation?: TabsOrientation;
-} & GlassProps;
+  /** Ink colour for the whole tab group (sets `data-glass-tone`). */
+  tone?: GlassStyleProps["tone"];
+};
 
 const TabsBase = forwardRef<HTMLDivElement, TabsProps>(
   (
@@ -68,6 +74,7 @@ const TabsBase = forwardRef<HTMLDivElement, TabsProps>(
       onValueChange,
       activationMode = "auto",
       orientation = "horizontal",
+      tone,
       className,
       children,
       ...rest
@@ -179,8 +186,9 @@ const TabsBase = forwardRef<HTMLDivElement, TabsProps>(
 
     return (
       <TabsContext.Provider value={contextValue}>
-        <Glass
+        <div
           ref={ref}
+          data-glass-tone={tone && tone !== "auto" ? tone : undefined}
           className={cn(
             styles.tabs,
             orientation === "vertical" ? styles.tabsVertical : "",
@@ -189,7 +197,7 @@ const TabsBase = forwardRef<HTMLDivElement, TabsProps>(
           {...rest}
         >
           {children}
-        </Glass>
+        </div>
       </TabsContext.Provider>
     );
   },
@@ -197,17 +205,44 @@ const TabsBase = forwardRef<HTMLDivElement, TabsProps>(
 
 TabsBase.displayName = "Tabs";
 
-export type TabsListProps = ComponentPropsWithoutRef<"div"> & {
-  children: ReactNode;
-};
+export type TabsListProps = ComponentPropsWithoutRef<"div"> &
+  Pick<GlassStyleProps, "tone" | "lens" | "layer"> & {
+    children: ReactNode;
+  };
 
 const TabsList = forwardRef<HTMLDivElement, TabsListProps>(
   ({ className, children, ...rest }, ref) => {
-    const { orientation } = useTabsContext("Tabs.List");
+    const { orientation, value } = useTabsContext("Tabs.List");
+    const listRef = useRef<HTMLDivElement | null>(null);
+    const [pill, setPill] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
+
+    // the selection pill slides (with a spring) to the selected trigger
+    useLayoutEffect(() => {
+      const list = listRef.current;
+      if (!list) return;
+      const measure = () => {
+        const sel = list.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]');
+        if (!sel) return setPill(null);
+        setPill({ x: sel.offsetLeft, y: sel.offsetTop, w: sel.offsetWidth, h: sel.offsetHeight });
+      };
+      measure();
+      const ro = new ResizeObserver(measure);
+      ro.observe(list);
+      return () => ro.disconnect();
+    }, [value]);
+
+    const setRefs = useCallback(
+      (node: HTMLDivElement | null) => {
+        listRef.current = node;
+        if (typeof ref === "function") ref(node);
+        else if (ref) ref.current = node;
+      },
+      [ref],
+    );
 
     return (
-      <div
-        ref={ref}
+      <Glass
+        ref={setRefs as React.Ref<Element>}
         role="tablist"
         aria-orientation={orientation}
         className={cn(
@@ -217,8 +252,15 @@ const TabsList = forwardRef<HTMLDivElement, TabsListProps>(
         )}
         {...rest}
       >
+        {pill && (
+          <span
+            className={styles.indicator}
+            aria-hidden="true"
+            style={{ width: pill.w, height: pill.h, transform: `translate(${pill.x}px, ${pill.y}px)` }}
+          />
+        )}
         {children}
-      </div>
+      </Glass>
     );
   },
 );
@@ -365,12 +407,11 @@ const TabsTrigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
     }, [disabled, isControlled, selectedValue, setValue, value]);
 
     return (
-      <Button
+      <button
         ref={composedRef}
+        type="button"
         role="tab"
         id={triggerId}
-        size="small"
-        enableClickAnimation={true}
         className={cn(
           styles.tabsTrigger,
           isSelected ? styles.triggerSelected : "",
@@ -386,7 +427,7 @@ const TabsTrigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
         {...rest}
       >
         {children}
-      </Button>
+      </button>
     );
   },
 );

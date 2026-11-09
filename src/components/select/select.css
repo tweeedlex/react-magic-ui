@@ -1,0 +1,65 @@
+.rmu-select {
+  position: relative;
+  display: inline-block;
+  min-width: 180px;
+  font-family: var(--rmu-font);
+}
+.rmu-select__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  margin: 0;
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  text-align: left;
+}
+.rmu-select--small  .rmu-select__trigger { height: 32px; padding: 0 12px 0 14px; font-size: 14px; }
+.rmu-select--medium .rmu-select__trigger { height: 44px; padding: 0 16px 0 18px; font-size: 17px; }
+.rmu-select--large  .rmu-select__trigger { height: 52px; padding: 0 20px 0 22px; font-size: 17px; }
+
+.rmu-select__value { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; mix-blend-mode: var(--rmu-blend); }
+.rmu-select__placeholder { color: var(--rmu-ink2); }
+.rmu-select__chevron { width: 13px; height: 13px; flex: none; transition: rotate .4s var(--rmu-spring); }
+.rmu-select__chevron--open { rotate: 180deg; }
+
+/* floating menu grows out of the trigger */
+.rmu-select__menu {
+  position: fixed;
+  z-index: 1050;
+  max-height: 300px;
+  overflow: auto;
+  box-sizing: border-box;
+  padding: 6px;
+  border-radius: 22px;
+  transform-origin: 50% 0;
+  animation: rmu-menu-in .42s var(--rmu-spring-soft) both;
+  --rmu-d: 1;
+  font-family: var(--rmu-font);
+}
+@keyframes rmu-menu-in {
+  from { opacity: 0; scale: .9 .7; translate: 0 -6px; }
+  to   { opacity: 1; scale: 1; translate: 0 0; }
+}
+
+.rmu-select__option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px 0 8px;
+  height: 40px;
+  border-radius: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 16px;
+  transition: background .15s ease;
+}
+.rmu-select__menu--small .rmu-select__option { height: 32px; font-size: 14px; }
+.rmu-select__option--active { background: var(--rmu-fill-hover); }
+.rmu-select__option[aria-selected="true"] { font-weight: 600; }
+.rmu-select__option--disabled { opacity: .4; cursor: not-allowed; }
+.rmu-select__tick { width: 16px; height: 16px; }
+
+.rmu-select--disabled { opacity: .45; }

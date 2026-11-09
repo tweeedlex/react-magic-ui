@@ -12,7 +12,11 @@ import React, {
 import { createPortal } from "react-dom";
 import { cn } from "../../func";
 import Glass from "../glass/Glass";
-import styles from "./style/Toast.module.scss";
+import { scoped } from "../../core/classes";
+import "./toast.css";
+import { CheckmarkCircleFill, ExclamationmarkCircleFill, InfoCircleFill, Xmark } from "../../core/icons";
+
+const styles = scoped("rmu-toast");
 
 type ToastVariant = "default" | "success" | "error" | "info";
 
@@ -97,10 +101,10 @@ const positionClassMap: Record<ToastPosition, string> = {
 };
 
 const animationDurations: Record<ToastAnimation, number> = {
-  "slide-from-right": 220,
-  "slide-from-left": 220,
-  "slide-from-bottom": 240,
-  scale: 200,
+  "slide-from-right": 260,
+  "slide-from-left": 260,
+  "slide-from-bottom": 260,
+  scale: 240,
 };
 
 const positionSorts: Record<ToastPosition, "asc" | "desc"> = {
@@ -192,39 +196,35 @@ const ToastCard: React.FC<{
     <Glass
       role="status"
       aria-live="polite"
-      enableLiquidAnimation={toast.enableLiquidAnimation}
-      triggerAnimation={phase === "enter"}
-      rootClassName={cn(
+      layer="surface"
+      className={cn(
         styles.toastCard,
         variantClassMap[toast.variant],
         animationClass,
         animPhaseClass,
       )}
     >
-      <div className={styles.toastContent}>
-        <div className={styles.toastInner}>
-          <div className={styles.toastTextContainer}>
-            {toast.title && (
-              <p className={styles.toastTitle}>
-                {toast.title}
-              </p>
-            )}
-            {toast.description && (
-              <p className={styles.toastDescription}>
-                {toast.description}
-              </p>
-            )}
-          </div>
-
-          <button
-            type="button"
-            aria-label="close toast"
-            className={styles.toastCloseButton}
-            onClick={() => setPhase("exit")}
-          >
-            ×
-          </button>
+      <div className={styles.toastInner}>
+        {toast.variant !== "default" && (
+          <span className={styles.toastIcon} aria-hidden="true">
+            {toast.variant === "success" && <CheckmarkCircleFill width={24} height={24} />}
+            {toast.variant === "error" && <ExclamationmarkCircleFill width={24} height={24} />}
+            {toast.variant === "info" && <InfoCircleFill width={24} height={24} />}
+          </span>
+        )}
+        <div className={styles.toastTextContainer}>
+          {toast.title && <p className={styles.toastTitle}>{toast.title}</p>}
+          {toast.description && <p className={styles.toastDescription}>{toast.description}</p>}
         </div>
+
+        <button
+          type="button"
+          aria-label="close toast"
+          className={styles.toastCloseButton}
+          onClick={() => setPhase("exit")}
+        >
+          <Xmark className="rmu-icon" width={12} height={12} />
+        </button>
       </div>
     </Glass>
   );
