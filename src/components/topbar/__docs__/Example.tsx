@@ -32,14 +32,12 @@ const Example: FC<ExampleProps> = ({
   ...topbarProps
 }) => {
   return (
-    <div className="w-full max-w-5xl">
+    <div style={{ width: "100%", maxWidth: 1024 }}>
       <Topbar {...topbarProps}>
         <Topbar.Brand icon={icon} title={title} subtitle={subtitle} />
 
-        <Topbar.Section grow className="hidden md:flex">
-          <div className="w-full">
-            <Input size="medium" placeholder={searchPlaceholder} />
-          </div>
+        <Topbar.Section grow>
+          <Input placeholder={searchPlaceholder} wrapperStyle={{ width: "100%", maxWidth: 420 }} />
         </Topbar.Section>
 
         <Topbar.Actions gap="regular">

@@ -3,7 +3,8 @@ import Tabs from "../Tabs";
 
 const Example = () => {
   return (
-    <div className="w-full max-w-2xl">
+    // fixed width, so the stage doesn't re-centre the tabs when a shorter panel shows
+    <div style={{ width: 560, maxWidth: "100%" }}>
       <Tabs defaultValue="overview">
         <Tabs.List>
           <Tabs.Trigger value="overview">Overview</Tabs.Trigger>
