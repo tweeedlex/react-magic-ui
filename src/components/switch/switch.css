@@ -9,6 +9,8 @@
   border-radius: 999px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  /* horizontal drags move the knob, vertical ones still scroll the page */
+  touch-action: pan-y;
 }
 .rmu-switch--small  { --w: 52px; --h: 24px; --tw: 32px; }
 .rmu-switch--large  { --w: 76px; --h: 34px; --tw: 46px; }
@@ -43,7 +45,8 @@
 }
 /* held: the knob grows past the track and becomes clear glass, so the
    fill shows through it (iOS 26) */
-.rmu-switch:active:not(:disabled) .rmu-switch__thumb {
+.rmu-switch:active:not(:disabled) .rmu-switch__thumb,
+.rmu-switch--dragging .rmu-switch__thumb {
   width: calc(var(--tw) + 8px);
   scale: 1.35;
   background-color: rgb(255 255 255 / .16);
@@ -57,5 +60,12 @@
   transition-duration: .5s, .3s, .28s, .15s, .15s;
 }
 .rmu-switch--on:active:not(:disabled) .rmu-switch__thumb { translate: calc(var(--w) - var(--tw) - 8px - 2 * var(--pad)) 0; }
+
+/* dragging: the knob sits under the pointer, no spring on translate */
+.rmu-switch.rmu-switch--dragging:not(:disabled) .rmu-switch__thumb.rmu-switch__thumb {
+  translate: var(--rmu-switch-x, 0px) 0;
+  transition-duration: 0s, .3s, .28s, .15s, .15s;
+}
+.rmu-switch--dragging { cursor: grabbing; }
 
 .rmu-switch--disabled { opacity: .45; cursor: not-allowed; }

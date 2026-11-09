@@ -84,7 +84,7 @@ Props: all `<input>` props (`ref` and `className` go to the `<input>`), `size`, 
 ```tsx
 <Switch aria-label="Wi-Fi" checked={wifi} onCheckedChange={setWifi} />
 ```
-Props: `checked`, `defaultChecked`, `onCheckedChange`, `tint`, `size`, `disabled`.
+Props: `checked`, `defaultChecked`, `onCheckedChange`, `tint`, `size`, `disabled`. Click to toggle, or drag the knob: it follows the pointer and lands on the side it is let go on.
 
 ### Checkbox
 ```tsx
