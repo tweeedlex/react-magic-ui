@@ -333,21 +333,23 @@
 }
 
 /* ---- Accessibility fallbacks --------------------------------------------- */
-/* Reduced motion: no springs, swells or morphs anywhere in the kit. State
-   changes still happen, instantly; animationend still fires. */
+/* Reduced motion, the HIG way (Motion, Accessibility): transitions stay, but
+   springs lose their bounce, movement and scaling turn into fades, and blur
+   is never animated in or out. Components swap their own keyframes for
+   fades in their stylesheets; this block handles the shared parts. */
 @media (prefers-reduced-motion: reduce) {
-  [class*="rmu-"],
-  [class*="rmu-"]::before,
-  [class*="rmu-"]::after {
-    transition-duration: .01ms !important;
-    transition-delay: 0s !important;
-    animation-duration: .01ms !important;
-    animation-delay: 0s !important;
-    animation-iteration-count: 1 !important;
+  :where(:root) {
+    --rmu-spring: cubic-bezier(.2, .8, .2, 1);
+    --rmu-spring-soft: cubic-bezier(.2, .8, .2, 1);
   }
-  .rmu-glass--interactive:active,
+  /* no press swell or squeeze, no lens that grows under the finger */
+  [class*="rmu-"]:active,
   .rmu-switch:active .rmu-switch__thumb,
+  .rmu-switch--dragging .rmu-switch__thumb,
   .rmu-slider--dragging .rmu-slider__thumb { scale: none !important; }
+  /* the settle pulse is pure scale */
+  .rmu-glass--pulse-a,
+  .rmu-glass--pulse-b { animation: none; }
 }
 @media (prefers-reduced-transparency: reduce) {
   .rmu-glass:not(.rmu-glass--inner):not(.rmu-tinted) {

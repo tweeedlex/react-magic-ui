@@ -67,6 +67,10 @@
   to   { opacity: 1; translate: 0 0; }
 }
 
+/* reduced motion: the indicator jumps instead of sliding, panels fade without
+   the rise */
 @media (prefers-reduced-motion: reduce) {
-  .rmu-tabs-indicator, .rmu-tabs-tabsContent { transition: none; animation: none; }
+  .rmu-tabs-indicator { transition: none; }
+  .rmu-tabs-tabsContent { animation-name: rmu-tabs-fade; }
 }
+@keyframes rmu-tabs-fade { from { opacity: 0; } }

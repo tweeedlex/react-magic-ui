@@ -55,12 +55,14 @@ export type SelectProps = Pick<GlassStyleProps, "tone" | "lens"> & {
 /**
  * Keyframe that squeezes the menu onto the trigger's rect (scale from the
  * top-left corner, radius corrected for the scale). Null when there is
- * nothing to animate: no Web Animations API (tests, old browsers) or the
- * user asked for reduced motion.
+ * nothing to animate: no Web Animations API (tests, old browsers). With
+ * reduced motion the menu only fades in place (HIG: fades replace movement).
  */
 function morphFrom(trigger: HTMLElement, menu: HTMLElement): Keyframe | null {
   if (typeof menu.animate !== "function") return null;
-  if (typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return null;
+  if (typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+    return { opacity: 0 };
+  }
   const t = trigger.getBoundingClientRect();
   const m = menu.getBoundingClientRect();
   if (!m.width || !m.height || !t.width || !t.height) return null;

@@ -80,6 +80,7 @@
 .rmu-toast-toastCloseButton:active { scale: .85; }
 .rmu-toast-toastCloseButton:focus-visible { outline: 2.5px solid var(--rmu-focus); outline-offset: 2px; }
 
+/* reduced motion: toasts fade in place, no slide or scale */
 @media (prefers-reduced-motion: reduce) {
-  .rmu-toast-toastCard { transition-duration: .01s !important; }
+  .rmu-toast-toastCard { transition: opacity .25s ease !important; }
 }

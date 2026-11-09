@@ -101,6 +101,8 @@
 }
 .rmu-modal-modalFooter > * { flex: 1 1 0; }
 
+/* reduced motion: the panel fades in and out instead of scaling */
 @media (prefers-reduced-motion: reduce) {
-  .rmu-modal-modalContainer * { animation-duration: 0s !important; }
+  .rmu-modal-animated .rmu-modal-modalContent { animation: rmu-modal-fade .2s ease both; }
+  .rmu-modal-closing .rmu-modal-modalContent { animation: rmu-modal-fade .2s ease reverse both; }
 }
