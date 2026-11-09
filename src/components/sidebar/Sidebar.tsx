@@ -14,7 +14,8 @@ import { ChevronLeft } from "../../core/icons";
 
 const styles = scoped("rmu-sidebar");
 
-type SidebarSize = "small" | "medium" | "large";
+/** Width and item height of the sidebar. */
+export type SidebarSize = "small" | "medium" | "large";
 
 export type SidebarContextValue = {
   size: SidebarSize;
@@ -41,19 +42,39 @@ const useSidebarContext = (component: string) => {
 };
 
 export type SidebarProps = ComponentPropsWithoutRef<"aside"> & {
+  /** Default `"medium"`. */
   size?: SidebarSize;
+  /** Controlled collapsed state (icons only). */
   collapsed?: boolean;
+  /** Initial collapsed state when uncontrolled. Default `false`. */
   defaultCollapsed?: boolean;
+  /** Lets `Sidebar.Toggle` collapse it. Default `false`. */
   collapsible?: boolean;
+  /** Called with the next collapsed state. */
   onToggle?: (collapsed: boolean) => void;
+  /** Controlled selected item (`itemId` of a `Sidebar.Item`). */
   activeItemId?: string;
+  /** Initially selected item when uncontrolled. */
   defaultActiveItemId?: string;
+  /** Called when an item is clicked. */
   onSelectItem?: (
     itemId: string,
     event: React.MouseEvent<HTMLButtonElement>,
   ) => void;
 } & Omit<GlassStyleProps, "layer">;
 
+/**
+ * Glass navigation column with selectable items and an optional collapse.
+ *
+ * @example
+ * <Sidebar collapsible activeItemId={page} onSelectItem={setPage}>
+ *   <Sidebar.Header>My app<Sidebar.Toggle /></Sidebar.Header>
+ *   <Sidebar.Items>
+ *     <Sidebar.Item itemId="home" icon={<HomeIcon />}>Home</Sidebar.Item>
+ *     <Sidebar.Item itemId="inbox" icon={<InboxIcon />} badge={<Badge variant="notification">3</Badge>}>Inbox</Sidebar.Item>
+ *   </Sidebar.Items>
+ * </Sidebar>
+ */
 const SidebarBase = forwardRef<HTMLElement, SidebarProps>(
   (
     {

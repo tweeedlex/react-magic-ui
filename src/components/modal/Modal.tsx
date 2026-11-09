@@ -21,7 +21,8 @@ import { useMergedRef } from "../../core/refs";
 
 const styles = scoped("rmu-modal");
 
-type ModalSize = "sm" | "md" | "lg";
+/** Max width of the dialog: sm 400px, md 520px, lg 680px. */
+export type ModalSize = "sm" | "md" | "lg";
 
 export type ModalProps = Omit<ComponentPropsWithoutRef<"div">, "title"> & {
   /** Whether the modal is shown. */

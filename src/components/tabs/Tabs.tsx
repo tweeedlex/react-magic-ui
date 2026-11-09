@@ -18,8 +18,9 @@ import "./tabs.css";
 
 const styles = scoped("rmu-tabs");
 
-type TabsOrientation = "horizontal" | "vertical";
-type TabsActivationMode = "auto" | "manual";
+export type TabsOrientation = "horizontal" | "vertical";
+/** `"auto"`: arrow keys select as they move focus. `"manual"`: Enter/Space selects. */
+export type TabsActivationMode = "auto" | "manual";
 
 type TriggerEntry = {
   ref: HTMLButtonElement | null;
@@ -57,15 +58,33 @@ const useTabsContext = (component: string) => {
 const sanitizeIdPart = (part: string) => part.replace(/[^a-zA-Z0-9_-]/g, "-");
 
 export type TabsProps = ComponentPropsWithoutRef<"div"> & {
+  /** Controlled selected tab (`value` of a `Tabs.Trigger`). */
   value?: string;
+  /** Initially selected tab when uncontrolled. */
   defaultValue?: string;
+  /** Called with the newly selected tab's `value`. */
   onValueChange?: (next: string) => void;
+  /** Default `"auto"`. */
   activationMode?: TabsActivationMode;
+  /** Default `"horizontal"`. */
   orientation?: TabsOrientation;
   /** Ink colour for the whole tab group (sets `data-glass-tone`). */
   tone?: GlassStyleProps["tone"];
 };
 
+/**
+ * Segmented glass tabs; the selection pill springs to the chosen trigger.
+ *
+ * @example
+ * <Tabs defaultValue="day">
+ *   <Tabs.List aria-label="Range">
+ *     <Tabs.Trigger value="day">Day</Tabs.Trigger>
+ *     <Tabs.Trigger value="week">Week</Tabs.Trigger>
+ *   </Tabs.List>
+ *   <Tabs.Content value="day">…</Tabs.Content>
+ *   <Tabs.Content value="week">…</Tabs.Content>
+ * </Tabs>
+ */
 const TabsBase = forwardRef<HTMLDivElement, TabsProps>(
   (
     {
@@ -268,6 +287,7 @@ const TabsList = forwardRef<HTMLDivElement, TabsListProps>(
 TabsList.displayName = "Tabs.List";
 
 export type TabsTriggerProps = ComponentPropsWithoutRef<"button"> & {
+  /** Id of this tab; matches a `Tabs.Content`. */
   value: string;
 };
 
@@ -435,7 +455,9 @@ const TabsTrigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
 TabsTrigger.displayName = "Tabs.Trigger";
 
 export type TabsContentProps = ComponentPropsWithoutRef<"div"> & {
+  /** Shown when the tab with this `value` is selected. */
   value: string;
+  /** Don't render until first selected. */
   lazyMount?: boolean;
 };
 

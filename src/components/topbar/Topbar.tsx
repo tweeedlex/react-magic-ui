@@ -12,7 +12,8 @@ import "./topbar.css";
 
 const styles = scoped("rmu-topbar");
 
-type TopbarSize = "compact" | "comfortable" | "spacious";
+/** Minimum bar height: compact 48px, comfortable 60px, spacious 72px. */
+export type TopbarSize = "compact" | "comfortable" | "spacious";
 
 export type TopbarContextValue = {
   size: TopbarSize;
@@ -30,14 +31,28 @@ const useTopbarContext = (component: string) => {
   return context;
 };
 
-type SectionGap = "tight" | "regular" | "relaxed";
+/** Space between items in a section. */
+export type TopbarGap = "tight" | "regular" | "relaxed";
 
 export type TopbarProps = ComponentPropsWithoutRef<"header"> & {
+  /** Default `"comfortable"`. */
   size?: TopbarSize;
   /** Soft drop shadow under the bar. Default `true`. */
   elevated?: boolean;
 } & Omit<GlassStyleProps, "layer">;
 
+/**
+ * Floating glass bar for the top of a page.
+ *
+ * @example
+ * <Topbar size="compact">
+ *   <Topbar.Brand icon={<Logo />} title="My app" />
+ *   <Topbar.Section grow><Input placeholder="Search" /></Topbar.Section>
+ *   <Topbar.Actions>
+ *     <Button size="small" variant="prominent">New</Button>
+ *   </Topbar.Actions>
+ * </Topbar>
+ */
 const TopbarBase = forwardRef<HTMLElement, TopbarProps>(
   ({ size = "comfortable", elevated = true, className, children, ...rest }, ref) => {
     const value = useMemo<TopbarContextValue>(
@@ -71,9 +86,13 @@ const TopbarBase = forwardRef<HTMLElement, TopbarProps>(
 TopbarBase.displayName = "Topbar";
 
 export type TopbarSectionProps = ComponentPropsWithoutRef<"div"> & {
+  /** Take the free space (e.g. a search field). */
   grow?: boolean;
+  /** Default `"left"`. */
   align?: "left" | "center" | "right" | "between";
-  gap?: SectionGap;
+  /** Default `"regular"`. */
+  gap?: TopbarGap;
+  /** Let items wrap to a second line. */
   wrap?: boolean;
 };
 
@@ -84,7 +103,7 @@ const alignClassMap: Record<NonNullable<TopbarSectionProps["align"]>, string> = 
   between: styles.alignBetween,
 };
 
-const gapClassMap: Record<SectionGap, string> = {
+const gapClassMap: Record<TopbarGap, string> = {
   tight: styles.gapTight,
   regular: styles.gapRegular,
   relaxed: styles.gapRelaxed,
@@ -125,8 +144,11 @@ const TopbarSection = forwardRef<HTMLDivElement, TopbarSectionProps>(
 TopbarSection.displayName = "Topbar.Section";
 
 export type TopbarBrandProps = ComponentPropsWithoutRef<"div"> & {
+  /** Logo or icon before the title. */
   icon?: ReactNode;
+  /** App or page name. */
   title?: ReactNode;
+  /** Smaller line under the title. */
   subtitle?: ReactNode;
   iconClassName?: string;
 };
@@ -182,7 +204,8 @@ const TopbarBrand = forwardRef<HTMLDivElement, TopbarBrandProps>(
 TopbarBrand.displayName = "Topbar.Brand";
 
 export type TopbarActionsProps = ComponentPropsWithoutRef<"div"> & {
-  gap?: SectionGap;
+  /** Default `"regular"`. */
+  gap?: TopbarGap;
 };
 
 const TopbarActions = forwardRef<HTMLDivElement, TopbarActionsProps>(
