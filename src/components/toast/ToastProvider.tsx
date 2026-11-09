@@ -20,15 +20,18 @@ import { syncGlassContext, useIsClient } from "../../core/portal";
 
 const styles = scoped("rmu-toast");
 
-type ToastVariant = "default" | "success" | "error" | "info";
+/** Icon and accent of a toast. `"default"` has no icon. */
+export type ToastVariant = "default" | "success" | "error" | "info";
 
-type ToastAnimation =
+/** How a toast comes in and leaves. */
+export type ToastAnimation =
   | "slide-from-right"
   | "slide-from-left"
   | "slide-from-bottom"
   | "scale";
 
-type ToastPosition =
+/** Screen corner or edge the toast stack sits in. */
+export type ToastPosition =
   | "top-right"
   | "top-left"
   | "top-center"
@@ -36,15 +39,21 @@ type ToastPosition =
   | "bottom-left"
   | "bottom-center";
 
+/** What `showToast` takes. Unset fields fall back to the `ToastProvider` defaults. */
 export type ToastDefinition = {
+  /** Pass your own id to dismiss it later; one is generated otherwise. */
   id?: string;
   title?: ReactNode;
   description?: ReactNode;
+  /** Default `"default"` (no icon). */
   variant?: ToastVariant;
+  /** Milliseconds before it leaves. `Infinity` keeps it until closed. */
   duration?: number;
   animation?: ToastAnimation;
   position?: ToastPosition;
+  /** Animate in and out. `false` shows and removes it instantly. */
   enableLiquidAnimation?: boolean;
+  /** Called once when it starts to leave (timer, close button or dismiss). */
   onClose?: () => void;
 };
 
@@ -60,17 +69,27 @@ type ToastRecord = ToastDefinition & {
 };
 
 export type ToastProviderProps = PropsWithChildren<{
+  /** Default time on screen in ms. Default 4000. */
   duration?: number;
+  /** Default `"slide-from-right"`. */
   animation?: ToastAnimation;
+  /** Default `"top-right"`. */
   position?: ToastPosition;
+  /** Animate toasts in and out. Default `true`. */
   enableLiquidAnimation?: boolean;
+  /** Where to portal the toast layer. Default `document.body`. */
   portalContainer?: HTMLElement | null;
 }>;
 
-type ToastContextValue = {
+/** What `useToast()` returns. */
+export type ToastContextValue = {
+  /** Shows a toast and returns its id. */
   showToast: (toast: ToastDefinition) => string;
+  /** Starts the exit of one toast. */
   dismissToast: (id: string) => void;
+  /** Starts the exit of every toast. */
   clearToasts: () => void;
+  /** The provider's defaults. */
   defaults: {
     duration: number;
     animation: ToastAnimation;
@@ -139,7 +158,7 @@ const ToastCard: React.FC<{
 
   // a dismissed toast leaves even if its own timer hasn't fired
   const current = toast.dismissed ? "exit" : phase;
-  const animPhaseClass = current === "initial" ? styles.animInitial : phase === "enter" ? styles.animEnter : styles.animExit;
+  const animPhaseClass = current === "initial" ? styles.animInitial : current === "enter" ? styles.animEnter : styles.animExit;
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
@@ -177,7 +196,7 @@ const ToastCard: React.FC<{
 
     removeTimer.current = setTimeout(() => {
       onRemove(toast.id);
-    }, animationDurations[toast.animation]);
+    }, toast.enableLiquidAnimation ? animationDurations[toast.animation] : 0);
 
     return () => {
       if (removeTimer.current) {
@@ -198,6 +217,7 @@ const ToastCard: React.FC<{
         variantClassMap[toast.variant],
         animationClass,
         animPhaseClass,
+        !toast.enableLiquidAnimation && styles.static,
       )}
     >
       <div className={styles.toastInner}>
@@ -226,6 +246,13 @@ const ToastCard: React.FC<{
   );
 };
 
+/**
+ * Shows toasts from anywhere under a `ToastProvider`.
+ *
+ * @example
+ * const { showToast } = useToast();
+ * showToast({ variant: "success", title: "Saved" });
+ */
 export const useToast = () => {
   const context = useContext(ToastContext);
   if (!context) {
@@ -234,6 +261,14 @@ export const useToast = () => {
   return context;
 };
 
+/**
+ * Holds the toast stack. Put it once near the root; call `useToast()` below it.
+ *
+ * @example
+ * <ToastProvider position="top-center">
+ *   <App />
+ * </ToastProvider>
+ */
 export const ToastProvider: React.FC<ToastProviderProps> = ({
   children,
   duration = 4000,

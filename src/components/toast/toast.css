@@ -36,6 +36,7 @@
 .rmu-toast-animInitial,
 .rmu-toast-animExit { opacity: 0; }
 .rmu-toast-animExit { transition-duration: .25s, .25s, .25s; transition-timing-function: ease; }
+.rmu-toast-static { transition: none; }
 .rmu-toast-slideFromRight:is(.rmu-toast-animInitial, .rmu-toast-animExit)  { translate: 32px 0; }
 .rmu-toast-slideFromLeft:is(.rmu-toast-animInitial, .rmu-toast-animExit)   { translate: -32px 0; }
 .rmu-toast-slideFromBottom:is(.rmu-toast-animInitial, .rmu-toast-animExit) { translate: 0 24px; }
