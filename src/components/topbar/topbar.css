@@ -8,9 +8,9 @@
 }
 .rmu-topbar-elevated { --rmu-edge-extra: 0 12px 32px rgb(0 0 0 / .14); box-shadow: var(--rmu-edge), var(--rmu-edge-extra); }
 
-.rmu-topbar-compact     { min-height: 48px; padding: 6px 8px 6px 16px; gap: 12px; font-size: 14px; }
-.rmu-topbar-comfortable { min-height: 60px; padding: 8px 10px 8px 20px; gap: 16px; font-size: 15px; }
-.rmu-topbar-spacious    { min-height: 72px; padding: 10px 12px 10px 24px; gap: 20px; font-size: 16px; border-radius: 28px; }
+.rmu-topbar-compact     { min-height: 48px; padding: 6px 8px 6px 16px; gap: 12px; font-size: 14px; --rmu-topbar-tracking: var(--rmu-tracking-14); }
+.rmu-topbar-comfortable { min-height: 60px; padding: 8px 10px 8px 20px; gap: 16px; font-size: 15px; --rmu-topbar-tracking: var(--rmu-tracking-15); }
+.rmu-topbar-spacious    { min-height: 72px; padding: 10px 12px 10px 24px; gap: 20px; font-size: 16px; border-radius: 28px; --rmu-topbar-tracking: var(--rmu-tracking-16); }
 
 .rmu-topbar-topbarSection { display: flex; align-items: center; min-width: 0; }
 .rmu-topbar-sectionGrow   { flex: 1; min-width: 0; }
@@ -41,7 +41,7 @@
 .rmu-topbar-brandContent { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; }
 .rmu-topbar-brandTitle {
   font-weight: 600;
-  letter-spacing: -.01em;
+  letter-spacing: var(--rmu-topbar-tracking);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   mix-blend-mode: var(--rmu-blend);
 }

@@ -54,7 +54,7 @@
   font-size: 20px;
   font-weight: 600;
   line-height: 1.25;
-  letter-spacing: -.01em;
+  letter-spacing: var(--rmu-tracking-20);
   mix-blend-mode: var(--rmu-blend);
 }
 .rmu-modal-modalDescription {

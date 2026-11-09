@@ -38,6 +38,14 @@
   --rmu-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter Variable", "Segoe UI Variable Text",
     "Segoe UI", system-ui, sans-serif;
 
+  /* tracking by point size. Inter's dynamic metrics
+     (-0.0223 + 0.185 * e^(-0.1745 * size) em), not one value for every size */
+  --rmu-tracking-14: -0.006em;
+  --rmu-tracking-15: -0.009em;
+  --rmu-tracking-16: -0.011em;
+  --rmu-tracking-17: -0.013em;
+  --rmu-tracking-20: -0.017em;
+
   /* motion */
   --rmu-spring: cubic-bezier(.32, 1.42, .52, 1);   /* bouncy settle */
   --rmu-spring-soft: cubic-bezier(.25, 1.18, .5, 1);
@@ -50,6 +58,18 @@
   --rmu-red: rgb(255 66 69);
   --rmu-orange: rgb(255 146 48);
   --rmu-focus: rgb(0 145 255 / .8);
+}
+
+/* Safari renders the system font (SF) with its own size-specific tracking;
+   adding ours on top would double it */
+@supports (font: -apple-system-body) {
+  :where(:root) {
+    --rmu-tracking-14: normal;
+    --rmu-tracking-15: normal;
+    --rmu-tracking-16: normal;
+    --rmu-tracking-17: normal;
+    --rmu-tracking-20: normal;
+  }
 }
 
 /* Increased contrast: HIG "accessible" variants and an opaque focus ring */
