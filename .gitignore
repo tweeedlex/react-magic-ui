@@ -28,4 +28,3 @@ dist-ssr
 storybook-static
 .cache
 
-package-lock.json
