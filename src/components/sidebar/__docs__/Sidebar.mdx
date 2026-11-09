@@ -1,60 +1,87 @@
 import { Canvas, Meta } from "@storybook/addon-docs/blocks";
-import Example from "./Example.tsx";
 import * as SidebarStories from "./Sidebar.stories.tsx";
 
 <Meta of={SidebarStories} title="Sidebar" />
 
 # Sidebar
 
-Sidebar with glassmorphism styling that exposes a compound component API.
-
-#### Example
+A glass column for an app's main navigation. The selected item is highlighted, and the column can collapse to icons only. It is built from parts: `Sidebar.Header`, `Sidebar.Items`, `Sidebar.Item`, `Sidebar.Footer` and `Sidebar.Toggle`.
 
 <Canvas of={SidebarStories.Default} />
 
 ## Usage
 
 ```tsx
-import { Sidebar } from "react-magic-ui";
+import { Sidebar, Badge } from "react-magic-ui";
+import { useState } from "react";
 
-const Title = () => {
-  const { collapsed } = Sidebar.useSidebar();
-  if (collapsed) return null;
-  return <span>Magic UI</span>;
-};
+const [page, setPage] = useState("home");
 
-export const Example = () => (
-  <Sidebar collapsible defaultActiveItemId="dashboard">
-    <Sidebar.Header>
-      <Title />
-      <Sidebar.Toggle />
-    </Sidebar.Header>
+<Sidebar collapsible activeItemId={page} onSelectItem={setPage}>
+  <Sidebar.Header>
+    <strong>Magic UI</strong>
+    <Sidebar.Toggle />
+  </Sidebar.Header>
 
-    <Sidebar.Items>
-      <Sidebar.Item itemId="dashboard">Dashboard</Sidebar.Item>
-      <Sidebar.Item itemId="analytics" badge={3}>
-        Analytics
-      </Sidebar.Item>
-      <Sidebar.Item itemId="settings">Settings</Sidebar.Item>
-    </Sidebar.Items>
+  <Sidebar.Items>
+    <Sidebar.Item itemId="home" icon={<HouseIcon />}>Home</Sidebar.Item>
+    <Sidebar.Item itemId="inbox" icon={<TrayIcon />} badge={<Badge variant="notification">3</Badge>}>
+      Inbox
+    </Sidebar.Item>
+    <Sidebar.Item itemId="settings" icon={<GearIcon />}>Settings</Sidebar.Item>
+  </Sidebar.Items>
 
-    <Sidebar.Footer>
-      <small>© 2025</small>
-    </Sidebar.Footer>
-  </Sidebar>
-);
+  <Sidebar.Footer>
+    <small>v2.0</small>
+  </Sidebar.Footer>
+</Sidebar>
 ```
 
-#### Arguments
+Without `activeItemId`, the sidebar keeps track of the selection itself. Pass `defaultActiveItemId` to choose the item selected at first.
 
-- **size** _`"small" | "medium" | "large"`_ — Controls the width presets of the sidebar. Default is `"medium"`.
-- **collapsed / defaultCollapsed** _`boolean`_ — Collapse state (controlled or uncontrolled).
-- **collapsible** _`boolean`_ — Enables the collapse toggle control. Default is `false`.
-- **enableLiquidAnimation** _`boolean`_ — Enable liquid bounce animation on collapse/expand. Default is `true`.
-- **activeItemId / defaultActiveItemId** _`string`_ — Active item id (controlled or uncontrolled).
-- **onSelectItem** _`(itemId: string, event: React.MouseEvent<HTMLButtonElement>) => void`_ — Called when an item is selected.
-- **onToggle** _`(collapsed: boolean) => void`_ — Fired when collapse state changes.
-- **className** _`string`_ — Additional CSS classes to apply to the sidebar.
-- **children** _`React.ReactNode`_ — Compose the sidebar via `Sidebar.Header`, `Sidebar.Items`, `Sidebar.Item`, `Sidebar.Footer`, and `Sidebar.Toggle`.
-- **Sidebar.useSidebar()** _`() => SidebarContextValue`_ — Hook available inside sidebar subtree to read current state (e.g., `collapsed`, `size`) and react accordingly.
+## Collapsing
 
+With `collapsible`, `Sidebar.Toggle` shows a button that narrows the column to 72px. Items then show only their icons; an item without an icon shows the first letter of its label, or `collapsedFallback` if you pass one. The header and footer hide everything except the toggle.
+
+<Canvas of={SidebarStories.Collapsed} />
+
+To control it yourself, for example to collapse it on small screens, pass `collapsed` and `onToggle`.
+
+## Props
+
+### Sidebar
+
+All `<aside>` props are passed through, and `ref` points to the `<aside>`.
+
+- **size** _`"small" | "medium" | "large"`_: width 200, 260 or 320px. Default `"medium"`.
+- **collapsible** _`boolean`_: lets `Sidebar.Toggle` collapse it. Default `false`.
+- **collapsed** / **defaultCollapsed** _`boolean`_: the collapsed state, controlled or uncontrolled.
+- **onToggle** _`(collapsed: boolean) => void`_: called with the new collapsed state.
+- **activeItemId** / **defaultActiveItemId** _`string`_: the selected item's `itemId`, controlled or uncontrolled.
+- **onSelectItem** _`(itemId: string, event) => void`_: called when an item is clicked.
+- **material**, **tone**, **lens**: see [Glass](?path=/docs/glass--docs).
+
+<Canvas of={SidebarStories.Large} />
+
+### Sidebar.Item
+
+A `<button>`; all button props are passed through.
+
+- **itemId** _`string`_: identifies the item. Required.
+- **icon** _`ReactNode`_: shown before the label, and alone when collapsed.
+- **badge** _`ReactNode`_: shown at the end, for example a [Badge](?path=/docs/badge--docs) with a count. Hidden when collapsed.
+- **collapsedFallback** _`ReactNode`_: what to show when collapsed and there is no icon.
+- **disabled** _`boolean`_
+
+<Canvas of={SidebarStories.WithBadges} />
+
+### Sidebar.useSidebar()
+
+Returns `{ size, collapsed, collapsible, toggleCollapsed, activeItemId }`, so your own parts can react to the sidebar's state, for example to hide a label when it is collapsed.
+
+## Behaviour
+
+- The selected item gets `aria-current="page"`.
+- The items are inside a `<nav>`, so screen readers list them as navigation.
+- An item whose label is plain text uses that text as its `aria-label`, so it still has a name when collapsed to an icon.
+- The toggle's label switches between "collapse sidebar" and "expand sidebar".

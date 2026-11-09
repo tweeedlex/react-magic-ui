@@ -1,72 +1,94 @@
 import { Canvas, Meta } from "@storybook/addon-docs/blocks";
-import Example from "./Example.tsx";
 import * as ToastStories from "./Toast.stories.tsx";
 
 <Meta of={ToastStories} title="Toast" />
 
 # Toast
 
-Toasts deliver short, time-bound messages that appear above the interface without interrupting flow.
-
-#### Example
+A short message on a glass card that slides in at the edge of the screen and leaves by itself after a few seconds. Use it to confirm an action ("Saved") or report something that happened in the background.
 
 <Canvas of={ToastStories.Playground} />
 
-## Usage
+## Setup
+
+Put one `ToastProvider` near the root of the app. It sets the defaults and renders the toasts in a portal.
 
 ```tsx
-import { ToastProvider, useToast } from "react-magic-ui";
+import { ToastProvider } from "react-magic-ui";
 
-const Controls = () => {
-  const { showToast, clearToasts } = useToast();
+<ToastProvider position="top-center" duration={4000}>
+  <App />
+</ToastProvider>
+```
+
+## Usage
+
+Anywhere below the provider, call `showToast` from `useToast()`:
+
+```tsx
+import { useToast, Button } from "react-magic-ui";
+
+const SaveButton = () => {
+  const { showToast } = useToast();
 
   return (
-    <>
-      <button
-        onClick={() =>
-          showToast({
-            title: "Success!",
-            description: "Your workspace has been updated.",
-            variant: "success",
-            duration: 5000,
-            animation: "slide-from-right",
-            position: "top-right",
-          })
-        }
-      >
-        Show toast
-      </button>
-      <button onClick={clearToasts}>Clear all</button>
-    </>
-  );
-};
-
-const Example = () => {
-  return (
-    <ToastProvider duration={4000} animation="slide-from-right" position="top-right">
-      <Controls />
-    </ToastProvider>
+    <Button
+      variant="prominent"
+      onClick={async () => {
+        await save();
+        showToast({ variant: "success", title: "Saved", description: "Your changes are live." });
+      }}
+    >
+      Save
+    </Button>
   );
 };
 ```
 
-#### ToastProvider Props
+`showToast` returns the toast's id. To remove a toast yourself, for example an "Uploading…" toast once the upload is done, keep the id and pass it to `dismissToast`:
 
-- **duration** _`number`_ — Default time in milliseconds the toast stays visible. Default is `4000`.
-- **animation** _`ToastAnimation`_ — Default entry and exit motion. Choose from `"slide-from-right"`, `"slide-from-left"`, `"slide-from-bottom"`, or `"scale"`.
-- **position** _`ToastPosition`_ — Default screen anchoring for the stack. Supports `"top-right"`, `"top-left"`, `"top-center"`, `"bottom-right"`, `"bottom-left"`, or `"bottom-center"`.
-- **enableLiquidAnimation** _`boolean`_ — Enable liquid bounce animation on toast appearance. Default is `true`.
-- **portalContainer** _`HTMLElement | null`_ — Custom container for rendering toasts.
+```tsx
+const { showToast, dismissToast } = useToast();
 
-#### Toast Options
+const id = showToast({ title: "Uploading…", duration: Infinity });
+await upload();
+dismissToast(id);
+showToast({ variant: "success", title: "Uploaded" });
+```
 
-- **title** _`React.ReactNode`_ — The title of the toast.
-- **description** _`React.ReactNode`_ — The description/body text of the toast.
-- **variant** _`"default" | "success" | "error" | "info"`_ — Visual style for the toast.
-- **duration** _`number`_ — Time in milliseconds the toast stays visible. Set to `Infinity` to disable auto-dismiss.
-- **animation** _`ToastAnimation`_ — Entry and exit motion. Overrides provider default.
-- **position** _`ToastPosition`_ — Screen anchoring. Overrides provider default.
-- **enableLiquidAnimation** _`boolean`_ — Enable liquid bounce animation for this specific toast. Overrides provider default.
-- **onClose** _`() => void`_ — Callback fired when the toast is dismissed.
+## Guidelines
 
+- Keep it to a title and at most one short line. Toasts leave on their own, so don't put anything there the user must read or act on; use a [Modal](?path=/docs/modal--docs) for that.
+- `variant` adds an icon: `"success"` (green check), `"error"` (red exclamation mark) or `"info"` (blue i). `"default"` has no icon.
 
+## ToastProvider props
+
+- **duration** _`number`_: time on screen in ms. Default `4000`.
+- **position** _`"top-right" | "top-left" | "top-center" | "bottom-right" | "bottom-left" | "bottom-center"`_: where the toasts stack. Default `"top-right"`.
+- **animation** _`"slide-from-right" | "slide-from-left" | "slide-from-bottom" | "scale"`_: how they come in and leave. Default `"slide-from-right"`.
+- **enableLiquidAnimation** _`boolean`_: animate toasts in and out. Default `true`.
+- **portalContainer** _`HTMLElement | null`_: where the toasts are rendered. Default `document.body`.
+
+## useToast()
+
+- **showToast(toast)**: shows a toast and returns its id.
+- **dismissToast(id)**: removes one toast.
+- **clearToasts()**: removes all toasts.
+- **defaults**: the provider's settings.
+
+`useToast` throws an error if there is no `ToastProvider` above it.
+
+## showToast options
+
+- **title** / **description** _`ReactNode`_
+- **variant** _`"default" | "success" | "error" | "info"`_: default `"default"`.
+- **duration** _`number`_: ms on screen. `Infinity` keeps the toast until it is closed.
+- **position**, **animation**, **enableLiquidAnimation**: override the provider's defaults for this toast.
+- **id** _`string`_: your own id instead of a generated one.
+- **onClose** _`() => void`_: called once when the toast starts to leave, whether by its timer, the close button or `dismissToast`.
+
+## Behaviour
+
+- The newest toast appears closest to the screen edge and pushes older ones away from it.
+- Each toast has a close button and `role="status"` with `aria-live="polite"`, so screen readers announce it without interrupting.
+- With `prefers-reduced-motion` toasts appear and disappear without sliding.

@@ -204,7 +204,7 @@ const TopbarBrand = forwardRef<HTMLDivElement, TopbarBrandProps>(
 TopbarBrand.displayName = "Topbar.Brand";
 
 export type TopbarActionsProps = ComponentPropsWithoutRef<"div"> & {
-  /** Default `"regular"`. */
+  /** Default `"tight"`. */
   gap?: TopbarGap;
 };
 

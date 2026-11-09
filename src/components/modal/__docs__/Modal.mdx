@@ -1,67 +1,71 @@
 import { Canvas, Meta } from "@storybook/addon-docs/blocks";
-import Example from "./Example.tsx";
 import * as ModalStories from "./Modal.stories.tsx";
 
 <Meta of={ModalStories} title="Modal" />
 
 # Modal
 
-Modal presents content in a focus-trapped glass surface over an application.
-
-#### Example
+A dialog on a sheet of frosted glass over a dimmed page. It springs in and fades out, like iOS 26 alerts and sheets. The glass is denser than on cards, so text stays readable over any background.
 
 <Canvas of={ModalStories.Default} />
 
 ## Usage
 
-```ts
+```tsx
 import { Modal, Button } from "react-magic-ui";
 import { useState } from "react";
 
-const Example = () => {
-  const [open, setOpen] = useState(false);
+const [open, setOpen] = useState(false);
 
-  return (
+<Button onClick={() => setOpen(true)}>Delete photo</Button>
+
+<Modal
+  open={open}
+  onOpenChange={setOpen}
+  title="Delete photo?"
+  description="This can't be undone."
+  footer={
     <>
-      <Button text="Open modal" onClick={() => setOpen(true)} />
-      <Modal
-        open={open}
-        onOpenChange={setOpen}
-        title="Glass modal"
-        description="A translucent surface that keeps the focus on your content."
-        footer={
-          <>
-            <Button text="Cancel" onClick={() => setOpen(false)} />
-            <Button text="Confirm" onClick={() => setOpen(false)} />
-          </>
-        }
-      >
-        <p>
-          This modal demonstrates the glassmorphism style with focus management, overlay dismissal,
-          and a flexible footer.
-        </p>
-      </Modal>
+      <Button onClick={() => setOpen(false)}>Cancel</Button>
+      <Button variant="prominent" destructive onClick={remove}>Delete</Button>
     </>
-  );
-};
-
-export default Example;
+  }
+/>
 ```
 
-#### Props
+Anything you pass as `children` goes into the body, between the header and the footer, such as a form or a longer text. If the content is taller than the screen, the dialog scrolls inside itself.
 
-- **open** _`boolean`_ — Controls whether the modal is visible.
-- **onOpenChange** _`(open: boolean) => void`_ — Callback fired when the open state should change.
-- **onClose** _`() => void`_ — Fired after the modal requests to close (overlay, close button, or escape).
-- **title** _`React.ReactNode`_ — Heading content displayed at the top of the modal.
-- **description** _`React.ReactNode`_ — Supporting text rendered under the title.
-- **footer** _`React.ReactNode`_ — Footer content, typically actions.
-- **size** _`"sm" | "md" | "lg"`_ — Controls the maximum width. Default is `"md"`.
-- **closeOnOverlay** _`boolean`_ — Allows closing by clicking the overlay. Default is `true`.
-- **closeOnEsc** _`boolean`_ — Allows closing with the Escape key. Default is `true`.
-- **lockScroll** _`boolean`_ — Prevents body scroll while open. Default is `true`.
-- **enableLiquidAnimation** _`boolean`_ — Enable liquid bounce animation on modal open. Default is `true`.
-- **portalContainer** _`HTMLElement | null`_ — Custom container for rendering the modal.
-- **className** _`string`_ — Additional CSS classes to apply to the modal content.
+## Guidelines
 
+- Use a modal for a short decision or a small task that has to be done before going back to the page. For a passing message, use a [Toast](?path=/docs/toast--docs).
+- Put two or three actions in the `footer`, with the main one last. They share the row in equal widths, as in iOS alerts. Make the main action `variant="prominent"`, and add `destructive` when it deletes something.
+- If closing the modal would lose the user's input, pass `closeOnOverlay={false}` so a stray click outside doesn't close it.
 
+<Canvas of={ModalStories.OverlayLocked} />
+
+## Props
+
+All `<div>` props go to the dialog panel, and `ref` points to it.
+
+- **open** _`boolean`_: shows the modal. Required.
+- **onOpenChange** _`(open: boolean) => void`_: called with `false` when the user closes it.
+- **onClose** _`() => void`_: called at the same moment, without an argument. Pass either one; with neither, there is no close button.
+- **title** _`ReactNode`_: the heading, linked to the dialog with `aria-labelledby`.
+- **description** _`ReactNode`_: a line under the title, linked with `aria-describedby`.
+- **footer** _`ReactNode`_: the row of actions at the bottom.
+- **size** _`"sm" | "md" | "lg"`_: max width 400, 520 or 680px. Default `"md"`.
+- **closeOnOverlay** _`boolean`_: a click on the dimmed page closes it. Default `true`.
+- **closeOnEsc** _`boolean`_: Escape closes it. Default `true`.
+- **lockScroll** _`boolean`_: the page behind doesn't scroll while the modal is open. Default `true`.
+- **enableLiquidAnimation** _`boolean`_: the spring in and fade out. With `false` it appears and disappears at once. Default `true`.
+- **portalContainer** _`HTMLElement | null`_: where the modal is rendered. Default `document.body`.
+- **tone**, **lens**: see [Glass](?path=/docs/glass--docs).
+
+<Canvas of={ModalStories.Large} />
+
+## Behaviour
+
+- The modal is rendered in a portal, but it takes the theme and ink tone of the place where you declared it.
+- When it opens, focus moves to the dialog, so screen readers start reading from the title.
+- The dialog has `role="dialog"` and `aria-modal="true"`.
+- With `prefers-reduced-motion` there is no animation; the modal simply appears and disappears.

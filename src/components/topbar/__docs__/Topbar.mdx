@@ -1,14 +1,11 @@
 import { Canvas, Meta } from "@storybook/addon-docs/blocks";
-import Example from "./Example.tsx";
 import * as TopbarStories from "./Topbar.stories.tsx";
 
 <Meta of={TopbarStories} title="Topbar" />
 
 # Topbar
 
-Glassmorphism top navigation bar with compound sections, brand, and action helpers.
-
-#### Example
+A floating glass bar for the top of a page, holding the app name, a search field and actions. It is built from parts (`Topbar.Brand`, `Topbar.Section`, `Topbar.Actions`, `Topbar.Divider`), so you arrange it the way you need.
 
 <Canvas of={TopbarStories.Default} />
 
@@ -17,31 +14,65 @@ Glassmorphism top navigation bar with compound sections, brand, and action helpe
 ```tsx
 import { Topbar, Button, Input } from "react-magic-ui";
 
-export const Example = () => (
-  <Topbar>
-    <Topbar.Brand icon="✨" title="Magic UI" subtitle="Command Center" />
+<Topbar>
+  <Topbar.Brand icon={<Logo />} title="Magic UI" subtitle="Command Center" />
 
-    <Topbar.Section grow>
-      <Input size="medium" placeholder="Search anything..." />
-    </Topbar.Section>
+  <Topbar.Section grow>
+    <Input placeholder="Search" leadingIcon={<SearchIcon />} />
+  </Topbar.Section>
 
-    <Topbar.Actions>
-      <Topbar.Divider />
-      <Button text="Invite" size="small" />
-      <Button text="Share" size="small" />
-    </Topbar.Actions>
-  </Topbar>
-);
+  <Topbar.Actions>
+    <Button size="small">Invite</Button>
+    <Topbar.Divider />
+    <Button size="small" variant="prominent">New</Button>
+  </Topbar.Actions>
+</Topbar>
 ```
 
-#### Arguments
+Buttons and fields in the bar are drawn as inner layers, so there is no glass blurred on top of glass. To keep the bar on screen while the page scrolls, give it `position: sticky; top: 12px` through `className` or `style`.
 
-- **size** _(`"compact" | "comfortable" | "spacious"`)_ – Controls the height, padding, and typography rhythm.
-- **elevated** _(`boolean`)_ – Toggles the drop shadow for a flatter appearance.
-- **Topbar.Section** _(`{ grow, align, gap, wrap }`)_ – Compose flexible areas, optionally stretching with `grow`.
-- **Topbar.Brand** _(`{ icon, title, subtitle }`)_ – Brand helper that adapts to the current topbar size.
-- **Topbar.Actions** _(`{ gap }`)_ – Right-aligned action container, wraps on smaller widths if needed.
-- **Topbar.Divider** _(`void`)_ – Responsive divider that matches the current topbar height.
-- **Topbar.useTopbar()** _(() => TopbarContextValue)_ – Access the active `size` within the component tree.
+## Sizes
 
+- **`"compact"`**: 48px high. For dense tools and dashboards.
+- **`"comfortable"`** (default): 60px.
+- **`"spacious"`**: 72px, with larger corners. For landing pages and big screens.
 
+<Canvas of={TopbarStories.Compact} />
+<Canvas of={TopbarStories.Spacious} />
+
+## Props
+
+### Topbar
+
+All `<header>` props are passed through, and `ref` points to the `<header>`.
+
+- **size** _`"compact" | "comfortable" | "spacious"`_: default `"comfortable"`.
+- **elevated** _`boolean`_: a soft shadow under the bar. Default `true`.
+- **material**, **tone**, **lens**: see [Glass](?path=/docs/glass--docs).
+
+<Canvas of={TopbarStories.Flat} />
+
+### Topbar.Brand
+
+- **icon** _`ReactNode`_: a logo before the title. Its size follows the bar's size.
+- **title** / **subtitle** _`ReactNode`_: the app or page name and a smaller line under it.
+- **children**: your own content instead of the title and subtitle.
+
+### Topbar.Section
+
+- **grow** _`boolean`_: takes all the free space, for example for a search field.
+- **align** _`"left" | "center" | "right" | "between"`_: default `"left"`.
+- **gap** _`"tight" | "regular" | "relaxed"`_: space between items. Default `"regular"`.
+- **wrap** _`boolean`_: lets items wrap to a second line.
+
+### Topbar.Actions
+
+A section aligned to the right. Its **gap** defaults to `"tight"`.
+
+### Topbar.Divider
+
+A thin vertical line between groups of items. Its height follows the bar's size.
+
+### Topbar.useTopbar()
+
+Returns `{ size }`, so your own parts inside the bar can match its size.
