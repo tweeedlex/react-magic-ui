@@ -40,6 +40,10 @@ import "react-magic-ui/style.css";
   `--rmu-accent` (prominent buttons, slider fill; default `--rmu-blue`), `--rmu-blue`, `--rmu-green`, `--rmu-red`, `--rmu-orange`, `--rmu-gray`, `--rmu-font`.
 - Every component takes `className` and `style` on its root, and forwards `ref`.
 
+## Motion
+
+Built in, nothing to wire up: pressed glass swells and lights up from the touch point, Switch and Slider thumbs turn into clear glass bubbles while held or dragged, and the Select menu grows out of its trigger and folds back into it. All of it switches off under `prefers-reduced-motion: reduce`.
+
 ## Components
 
 ### Button

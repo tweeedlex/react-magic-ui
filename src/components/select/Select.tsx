@@ -52,6 +52,28 @@ export type SelectProps = Pick<GlassStyleProps, "tone" | "lens"> & {
  *   onValueChange={setSize}
  * />
  */
+/**
+ * Keyframe that squeezes the menu onto the trigger's rect (scale from the
+ * top-left corner, radius corrected for the scale). Null when there is
+ * nothing to animate: no Web Animations API (tests, old browsers) or the
+ * user asked for reduced motion.
+ */
+function morphFrom(trigger: HTMLElement, menu: HTMLElement): Keyframe | null {
+  if (typeof menu.animate !== "function") return null;
+  if (typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return null;
+  const t = trigger.getBoundingClientRect();
+  const m = menu.getBoundingClientRect();
+  if (!m.width || !m.height || !t.width || !t.height) return null;
+  const sx = t.width / m.width;
+  const sy = t.height / m.height;
+  const r = t.height / 2;
+  return {
+    transform: `translate(${t.left - m.left}px, ${t.top - m.top}px) scale(${sx}, ${sy})`,
+    opacity: 0.5,
+    borderRadius: `${r / sx}px / ${r / sy}px`,
+  };
+}
+
 const Select = forwardRef<HTMLButtonElement, SelectProps>(({
   size = "medium",
   disabled,
@@ -85,10 +107,47 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(({
   const [pos, setPos] = useState<{ top: number; left: number; width: number } | null>(null);
   // the menu is portalled to body, so it takes the theme and ink tone of the trigger's ancestors
   const menuWrapRef = useRef<HTMLDivElement>(null);
-  const menuShown = open && !disabled && !!pos;
+  const menuOpen = open && !disabled;
+  // stays mounted after closing until the menu has folded back into the trigger
+  const [mounted, setMounted] = useState(false);
+  if (menuOpen && !mounted) setMounted(true);
+  const menuShown = mounted && !!pos;
   useLayoutEffect(() => {
     if (menuShown && menuWrapRef.current) syncGlassContext(menuWrapRef.current, rootRef.current);
   }, [menuShown]);
+
+  // iOS 26: the menu grows out of the trigger and folds back into it
+  useLayoutEffect(() => {
+    const menu = menuRef.current;
+    const trigger = rootRef.current;
+    if (!menuShown || !menu || !trigger) return;
+    const from = morphFrom(trigger, menu);
+    if (menuOpen) {
+      if (!from) return;
+      const anim = menu.animate([from, { transform: "none", opacity: 1, borderRadius: "22px" }], {
+        duration: 460,
+        easing: "cubic-bezier(.25, 1.18, .5, 1)",
+      });
+      return () => anim.cancel();
+    }
+    if (!from) {
+      setMounted(false);
+      return;
+    }
+    const anim = menu.animate([{ transform: "none", opacity: 1, borderRadius: "22px" }, { ...from, opacity: 0 }], {
+      duration: 220,
+      easing: "cubic-bezier(.4, 0, .7, 1)",
+      fill: "forwards",
+    });
+    // finish events can lag in background tabs; the timer makes sure it unmounts
+    const done = window.setTimeout(() => setMounted(false), 260);
+    anim.onfinish = () => setMounted(false);
+    return () => {
+      window.clearTimeout(done);
+      anim.onfinish = null;
+      anim.cancel();
+    };
+  }, [menuShown, menuOpen]);
   const listId = useId();
 
   const current = value ?? inner;
@@ -190,7 +249,7 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(({
         <ChevronDown className={clsx("rmu-icon rmu-select__chevron", open && "rmu-select__chevron--open")} />
       </Glass>
 
-      {open && !disabled && pos && typeof document !== "undefined" && createPortal(
+      {menuShown && typeof document !== "undefined" && createPortal(
         <div ref={menuWrapRef}>
         <Glass
           ref={menuRef as React.Ref<Element>}
@@ -202,6 +261,7 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(({
           style={{ top: pos.top, left: pos.left, minWidth: pos.width }}
           role="listbox"
           id={listId}
+          aria-hidden={menuOpen ? undefined : true}
         >
           {options.map((opt, i) => (
             <div

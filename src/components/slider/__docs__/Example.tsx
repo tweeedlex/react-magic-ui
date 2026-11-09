@@ -22,7 +22,7 @@ const Example: FC<Omit<SliderProps, 'value' | 'onValueChange'>> = ({
                 flexDirection: "column",
                 gap: "40px",
                 padding: "20px",
-                width: "100%",
+                width: "min(400px, 80vw)",
                 maxWidth: "400px",
                 margin: "0 auto",
             }}

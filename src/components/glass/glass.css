@@ -239,8 +239,26 @@
   transition-timing-function: ease, ease, ease, ease, ease, ease, ease, ease, ease, ease, ease, ease, ease, ease, var(--rmu-spring);
 }
 .rmu-glass--interactive:hover { --rmu-hov: 14%; }
-.rmu-glass--interactive:active { --rmu-hov: 26%; scale: 1.04; transition-duration: .2s, .45s, .45s, .45s, .45s, .45s, .45s, .45s, .45s, .35s, .35s, .35s, .35s, .45s, .18s; }
+/* press: the glass swells toward the finger and lights up from the touch point */
+.rmu-glass--interactive:active { --rmu-hov: 26%; scale: 1.06; transition-duration: .2s, .45s, .45s, .45s, .45s, .45s, .45s, .45s, .45s, .35s, .35s, .35s, .35s, .45s, .22s; }
+.rmu-glass--interactive:is([class*="--rounded"], [class*="--small"]):active { scale: 1.12; }
+.rmu-glass--interactive::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(circle at var(--rmu-px, 50%) var(--rmu-py, 50%),
+    rgb(255 255 255 / .55), rgb(255 255 255 / .18) 38%, rgb(255 255 255 / 0) 70%);
+  mix-blend-mode: plus-lighter;
+  opacity: 0;
+  transition: opacity .6s ease;
+}
+.rmu-glass--interactive:active::after { opacity: .7; transition-duration: .12s; }
+.rmu-glass--interactive.rmu-tinted:active::after { opacity: .45; }
 .rmu-glass--interactive:is(:disabled, [aria-disabled="true"]) { --rmu-hov: 0%; scale: 1; cursor: not-allowed; }
+.rmu-glass--interactive:is(:disabled, [aria-disabled="true"])::after { opacity: 0; }
 
 /* one-shot settle (triggerAnimation) */
 .rmu-glass--pulse-a { animation: rmu-settle-a .6s var(--rmu-spring-soft); }
@@ -261,9 +279,21 @@
 }
 
 /* ---- Accessibility fallbacks --------------------------------------------- */
+/* Reduced motion: no springs, swells or morphs anywhere in the kit. State
+   changes still happen, instantly; animationend still fires. */
 @media (prefers-reduced-motion: reduce) {
-  .rmu-glass, .rmu-glass * { transition-duration: 0s !important; animation-duration: 0s !important; }
-  .rmu-glass--interactive:active { scale: 1; }
+  [class*="rmu-"],
+  [class*="rmu-"]::before,
+  [class*="rmu-"]::after {
+    transition-duration: .01ms !important;
+    transition-delay: 0s !important;
+    animation-duration: .01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+  }
+  .rmu-glass--interactive:active,
+  .rmu-switch:active .rmu-switch__thumb,
+  .rmu-slider--dragging .rmu-slider__thumb { scale: none !important; }
 }
 @media (prefers-reduced-transparency: reduce) {
   .rmu-glass:not(.rmu-glass--inner):not(.rmu-tinted) {

@@ -34,12 +34,28 @@
   border-radius: 999px;
   background: #fff;
   box-shadow: 0 0 0 .5px rgb(0 0 0 / .04), 0 3px 8px rgb(0 0 0 / .15), 0 1px 1px rgb(0 0 0 / .1);
-  transition: translate .5s var(--rmu-spring), width .3s var(--rmu-spring-soft);
+  transition:
+    translate .5s var(--rmu-spring), width .3s var(--rmu-spring-soft), scale .4s var(--rmu-spring),
+    background-color .25s ease, box-shadow .25s ease;
 }
 .rmu-switch--on .rmu-switch__thumb {
   translate: calc(var(--w) - var(--tw) - 2 * var(--pad)) 0;
 }
-.rmu-switch:active:not(:disabled) .rmu-switch__thumb { width: calc(var(--tw) + 8px); }
+/* held: the knob grows past the track and becomes clear glass, so the
+   fill shows through it (iOS 26) */
+.rmu-switch:active:not(:disabled) .rmu-switch__thumb {
+  width: calc(var(--tw) + 8px);
+  scale: 1.35;
+  background-color: rgb(255 255 255 / .16);
+  box-shadow:
+    inset 1px 1px 1px -.5px rgb(255 255 255 / .95),
+    inset -1px -1px 1px -.5px rgb(255 255 255 / .6),
+    inset 0 0 0 .5px rgb(255 255 255 / .55),
+    0 4px 14px rgb(0 0 0 / .18);
+  -webkit-backdrop-filter: blur(.5px) saturate(160%) brightness(1.1);
+  backdrop-filter: blur(.5px) saturate(160%) brightness(1.1);
+  transition-duration: .5s, .3s, .28s, .15s, .15s;
+}
 .rmu-switch--on:active:not(:disabled) .rmu-switch__thumb { translate: calc(var(--w) - var(--tw) - 8px - 2 * var(--pad)) 0; }
 
 .rmu-switch--disabled { opacity: .45; cursor: not-allowed; }

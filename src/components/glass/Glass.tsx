@@ -101,6 +101,7 @@ function GlassImpl<T extends ElementType = "div">(
     className,
     style,
     children,
+    onPointerDown,
     ...rest
   }: GlassProps<T>,
   ref: React.ForwardedRef<Element>,
@@ -129,6 +130,17 @@ function GlassImpl<T extends ElementType = "div">(
     if (triggerAnimation) setPulse((p) => p + 1);
   }
 
+  // interactive glass lights up from where it was touched (iOS 26)
+  const handlePointerDown = (event: React.PointerEvent<HTMLElement>) => {
+    if (isInteractive) {
+      const el = event.currentTarget;
+      const r = el.getBoundingClientRect();
+      el.style.setProperty("--rmu-px", `${event.clientX - r.left}px`);
+      el.style.setProperty("--rmu-py", `${event.clientY - r.top}px`);
+    }
+    (onPointerDown as React.PointerEventHandler<HTMLElement> | undefined)?.(event);
+  };
+
   return (
     <GlassDepthContext.Provider value={inner ? depth : depth + 1}>
       <Component
@@ -145,6 +157,7 @@ function GlassImpl<T extends ElementType = "div">(
         )}
         style={rootStyle ? { ...rootStyle, ...style } : style}
         data-glass-tone={tone === "auto" ? undefined : tone}
+        onPointerDown={isInteractive || onPointerDown ? handlePointerDown : undefined}
         {...rest}
       >
         {children}

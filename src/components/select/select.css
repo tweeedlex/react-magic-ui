@@ -34,15 +34,16 @@
   box-sizing: border-box;
   padding: 6px;
   border-radius: 22px;
-  transform-origin: 50% 0;
-  animation: rmu-menu-in .42s var(--rmu-spring-soft) both;
+  /* Select.tsx morphs it out of the trigger with the Web Animations API */
+  transform-origin: 0 0;
   --rmu-d: 1;
   font-family: var(--rmu-font);
 }
-@keyframes rmu-menu-in {
-  from { opacity: 0; scale: .9 .7; translate: 0 -6px; }
-  to   { opacity: 1; scale: 1; translate: 0 0; }
-}
+/* closing: already gone for the pointer while it folds away */
+.rmu-select__menu[aria-hidden="true"] { pointer-events: none; }
+/* the rows fade in once the glass has started to grow, so text never squashes */
+.rmu-select__option { animation: rmu-option-in .26s ease .1s both; }
+@keyframes rmu-option-in { from { opacity: 0; } }
 
 .rmu-select__option {
   display: flex;
