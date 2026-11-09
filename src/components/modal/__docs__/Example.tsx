@@ -28,8 +28,8 @@ const Example: FC<ExampleProps> = ({
       ? footer
       : (
         <>
-          <Button text="Cancel" onClick={handleClose} />
-          <Button text="Confirm" onClick={handleClose} />
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button variant="prominent" onClick={handleClose}>Confirm</Button>
         </>
       );
 
