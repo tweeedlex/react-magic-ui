@@ -55,12 +55,14 @@ export type SelectProps = Pick<GlassStyleProps, "tone" | "lens"> & {
 /**
  * Keyframe that squeezes the menu onto the trigger's rect (scale from the
  * top-left corner, radius corrected for the scale). Null when there is
- * nothing to animate: no Web Animations API (tests, old browsers) or the
- * user asked for reduced motion.
+ * nothing to animate: no Web Animations API (tests, old browsers). With
+ * reduced motion the menu only fades in place (HIG: fades replace movement).
  */
 function morphFrom(trigger: HTMLElement, menu: HTMLElement): Keyframe | null {
   if (typeof menu.animate !== "function") return null;
-  if (typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return null;
+  if (typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+    return { opacity: 0 };
+  }
   const t = trigger.getBoundingClientRect();
   const m = menu.getBoundingClientRect();
   if (!m.width || !m.height || !t.width || !t.height) return null;
@@ -104,7 +106,7 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(({
   const rootRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   // the menu is portalled to <body> (glass can't sample the page from inside other glass)
-  const [pos, setPos] = useState<{ top: number; left: number; width: number } | null>(null);
+  const [pos, setPos] = useState<{ top: number; left: number; width: number; above: boolean } | null>(null);
   // the menu is portalled to body, so it takes the theme and ink tone of the trigger's ancestors
   const menuWrapRef = useRef<HTMLDivElement>(null);
   const menuOpen = open && !disabled;
@@ -147,8 +149,11 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(({
       anim.onfinish = null;
       anim.cancel();
     };
-  }, [menuShown, menuOpen]);
+    // re-run when the menu flips above the trigger: the first measure happens
+    // before the menu has a height, and the flip lands before paint
+  }, [menuShown, menuOpen, pos?.above]);
   const listId = useId();
+  const optionId = (i: number) => `${listId}-option-${i}`;
 
   const current = value ?? inner;
   const selected = options.find((o) => o.value === current);
@@ -180,12 +185,25 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
-  // keep the menu under the trigger while the page scrolls or resizes
+  // keep the menu next to the trigger while the page scrolls or resizes:
+  // below by default, above when it only fits there, nudged in from the
+  // right edge when it is wider than the room left
   useLayoutEffect(() => {
     if (!open) return;
+    const GAP = 8;
     const measure = () => {
       const r = rootRef.current?.getBoundingClientRect();
-      if (r) setPos({ top: r.bottom + 8, left: r.left, width: r.width });
+      if (!r) return;
+      const menu = menuRef.current;
+      const h = menu?.offsetHeight ?? 0;
+      const w = Math.max(menu?.offsetWidth ?? 0, r.width);
+      const vh = window.innerHeight;
+      const vw = window.innerWidth;
+      const fitsBelow = r.bottom + GAP + h <= vh - GAP;
+      const fitsAbove = r.top - GAP - h >= GAP;
+      const above = h > 0 && !fitsBelow && fitsAbove;
+      const left = Math.max(GAP, Math.min(r.left, vw - GAP - w));
+      setPos({ top: above ? r.top - GAP - h : r.bottom + GAP, left, width: r.width, above });
     };
     measure();
     window.addEventListener("scroll", measure, true);
@@ -194,7 +212,8 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(({
       window.removeEventListener("scroll", measure, true);
       window.removeEventListener("resize", measure);
     };
-  }, [open]);
+    // measure again once the menu is mounted and has a size
+  }, [open, menuShown]);
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (disabled) return;
@@ -214,8 +233,21 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(({
     };
     if (e.key === "ArrowDown") { e.preventDefault(); step(1); }
     else if (e.key === "ArrowUp") { e.preventDefault(); step(-1); }
+    else if (e.key === "Home" || e.key === "End") {
+      e.preventDefault();
+      const order = options.map((_, i) => i);
+      if (e.key === "End") order.reverse();
+      const i = order.find((n) => !options[n].disabled);
+      if (i !== undefined) setActive(i);
+    }
     else if (e.key === "Enter" || e.key === " ") { e.preventDefault(); if (options[active]) choose(options[active]); }
-    else if (e.key === "Escape" || e.key === "Tab") setOpen(false);
+    else if (e.key === "Escape") {
+      // closes the menu only, not a Modal or Sheet around it
+      e.preventDefault();
+      e.stopPropagation();
+      setOpen(false);
+    }
+    else if (e.key === "Tab") setOpen(false);
   };
 
   return (
@@ -234,11 +266,15 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(({
         lens={lens}
         interactive={!disabled}
         disabled={disabled}
+        // APG select-only combobox: focus stays on the trigger and
+        // aria-activedescendant tells screen readers which option is current
+        role="combobox"
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledBy}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={open ? listId : undefined}
+        aria-activedescendant={menuOpen && menuShown && options[active] ? optionId(active) : undefined}
         onClick={() => !disabled && openMenu(!open)}
         onKeyDown={onKeyDown}
         className="rmu-select__trigger"
@@ -266,6 +302,7 @@ const Select = forwardRef<HTMLButtonElement, SelectProps>(({
           {options.map((opt, i) => (
             <div
               key={opt.value}
+              id={optionId(i)}
               role="option"
               aria-selected={opt.value === current}
               aria-disabled={opt.disabled || undefined}

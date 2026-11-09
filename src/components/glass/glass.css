@@ -25,18 +25,26 @@
 /* user tint scale, 0..1.5 (1 = material as designed) */
 @property --rmu-tint-scale { syntax: '<number>'; inherits: true; initial-value: 1; }
 
-:root {
-  /* system colours */
-  --rmu-blue: rgb(0 122 255);
+:where(:root) {   /* zero specificity: themes and user overrides win */
+  /* system colours — HIG Color, iOS 26 palette (retuned for Liquid Glass) */
+  --rmu-blue: rgb(0 136 255);
   --rmu-green: rgb(52 199 89);
-  --rmu-red: rgb(255 59 48);
-  --rmu-orange: rgb(255 149 0);
+  --rmu-red: rgb(255 56 60);
+  --rmu-orange: rgb(255 141 40);
   --rmu-gray: rgb(142 142 147);
   --rmu-accent: var(--rmu-blue);
-  --rmu-focus: rgb(0 122 255 / .75);
+  --rmu-focus: rgb(0 136 255 / .75);
 
   --rmu-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter Variable", "Segoe UI Variable Text",
     "Segoe UI", system-ui, sans-serif;
+
+  /* tracking by point size. Inter's dynamic metrics
+     (-0.0223 + 0.185 * e^(-0.1745 * size) em), not one value for every size */
+  --rmu-tracking-14: -0.006em;
+  --rmu-tracking-15: -0.009em;
+  --rmu-tracking-16: -0.011em;
+  --rmu-tracking-17: -0.013em;
+  --rmu-tracking-20: -0.017em;
 
   /* motion */
   --rmu-spring: cubic-bezier(.32, 1.42, .52, 1);   /* bouncy settle */
@@ -45,10 +53,43 @@
   --rmu-dur: .45s;
 }
 :where(.dark, [data-theme="dark"]) {
-  --rmu-blue: rgb(10 132 255);
+  --rmu-blue: rgb(0 145 255);
   --rmu-green: rgb(48 209 88);
-  --rmu-red: rgb(255 69 58);
-  --rmu-orange: rgb(255 159 10);
+  --rmu-red: rgb(255 66 69);
+  --rmu-orange: rgb(255 146 48);
+  --rmu-focus: rgb(0 145 255 / .8);
+}
+
+/* Safari renders the system font (SF) with its own size-specific tracking;
+   adding ours on top would double it */
+@supports (font: -apple-system-body) {
+  :where(:root) {
+    --rmu-tracking-14: normal;
+    --rmu-tracking-15: normal;
+    --rmu-tracking-16: normal;
+    --rmu-tracking-17: normal;
+    --rmu-tracking-20: normal;
+  }
+}
+
+/* Increased contrast: HIG "accessible" variants and an opaque focus ring */
+@media (prefers-contrast: more) {
+  :where(:root) {
+    --rmu-blue: rgb(30 110 244);
+    --rmu-green: rgb(0 137 50);
+    --rmu-red: rgb(233 21 45);
+    --rmu-orange: rgb(197 83 0);
+    --rmu-gray: rgb(108 108 112);
+    --rmu-focus: rgb(30 110 244);
+  }
+  :where(.dark, [data-theme="dark"]) {
+    --rmu-blue: rgb(92 184 255);
+    --rmu-green: rgb(74 217 104);
+    --rmu-red: rgb(255 97 101);
+    --rmu-orange: rgb(255 160 86);
+    --rmu-gray: rgb(174 174 178);
+    --rmu-focus: rgb(92 184 255);
+  }
 }
 
 /* ---- State A: light theme, light glass, dark ink (default) --------------- */
@@ -312,21 +353,23 @@
 }
 
 /* ---- Accessibility fallbacks --------------------------------------------- */
-/* Reduced motion: no springs, swells or morphs anywhere in the kit. State
-   changes still happen, instantly; animationend still fires. */
+/* Reduced motion, the HIG way (Motion, Accessibility): transitions stay, but
+   springs lose their bounce, movement and scaling turn into fades, and blur
+   is never animated in or out. Components swap their own keyframes for
+   fades in their stylesheets; this block handles the shared parts. */
 @media (prefers-reduced-motion: reduce) {
-  [class*="rmu-"],
-  [class*="rmu-"]::before,
-  [class*="rmu-"]::after {
-    transition-duration: .01ms !important;
-    transition-delay: 0s !important;
-    animation-duration: .01ms !important;
-    animation-delay: 0s !important;
-    animation-iteration-count: 1 !important;
+  :where(:root) {
+    --rmu-spring: cubic-bezier(.2, .8, .2, 1);
+    --rmu-spring-soft: cubic-bezier(.2, .8, .2, 1);
   }
-  .rmu-glass--interactive:active,
+  /* no press swell or squeeze, no lens that grows under the finger */
+  [class*="rmu-"]:active,
   .rmu-switch:active .rmu-switch__thumb,
+  .rmu-switch--dragging .rmu-switch__thumb,
   .rmu-slider--dragging .rmu-slider__thumb { scale: none !important; }
+  /* the settle pulse is pure scale */
+  .rmu-glass--pulse-a,
+  .rmu-glass--pulse-b { animation: none; }
 }
 @media (prefers-reduced-transparency: reduce) {
   .rmu-glass:not(.rmu-glass--inner):not(.rmu-tinted) {

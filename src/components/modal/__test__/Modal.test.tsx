@@ -125,6 +125,72 @@ describe("Modal component", () => {
 
     expect(wheel()).toBe(false);
   });
+
+  describe("focus", () => {
+    const Harness = ({ open }: { open: boolean }) => (
+      <>
+        <div data-testid="app">
+          <button type="button">Opener</button>
+        </div>
+        <Modal open={open} onOpenChange={() => {}} title="Focus" footer={<button type="button">Last</button>}>
+          <button type="button">First</button>
+        </Modal>
+      </>
+    );
+
+    it("makes the page behind inert while open and restores it on close", () => {
+      const { rerender } = render(<Harness open={false} />);
+      const app = screen.getByTestId("app");
+      expect(app.closest("[inert]")).toBeNull();
+
+      rerender(<Harness open />);
+      expect(app.closest("[inert]")).not.toBeNull();
+      expect(screen.getByTestId("modal-container").closest("[inert]")).toBeNull();
+
+      rerender(<Harness open={false} />);
+      expect(app.closest("[inert]")).toBeNull();
+    });
+
+    it("cycles Tab inside the dialog", () => {
+      render(<Harness open />);
+      const dialog = screen.getByRole("dialog");
+      const close = screen.getByRole("button", { name: "close modal" });
+      const last = screen.getByRole("button", { name: "Last" });
+
+      last.focus();
+      fireEvent.keyDown(last, { key: "Tab" });
+      expect(document.activeElement).toBe(close);
+
+      close.focus();
+      fireEvent.keyDown(close, { key: "Tab", shiftKey: true });
+      expect(document.activeElement).toBe(last);
+
+      dialog.focus();
+      fireEvent.keyDown(dialog, { key: "Tab", shiftKey: true });
+      expect(document.activeElement).toBe(last);
+    });
+
+    it("returns focus to the opener on close", () => {
+      const { rerender } = render(<Harness open={false} />);
+      const opener = screen.getByRole("button", { name: "Opener" });
+      opener.focus();
+
+      rerender(<Harness open />);
+      expect(document.activeElement).toBe(screen.getByRole("dialog"));
+
+      rerender(<Harness open={false} />);
+      expect(document.activeElement).toBe(opener);
+    });
+
+    it("keeps the toast layer usable", () => {
+      const toastLayer = document.createElement("div");
+      toastLayer.setAttribute("data-rmu-keep-active", "");
+      document.body.appendChild(toastLayer);
+      render(<Harness open />);
+      expect(toastLayer).not.toHaveAttribute("inert");
+      toastLayer.remove();
+    });
+  });
 });
 
 

@@ -380,7 +380,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
       {children}
       {portalNode &&
         createPortal(
-          <div ref={layerRef} className={styles.toastLayer}>
+          <div ref={layerRef} className={styles.toastLayer} data-rmu-keep-active="">
             {(
               Object.entries(toastsByPosition) as [
                 ToastPosition,

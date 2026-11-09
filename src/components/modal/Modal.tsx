@@ -18,6 +18,7 @@ import { Xmark } from "../../core/icons";
 import { syncGlassContext, useIsClient } from "../../core/portal";
 import { lockPageScroll } from "../../core/scroll-lock";
 import { useMergedRef } from "../../core/refs";
+import { inertOutside, trapTabKey } from "../../core/focus";
 
 const styles = scoped("rmu-modal");
 
@@ -133,15 +134,30 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(({
     };
   }, [closeOnEsc, handleClose, open]);
 
+  // Modal focus contract (HIG Modality, APG dialog): focus moves in, Tab
+  // cycles inside, the page behind is inert, and focus returns on close.
   useEffect(() => {
     if (!open) {
       return;
     }
 
+    const opener = document.activeElement as HTMLElement | null;
     const element = contentRef.current;
-    if (element) {
-      element.focus({ preventScroll: true });
-    }
+    const layer = portalRef.current;
+    element?.focus({ preventScroll: true });
+    const restoreInert = layer ? inertOutside(layer) : undefined;
+    const handleTab = (event: KeyboardEvent) => {
+      if (contentRef.current) trapTabKey(event, contentRef.current);
+    };
+    layer?.addEventListener("keydown", handleTab);
+
+    return () => {
+      layer?.removeEventListener("keydown", handleTab);
+      restoreInert?.();
+      if (opener && opener.isConnected && opener !== document.body) {
+        opener.focus({ preventScroll: true });
+      }
+    };
   }, [open]);
 
   useEffect(() => {
