@@ -278,6 +278,39 @@
   outline-offset: 2px;
 }
 
+/* ---- Scrollbars ----------------------------------------------------------- */
+/* Anything that scrolls on or inside glass (Select menu, Modal body, content
+   in a Card) gets the iOS indicator: a thin ink-coloured pill floating over
+   the content, no track, no arrows, kept clear of the rounded corners. */
+.rmu-glass::-webkit-scrollbar,
+.rmu-glass *::-webkit-scrollbar { width: 11px; height: 11px; background: transparent; }
+.rmu-glass::-webkit-scrollbar-track,
+.rmu-glass *::-webkit-scrollbar-track { background: transparent; margin: 14px; }
+.rmu-glass::-webkit-scrollbar-corner,
+.rmu-glass *::-webkit-scrollbar-corner { background: transparent; }
+.rmu-glass::-webkit-scrollbar-button,
+.rmu-glass *::-webkit-scrollbar-button { display: none; }
+.rmu-glass::-webkit-scrollbar-thumb,
+.rmu-glass *::-webkit-scrollbar-thumb {
+  /* 11px box, 3.5px clear border: a 4px pill with space around it */
+  border: 3.5px solid transparent;
+  border-radius: 99px;
+  background: color-mix(in srgb, var(--rmu-ink-solid) 30%, transparent) padding-box;
+}
+.rmu-glass::-webkit-scrollbar-thumb:hover,
+.rmu-glass *::-webkit-scrollbar-thumb:hover { background-color: color-mix(in srgb, var(--rmu-ink-solid) 48%, transparent); }
+.rmu-glass::-webkit-scrollbar-thumb:active,
+.rmu-glass *::-webkit-scrollbar-thumb:active { background-color: color-mix(in srgb, var(--rmu-ink-solid) 60%, transparent); }
+/* Firefox has no ::-webkit-scrollbar; the standard properties are its only
+   styling (Chromium would let them override the pill above, so they stay here) */
+@supports not selector(::-webkit-scrollbar) {
+  .rmu-glass,
+  .rmu-glass * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--rmu-ink-solid) 30%, transparent) transparent;
+  }
+}
+
 /* ---- Accessibility fallbacks --------------------------------------------- */
 /* Reduced motion: no springs, swells or morphs anywhere in the kit. State
    changes still happen, instantly; animationend still fires. */
