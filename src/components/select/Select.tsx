@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import React, { forwardRef, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { syncGlassContext } from "../../core/portal";
 import clsx from "clsx";
@@ -20,7 +20,13 @@ export type SelectProps = Pick<GlassStyleProps, "tone" | "lens"> & {
   /** Initial value when uncontrolled. */
   defaultValue?: string;
   /** Called with the chosen option's `value`. */
+  onValueChange?: (value: string) => void;
+  /** @deprecated Use `onValueChange` (same signature). */
   onChange?: (value: string) => void;
+  /** Called when the menu opens or closes. */
+  onOpenChange?: (open: boolean) => void;
+  /** Form field name: renders a hidden input with the value, so the select posts with a `<form>`. */
+  name?: string;
   /** Shown when nothing is selected. Default `"Select an option"`. */
   placeholder?: string;
   disabled?: boolean;
@@ -28,8 +34,10 @@ export type SelectProps = Pick<GlassStyleProps, "tone" | "lens"> & {
   size?: "small" | "medium" | "large";
   className?: string;
   style?: React.CSSProperties;
+  /** Id of the trigger button (for a `<label htmlFor>`). */
   id?: string;
   "aria-label"?: string;
+  "aria-labelledby"?: string;
   /** @deprecated No effect. */
   enableClickAnimation?: boolean;
 };
@@ -41,16 +49,19 @@ export type SelectProps = Pick<GlassStyleProps, "tone" | "lens"> & {
  * <Select
  *   options={[{ value: "s", label: "Small" }, { value: "l", label: "Large" }]}
  *   value={size}
- *   onChange={setSize}
+ *   onValueChange={setSize}
  * />
  */
-const Select: React.FC<SelectProps> = ({
+const Select = forwardRef<HTMLButtonElement, SelectProps>(({
   size = "medium",
   disabled,
   options,
   value,
   defaultValue,
+  onValueChange,
   onChange,
+  onOpenChange,
+  name,
   placeholder = "Select an option",
   tone,
   lens,
@@ -58,8 +69,14 @@ const Select: React.FC<SelectProps> = ({
   style,
   id,
   "aria-label": ariaLabel,
-}) => {
-  const [open, setOpen] = useState(false);
+  "aria-labelledby": ariaLabelledBy,
+}, ref) => {
+  const [open, setOpenState] = useState(false);
+  const setOpen = (next: boolean) => {
+    if (next === open) return;
+    setOpenState(next);
+    onOpenChange?.(next);
+  };
   const [inner, setInner] = useState(defaultValue);
   const [active, setActive] = useState(-1);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -86,6 +103,7 @@ const Select: React.FC<SelectProps> = ({
   const choose = (opt: SelectOption) => {
     if (opt.disabled) return;
     if (value === undefined) setInner(opt.value);
+    onValueChange?.(opt.value);
     onChange?.(opt.value);
     setOpen(false);
   };
@@ -95,10 +113,12 @@ const Select: React.FC<SelectProps> = ({
     const onDown = (e: MouseEvent) => {
       const t = e.target as Node;
       if (rootRef.current?.contains(t) || menuRef.current?.contains(t)) return;
-      setOpen(false);
+      setOpenState(false);
+      onOpenChange?.(false);
     };
     document.addEventListener("mousedown", onDown);
     return () => document.removeEventListener("mousedown", onDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   // keep the menu under the trigger while the page scrolls or resizes
@@ -145,8 +165,10 @@ const Select: React.FC<SelectProps> = ({
       className={clsx("rmu-select", `rmu-select--${size}`, disabled && "rmu-select--disabled", className)}
       style={style}
     >
+      {name !== undefined && <input type="hidden" name={name} value={current ?? ""} />}
       <Glass
         as="button"
+        ref={ref as React.Ref<Element>}
         type="button"
         id={id}
         tone={tone}
@@ -154,6 +176,7 @@ const Select: React.FC<SelectProps> = ({
         interactive={!disabled}
         disabled={disabled}
         aria-label={ariaLabel}
+        aria-labelledby={ariaLabelledBy}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={open ? listId : undefined}
@@ -205,7 +228,7 @@ const Select: React.FC<SelectProps> = ({
       )}
     </div>
   );
-};
+});
 
 Select.displayName = "Select";
 

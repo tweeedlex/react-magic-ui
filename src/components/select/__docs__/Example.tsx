@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import Select, { SelectProps } from "../Select";
 
-const Example: FC<Omit<SelectProps, 'value' | 'onChange'>> = ({
+const Example: FC<Omit<SelectProps, 'value' | 'onValueChange'>> = ({
     disabled = false,
     size = "medium",
     options,
@@ -29,7 +29,7 @@ const Example: FC<Omit<SelectProps, 'value' | 'onChange'>> = ({
                 disabled={disabled}
                 options={options}
                 value={value}
-                onChange={setValue}
+                onValueChange={setValue}
                 placeholder={placeholder}
                 enableClickAnimation={enableClickAnimation}
             />

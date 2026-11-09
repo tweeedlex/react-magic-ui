@@ -1,6 +1,7 @@
 import React, {
   ComponentPropsWithoutRef,
   ReactNode,
+  forwardRef,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -16,6 +17,7 @@ import "./modal.css";
 import { Xmark } from "../../core/icons";
 import { syncGlassContext, useIsClient } from "../../core/portal";
 import { lockPageScroll } from "../../core/scroll-lock";
+import { useMergedRef } from "../../core/refs";
 
 const styles = scoped("rmu-modal");
 
@@ -63,7 +65,7 @@ const EXIT_MS = 220;
  *   </>}
  * />
  */
-const Modal: React.FC<ModalProps> = ({
+const Modal = forwardRef<HTMLDivElement, ModalProps>(({
   open,
   onClose,
   onOpenChange,
@@ -80,7 +82,7 @@ const Modal: React.FC<ModalProps> = ({
   portalContainer,
   onClick,
   ...rest
-}) => {
+}, ref) => {
   const isClient = useIsClient();
   const container = isClient ? (portalContainer ?? document.body) : null;
   // marks the place the modal is declared, to read the theme and ink tone around it
@@ -92,6 +94,7 @@ const Modal: React.FC<ModalProps> = ({
   const shown = open || (present && enableLiquidAnimation);
   const closing = shown && !open;
   const contentRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useMergedRef<HTMLDivElement>(contentRef, ref);
   const titleId = useId();
   const descriptionId = useId();
 
@@ -183,7 +186,7 @@ const Modal: React.FC<ModalProps> = ({
       />
 
       <Glass
-        ref={contentRef as React.Ref<Element>}
+        ref={dialogRef as React.Ref<Element>}
         layer="surface"
         // sheets hold text over anything: dense frosting, lens kept on the rim
         material="frosted"
@@ -238,7 +241,9 @@ const Modal: React.FC<ModalProps> = ({
       )}
     </>
   );
-};
+});
+
+Modal.displayName = "Modal";
 
 export default Modal;
 

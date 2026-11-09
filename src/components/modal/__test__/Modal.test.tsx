@@ -36,6 +36,12 @@ describe("Modal component", () => {
     expect(screen.getByText("Modal body content")).toBeInTheDocument();
   });
 
+  it("forwards the ref to the dialog", () => {
+    const ref = React.createRef<HTMLDivElement>();
+    render(<Modal open title="Hi" ref={ref} />);
+    expect(ref.current).toBe(screen.getByRole("dialog"));
+  });
+
   it("calls onOpenChange when overlay clicked", () => {
     const { onOpenChange } = renderModal();
 

@@ -12,6 +12,7 @@ import React, {
 import clsx from "clsx";
 import { Lens, lensSupported } from "../../core/lens";
 import "./glass.css";
+import { setRef } from "../../core/refs";
 
 /** How many real glass surfaces are above this one. */
 const GlassDepthContext = createContext(0);
@@ -73,11 +74,6 @@ type GlassOwnProps<T extends ElementType> = GlassStyleProps & {
 
 export type GlassProps<T extends ElementType = "div"> = GlassOwnProps<T> &
   Omit<ComponentPropsWithoutRef<T>, keyof GlassOwnProps<T>>;
-
-function setRef<T>(ref: React.Ref<T> | undefined, value: T) {
-  if (typeof ref === "function") ref(value);
-  else if (ref) (ref as React.MutableRefObject<T>).current = value;
-}
 
 function useLens(ref: React.RefObject<HTMLElement | null>, enabled: boolean) {
   useEffect(() => {

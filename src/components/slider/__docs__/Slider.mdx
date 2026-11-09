@@ -29,7 +29,7 @@ const Example = () => {
         max={100}
         step={1}
         value={value}
-        onChange={setValue}
+        onValueChange={setValue}
         showValue={false}
         enableClickAnimation={true}
       />
@@ -47,6 +47,6 @@ export default Example;
 - **max** - A number representing the maximum value of the Slider. Defaults to 100.
 - **step** - A number representing the increment step for the Slider value. Defaults to 1.
 - **value** - A number representing the current value of the Slider. Use this to control the Slider component.
-- **onChange** - A function that receives the new value as a number parameter. It is called when the user drags the slider or clicks on the track.
+- **onValueChange** - A function that receives the new value as a number parameter. It is called when the user drags the slider or clicks on the track.
 - **showValue** - A boolean indicating whether to display the current value of the Slider. Defaults to false.
 - **enableClickAnimation** - A boolean indicating whether to enable the liquid bounce animation on click

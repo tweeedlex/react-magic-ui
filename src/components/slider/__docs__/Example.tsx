@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import Slider, { SliderProps } from "../Slider";
 
-const Example: FC<Omit<SliderProps, 'value' | 'onChange'>> = ({
+const Example: FC<Omit<SliderProps, 'value' | 'onValueChange'>> = ({
     disabled = false,
     size = "medium",
     min = 0,
@@ -35,7 +35,7 @@ const Example: FC<Omit<SliderProps, 'value' | 'onChange'>> = ({
                     max={max}
                     step={step}
                     value={value}
-                    onChange={setValue}
+                    onValueChange={setValue}
                     showValue={showValue}
                     enableClickAnimation={enableClickAnimation}
                 />

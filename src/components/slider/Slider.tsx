@@ -1,14 +1,17 @@
-import React, { useRef, useState } from "react";
+import React, { ComponentPropsWithoutRef, forwardRef, useRef, useState } from "react";
 import clsx from "clsx";
 import Glass, { GlassStyleProps } from "../glass/Glass";
 import "./slider.css";
 
-export type SliderProps = Pick<GlassStyleProps, "tone"> & {
+export type SliderProps = Omit<ComponentPropsWithoutRef<"div">, "onChange" | "defaultValue" | "children"> &
+  Pick<GlassStyleProps, "tone"> & {
   /** Controlled value. */
   value?: number;
   /** Initial value when uncontrolled. Default 50. */
   defaultValue?: number;
-  /** Called while dragging and on keyboard changes. */
+  /** Called with the new value while dragging and on keyboard changes. */
+  onValueChange?: (value: number) => void;
+  /** @deprecated Use `onValueChange` (same signature). */
   onChange?: (value: number) => void;
   min?: number;
   max?: number;
@@ -18,9 +21,9 @@ export type SliderProps = Pick<GlassStyleProps, "tone"> & {
   size?: "small" | "medium" | "large";
   /** Show the current value after the track. */
   showValue?: boolean;
-  className?: string;
-  style?: React.CSSProperties;
+  /** Accessible name of the thumb. Use this or `aria-labelledby`. */
   "aria-label"?: string;
+  "aria-labelledby"?: string;
   /** @deprecated No effect. */
   enableClickAnimation?: boolean;
 };
@@ -30,9 +33,9 @@ export type SliderProps = Pick<GlassStyleProps, "tone"> & {
  * swells while dragged. Keyboard: arrows, Page Up/Down, Home/End.
  *
  * @example
- * <Slider aria-label="Volume" value={vol} onChange={setVol} />
+ * <Slider aria-label="Volume" value={vol} onValueChange={setVol} />
  */
-const Slider: React.FC<SliderProps> = ({
+const Slider = forwardRef<HTMLDivElement, SliderProps>(({
   size = "medium",
   disabled,
   min = 0,
@@ -40,13 +43,17 @@ const Slider: React.FC<SliderProps> = ({
   step = 1,
   value,
   defaultValue = 50,
+  onValueChange,
   onChange,
   showValue = false,
   tone,
   className,
-  style,
   "aria-label": ariaLabel,
-}) => {
+  "aria-labelledby": ariaLabelledBy,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  enableClickAnimation: _ignored,
+  ...rest
+}, ref) => {
   const [inner, setInner] = useState(defaultValue);
   const [dragging, setDragging] = useState(false);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -58,6 +65,7 @@ const Slider: React.FC<SliderProps> = ({
     const fixed = Number(clamped.toFixed(6));
     if (fixed === current) return;
     if (value === undefined) setInner(fixed);
+    onValueChange?.(fixed);
     onChange?.(fixed);
   };
 
@@ -92,8 +100,9 @@ const Slider: React.FC<SliderProps> = ({
 
   return (
     <div
+      ref={ref}
       className={clsx("rmu-slider", `rmu-slider--${size}`, dragging && "rmu-slider--dragging", disabled && "rmu-slider--disabled", className)}
-      style={style}
+      {...rest}
     >
       <div
         ref={trackRef}
@@ -112,6 +121,8 @@ const Slider: React.FC<SliderProps> = ({
           role="slider"
           tabIndex={disabled ? -1 : 0}
           aria-label={ariaLabel}
+          aria-labelledby={ariaLabelledBy}
+          aria-orientation="horizontal"
           aria-valuemin={min}
           aria-valuemax={max}
           aria-valuenow={current}
@@ -122,7 +133,7 @@ const Slider: React.FC<SliderProps> = ({
       {showValue && <span className="rmu-slider__value">{current}</span>}
     </div>
   );
-};
+});
 
 Slider.displayName = "Slider";
 

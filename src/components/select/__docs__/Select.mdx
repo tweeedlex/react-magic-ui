@@ -33,7 +33,7 @@ const Example = () => {
         disabled={false}
         options={options}
         value={value}
-        onChange={setValue}
+        onValueChange={setValue}
         placeholder="Select an option"
         enableClickAnimation={true}
       />
@@ -49,6 +49,6 @@ export default Example;
 - **size** - A string with one of three possible values: "small," "medium," or "large." It defines the size or dimensions of the Select.
 - **options** - An array of objects with `value` and `label` properties. Each object represents a selectable option in the dropdown.
 - **value** - A string representing the currently selected option's value. Use this to control the Select component.
-- **onChange** - A function that receives the selected option's value as a string parameter. It is called when the user selects an option from the dropdown.
+- **onValueChange** - A function that receives the selected option's value as a string parameter. It is called when the user selects an option from the dropdown.
 - **placeholder** - An optional string that displays placeholder text when no option is selected. Defaults to "Select an option".
 - **enableClickAnimation** - A boolean indicating whether to enable the liquid bounce animation on click
