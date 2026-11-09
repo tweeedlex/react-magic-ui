@@ -32,11 +32,22 @@ export type GlassLayer = "auto" | "surface" | "inner";
  */
 export type GlassTone = "auto" | "light" | "dark";
 
+/**
+ * What the surface is made of.
+ * - `"glass"` — Liquid Glass: light blur, lens at the rim. For controls and
+ *   navigation that float over content (buttons, bars, menus, sheets).
+ * - `"frosted"` — a thicker, more opaque blur without the lens. For content
+ *   panels such as cards and lists: Apple keeps Liquid Glass off the content layer.
+ */
+export type GlassMaterial = "glass" | "frosted";
+
 /** Props every glass component accepts. */
 export type GlassStyleProps = {
+  /** Surface material. Default `"glass"` (Card defaults to `"frosted"`). */
+  material?: GlassMaterial;
   /** Ink colour on the glass. Default `"auto"`. Can also be set for a whole subtree with `data-glass-tone` on any ancestor. */
   tone?: GlassTone;
-  /** Bend the backdrop at the rim (Chromium only, other browsers get flat glass). Default `true`. */
+  /** Bend the backdrop at the rim (Chromium only, other browsers get flat glass). Default `true` for `"glass"`, `false` for `"frosted"`. */
   lens?: boolean;
   /** Position in the glass hierarchy. Default `"auto"`. */
   layer?: GlassLayer;
@@ -82,7 +93,8 @@ function GlassImpl<T extends ElementType = "div">(
   {
     as,
     tone = "auto",
-    lens = true,
+    material = "glass",
+    lens: lensProp,
     layer = "auto",
     interactive,
     selected,
@@ -101,6 +113,7 @@ function GlassImpl<T extends ElementType = "div">(
   const depth = useContext(GlassDepthContext);
   const inner = layer === "inner" || (layer === "auto" && depth > 0);
   const isInteractive = interactive ?? enableLiquidAnimation ?? false;
+  const lens = lensProp ?? material === "glass";
 
   const localRef = useRef<HTMLElement | null>(null);
   const composedRef = useCallback(
@@ -127,6 +140,7 @@ function GlassImpl<T extends ElementType = "div">(
         className={clsx(
           "rmu-glass",
           inner && "rmu-glass--inner",
+          !inner && material === "frosted" && "rmu-glass--frosted",
           isInteractive && "rmu-glass--interactive",
           selected && "rmu-glass--selected",
           pulse > 0 && (pulse % 2 ? "rmu-glass--pulse-a" : "rmu-glass--pulse-b"),

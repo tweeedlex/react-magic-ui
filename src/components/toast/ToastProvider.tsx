@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -15,6 +16,7 @@ import Glass from "../glass/Glass";
 import { scoped } from "../../core/classes";
 import "./toast.css";
 import { CheckmarkCircleFill, ExclamationmarkCircleFill, InfoCircleFill, Xmark } from "../../core/icons";
+import { syncGlassContext, useIsClient } from "../../core/portal";
 
 const styles = scoped("rmu-toast");
 
@@ -135,7 +137,9 @@ const ToastCard: React.FC<{
   const removeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const closed = useRef(false);
 
-  const animPhaseClass = phase === "initial" ? styles.animInitial : phase === "enter" ? styles.animEnter : styles.animExit;
+  // a dismissed toast leaves even if its own timer hasn't fired
+  const current = toast.dismissed ? "exit" : phase;
+  const animPhaseClass = current === "initial" ? styles.animInitial : phase === "enter" ? styles.animEnter : styles.animExit;
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
@@ -162,15 +166,7 @@ const ToastCard: React.FC<{
   }, [toast.duration]);
 
   useEffect(() => {
-    if (!toast.dismissed) {
-      return;
-    }
-
-    setPhase("exit");
-  }, [toast.dismissed]);
-
-  useEffect(() => {
-    if (phase !== "exit") {
+    if (current !== "exit") {
       return;
     }
 
@@ -188,7 +184,7 @@ const ToastCard: React.FC<{
         clearTimeout(removeTimer.current);
       }
     };
-  }, [animationDurations, onRemove, phase, toast]);
+  }, [onRemove, current, toast]);
 
   const animationClass = animationClassMap[toast.animation];
 
@@ -247,18 +243,15 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
   portalContainer,
 }) => {
   const [toasts, setToasts] = useState<ToastRecord[]>([]);
-  const [portalNode, setPortalNode] = useState<HTMLElement | null>(null);
+  const isClient = useIsClient();
+  const portalNode = isClient ? (portalContainer ?? document.body) : null;
+  // marks where the provider sits, to read the theme and ink tone around it
+  const anchorRef = useRef<HTMLSpanElement>(null);
+  const layerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (portalContainer) {
-      setPortalNode(portalContainer);
-      return;
-    }
-
-    if (typeof document !== "undefined") {
-      setPortalNode(document.body);
-    }
-  }, [portalContainer]);
+  useLayoutEffect(() => {
+    if (toasts.length && layerRef.current) syncGlassContext(layerRef.current, anchorRef.current);
+  }, [toasts.length]);
 
   const showToast = useCallback(
     (toast: ToastDefinition) => {
@@ -348,10 +341,11 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
 
   return (
     <ToastContext.Provider value={contextValue}>
+      <span ref={anchorRef} hidden />
       {children}
       {portalNode &&
         createPortal(
-          <>
+          <div ref={layerRef} className={styles.toastLayer}>
             {(
               Object.entries(toastsByPosition) as [
                 ToastPosition,
@@ -381,7 +375,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
                 </div>
               );
             })}
-          </>,
+          </div>,
           portalNode,
         )}
     </ToastContext.Provider>

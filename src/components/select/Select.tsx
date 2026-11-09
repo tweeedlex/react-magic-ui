@@ -1,6 +1,6 @@
 import React, { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { inheritedGlassContext } from "../../core/portal";
+import { syncGlassContext } from "../../core/portal";
 import clsx from "clsx";
 import Glass, { GlassStyleProps } from "../glass/Glass";
 import "./select.css";
@@ -66,6 +66,12 @@ const Select: React.FC<SelectProps> = ({
   const menuRef = useRef<HTMLDivElement>(null);
   // the menu is portalled to <body> (glass can't sample the page from inside other glass)
   const [pos, setPos] = useState<{ top: number; left: number; width: number } | null>(null);
+  // the menu is portalled to body, so it takes the theme and ink tone of the trigger's ancestors
+  const menuWrapRef = useRef<HTMLDivElement>(null);
+  const menuShown = open && !disabled && !!pos;
+  useLayoutEffect(() => {
+    if (menuShown && menuWrapRef.current) syncGlassContext(menuWrapRef.current, rootRef.current);
+  }, [menuShown]);
   const listId = useId();
 
   const current = value ?? inner;
@@ -162,13 +168,14 @@ const Select: React.FC<SelectProps> = ({
       </Glass>
 
       {open && !disabled && pos && typeof document !== "undefined" && createPortal(
-        <div {...inheritedGlassContext(rootRef.current)}>
+        <div ref={menuWrapRef}>
         <Glass
           ref={menuRef as React.Ref<Element>}
           layer="surface"
           tone={tone}
           lens={lens}
-          className={clsx("rmu-glass--frosted rmu-select__menu", `rmu-select__menu--${size}`)}
+          material="frosted"
+          className={clsx("rmu-select__menu", `rmu-select__menu--${size}`)}
           style={{ top: pos.top, left: pos.left, minWidth: pos.width }}
           role="listbox"
           id={listId}

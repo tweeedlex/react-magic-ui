@@ -3,6 +3,7 @@ import React, {
   ReactNode,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useId,
   useRef,
   useState,
@@ -13,6 +14,7 @@ import Glass, { GlassStyleProps } from "../glass/Glass";
 import { scoped } from "../../core/classes";
 import "./modal.css";
 import { Xmark } from "../../core/icons";
+import { syncGlassContext, useIsClient } from "../../core/portal";
 
 const styles = scoped("rmu-modal");
 
@@ -41,7 +43,7 @@ export type ModalProps = Omit<ComponentPropsWithoutRef<"div">, "title"> & {
   enableLiquidAnimation?: boolean;
   /** Where to portal. Default `document.body`. */
   portalContainer?: HTMLElement | null;
-} & Pick<GlassStyleProps, "tone" | "lens">;
+} & Pick<GlassStyleProps, "tone" | "lens" | "material">;
 
 const EXIT_MS = 220;
 
@@ -78,8 +80,11 @@ const Modal: React.FC<ModalProps> = ({
   onClick,
   ...rest
 }) => {
-  const [mounted, setMounted] = useState(false);
-  const [container, setContainer] = useState<HTMLElement | null>(null);
+  const isClient = useIsClient();
+  const container = isClient ? (portalContainer ?? document.body) : null;
+  // marks the place the modal is declared, to read the theme and ink tone around it
+  const anchorRef = useRef<HTMLSpanElement>(null);
+  const portalRef = useRef<HTMLDivElement>(null);
   // stays rendered for the exit animation after `open` turns false
   const [present, setPresent] = useState(open);
   if (open && !present) setPresent(true);
@@ -89,24 +94,9 @@ const Modal: React.FC<ModalProps> = ({
   const titleId = useId();
   const descriptionId = useId();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!mounted) {
-      return;
-    }
-
-    if (portalContainer) {
-      setContainer(portalContainer);
-      return;
-    }
-
-    if (typeof document !== "undefined") {
-      setContainer(document.body);
-    }
-  }, [mounted, portalContainer]);
+  useLayoutEffect(() => {
+    if (shown && portalRef.current) syncGlassContext(portalRef.current, anchorRef.current);
+  }, [shown]);
 
   const handleClose = useCallback(() => {
     onOpenChange?.(false);
@@ -161,16 +151,22 @@ const Modal: React.FC<ModalProps> = ({
     return () => clearTimeout(timer);
   }, [open, present, enableLiquidAnimation]);
 
-  if (!shown || !mounted || !container) {
-    return null;
+  const anchor = <span ref={anchorRef} hidden />;
+
+  if (!shown || !container) {
+    return anchor;
   }
 
   const labelledBy = title ? titleId : undefined;
   const describedBy = description ? descriptionId : undefined;
   const showHeader = Boolean(title || description || onClose || onOpenChange);
 
-  return createPortal(
+  return (
+    <>
+      {anchor}
+      {createPortal(
     <div
+      ref={portalRef}
       className={cn(
         styles.modalContainer,
         enableLiquidAnimation && styles.animated,
@@ -194,6 +190,9 @@ const Modal: React.FC<ModalProps> = ({
       <Glass
         ref={contentRef as React.Ref<Element>}
         layer="surface"
+        // sheets hold text over anything: thicker material, lens kept on the rim
+        material="frosted"
+        lens
         className={cn(styles.modalContent, styles[size], className)}
         role="dialog"
         aria-modal="true"
@@ -241,6 +240,8 @@ const Modal: React.FC<ModalProps> = ({
       </Glass>
     </div>,
     container,
+      )}
+    </>
   );
 };
 
