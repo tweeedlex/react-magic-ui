@@ -36,14 +36,14 @@ export type GlassTone = "auto" | "light" | "dark";
  * What the surface is made of.
  * - `"glass"` — Liquid Glass: light blur, lens at the rim. For controls and
  *   navigation that float over content (buttons, bars, menus, sheets).
- * - `"frosted"` — a thicker, more opaque blur without the lens. For content
- *   panels such as cards and lists: Apple keeps Liquid Glass off the content layer.
+ * - `"frosted"` — a softer blur without the lens, for content panels when
+ *   the glass look is too busy (Apple keeps Liquid Glass off the content layer).
  */
 export type GlassMaterial = "glass" | "frosted";
 
 /** Props every glass component accepts. */
 export type GlassStyleProps = {
-  /** Surface material. Default `"glass"` (Card defaults to `"frosted"`). */
+  /** Surface material. Default `"glass"`. */
   material?: GlassMaterial;
   /** Ink colour on the glass. Default `"auto"`. Can also be set for a whole subtree with `data-glass-tone` on any ancestor. */
   tone?: GlassTone;

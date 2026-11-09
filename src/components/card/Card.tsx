@@ -18,10 +18,9 @@ export type CardProps = ComponentPropsWithoutRef<"div"> &
   };
 
 /**
- * Panel for grouping content. Frosted by default: Apple keeps Liquid Glass for
- * controls and navigation, content panels get a plain blur. Pass
- * `material="glass"` for a Liquid Glass card. Components inside render as inner
- * layers of the card (no glass-on-glass blur).
+ * Liquid Glass panel for grouping content. Pass `material="frosted"` for a
+ * softer blur without the lens. Components inside render as inner layers of
+ * the card (no glass-on-glass blur).
  *
  * @example
  * <Card>
@@ -31,7 +30,7 @@ export type CardProps = ComponentPropsWithoutRef<"div"> &
  */
 const Card = forwardRef<HTMLDivElement, CardProps>(
   (
-    { children, material = "frosted", size = "medium", direction = "column", align = "stretch", justify = "start", gap, className, style, ...props },
+    { children, material = "glass", size = "medium", direction = "column", align = "stretch", justify = "start", gap, className, style, ...props },
     ref,
   ) => (
     <Glass
