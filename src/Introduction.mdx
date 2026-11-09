@@ -1,0 +1,65 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Introduction" />
+
+# react-magic-ui
+
+Liquid glass React components in the style of Apple iOS 26. Plain CSS, React 18/19, TypeScript types and JSDoc on every prop.
+
+Use **Wallpaper** and **Theme** in the toolbar above a story to see the glass over different backgrounds and in dark mode.
+
+## Install
+
+```bash
+npm install react-magic-ui
+```
+
+```tsx
+// once, at the app entry (main.tsx, app/layout.tsx, _app.tsx)
+import "react-magic-ui/style.css";
+```
+
+The bundle is marked `"use client"`, so it works in the Next.js app router as is.
+
+## Use
+
+```tsx
+import { Button, Card, Switch } from "react-magic-ui";
+
+function Settings() {
+  const [wifi, setWifi] = useState(true);
+  return (
+    <Card>
+      <h3>Settings</h3>
+      <Switch aria-label="Wi-Fi" checked={wifi} onCheckedChange={setWifi} />
+      <Button variant="prominent">Done</Button>
+    </Card>
+  );
+}
+```
+
+Glass needs something behind it: put the UI over an image, video or gradient.
+
+## Rules, as iOS 26 does it
+
+- **No glass on glass.** Nesting is handled for you: a component inside another glass surface renders as its inner layer.
+- **One prominent action** per screen or bar. Everything else is `variant="glass"`.
+- **Red is a role.** Use `destructive` for delete and remove.
+- **Status colours belong to toasts**, not buttons.
+- **Same names everywhere:** `checked` / `onCheckedChange`, `value` / `onValueChange`, `open` / `onOpenChange`.
+
+## Theme and ink
+
+- Dark theme: class `dark` (or `data-theme="dark"`) on any ancestor.
+- Text colour on glass: `tone="light" | "dark"` on a component, or `data-glass-tone` on any ancestor.
+- Colours are CSS variables: `--rmu-accent`, `--rmu-blue`, `--rmu-green`, `--rmu-red`, `--rmu-orange`, `--rmu-gray`, `--rmu-font`.
+
+## For AI agents
+
+The package ships `llms.txt` with setup, the rules and an example for every component. Add this line to your `AGENTS.md` or `CLAUDE.md`:
+
+```md
+UI components come from react-magic-ui. Read node_modules/react-magic-ui/llms.txt before using them.
+```
+
+[Demo](https://react-magic-ui-demo.netlify.app/) · [npm](https://www.npmjs.com/package/react-magic-ui) · [GitHub](https://github.com/tweeedlex/react-magic-ui)

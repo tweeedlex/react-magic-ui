@@ -4,6 +4,7 @@ import Example from "./Example";
 const meta: Meta<typeof Example> = {
   title: "Topbar",
   component: Example,
+  parameters: { stage: "wide" },
 };
 
 export default meta;

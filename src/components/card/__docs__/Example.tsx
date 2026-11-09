@@ -21,6 +21,7 @@ const Example: FC<CardProps> = ({
         direction={direction}
         align={align}
         justify={justify}
+        style={{ maxWidth: 380 }}
       >
         <h1>Title</h1>
         <h2>Subtitle</h2>

@@ -1,1 +1,45 @@
-body { margin: 0; font-family: var(--rmu-font); }
+/* Storybook-only styles: the stage every story is rendered on. */
+html,
+body {
+  margin: 0;
+  font-family: var(--rmu-font);
+  -webkit-font-smoothing: antialiased;
+}
+
+.sb-stage {
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  overflow: auto;
+  font-family: var(--rmu-font);
+  color: rgb(0 0 0 / 0.86);
+}
+.sb-stage[data-glass-tone="light"] {
+  color: rgb(255 255 255 / 0.94);
+}
+
+.sb-stage--story {
+  min-height: 100vh;
+  padding: 56px 32px;
+}
+
+/* docs: each canvas is its own small stage */
+.sb-stage--docs {
+  min-height: 280px;
+  padding: 48px 32px;
+}
+
+.sb-stage__content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  max-width: 100%;
+}
+
+/* bars and navigation: let them take the width they are designed for */
+.sb-stage--wide .sb-stage__content {
+  width: min(100%, 1040px);
+  display: block;
+}
