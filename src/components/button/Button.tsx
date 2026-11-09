@@ -3,7 +3,7 @@ import clsx from "clsx";
 import Glass, { GlassStyleProps } from "../glass/Glass";
 import "./button.css";
 
-export type ButtonVariant = "default" | "prominent" | "positive" | "negative" | "warning";
+export type ButtonVariant = "glass" | "prominent";
 export type ButtonSize = "small" | "medium" | "large";
 
 export type ButtonProps = Omit<ComponentPropsWithoutRef<"button">, "children"> &
@@ -12,11 +12,23 @@ export type ButtonProps = Omit<ComponentPropsWithoutRef<"button">, "children"> &
     text?: string;
     children?: React.ReactNode;
     /**
-     * - `"default"` — clear glass.
-     * - `"prominent"` — tinted with the accent colour (primary action).
-     * - `"positive" | "negative" | "warning"` — tinted with a status colour.
+     * The two iOS 26 button styles.
+     * - `"glass"` — clear glass (default). Most buttons.
+     * - `"prominent"` — glass tinted with the accent colour. The primary action;
+     *   keep it to one per screen or bar.
      */
     variant?: ButtonVariant;
+    /**
+     * Destructive role (delete, remove): red label on `"glass"`, red tint on
+     * `"prominent"`.
+     */
+    destructive?: boolean;
+    /**
+     * Custom colour, like `.tint()` in SwiftUI: the tint of a `"prominent"`
+     * button, the label colour of a `"glass"` one. Any CSS colour. Default:
+     * the accent (`--rmu-accent`, system blue). `destructive` wins over it.
+     */
+    tint?: string;
     /** Height: small 32px, medium 44px, large 52px. Default `"medium"`. */
     size?: ButtonSize;
     /** Circle icon button (pass an icon as children and an `aria-label`). */
@@ -25,26 +37,23 @@ export type ButtonProps = Omit<ComponentPropsWithoutRef<"button">, "children"> &
     enableClickAnimation?: boolean;
   };
 
-const tints: Partial<Record<ButtonVariant, string>> = {
-  prominent: "var(--rmu-accent)",
-  positive: "var(--rmu-green)",
-  negative: "var(--rmu-red)",
-  warning: "var(--rmu-orange)",
-};
-
 /**
  * Capsule glass button.
  *
  * @example
- * <Button onClick={save}>Save</Button>
- * <Button variant="prominent" size="large">Continue</Button>
+ * <Button onClick={cancel}>Cancel</Button>
+ * <Button variant="prominent" onClick={save}>Done</Button>
+ * <Button destructive onClick={remove}>Delete</Button>
+ * <Button variant="prominent" tint="var(--rmu-green)">Answer</Button>
  * <Button rounded aria-label="Close"><XIcon /></Button>
  */
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
       size = "medium",
-      variant = "default",
+      variant = "glass",
+      destructive = false,
+      tint,
       disabled,
       text,
       children,
@@ -57,7 +66,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref,
   ) => {
-    const tint = tints[variant];
+    const prominent = variant === "prominent";
+    const color = destructive ? "var(--rmu-red)" : tint;
+    // prominent: the colour fills the glass; glass: it colours the label
+    const vars = prominent
+      ? { "--rmu-tint": color ?? "var(--rmu-accent)" }
+      : color
+        ? { "--rmu-label": color }
+        : null;
     return (
       <Glass
         as="button"
@@ -69,12 +85,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           "rmu-button",
           `rmu-button--${size}`,
           `rmu-button--${variant}`,
+          destructive && "rmu-button--destructive",
           rounded && "rmu-button--rounded",
-          tint && "rmu-tinted",
+          prominent && "rmu-tinted",
+          !prominent && color && "rmu-button--colored",
           disabled && "rmu-button--disabled",
           className,
         )}
-        style={tint ? ({ "--rmu-tint": tint, ...style } as React.CSSProperties) : style}
+        style={vars ? ({ ...vars, ...style } as React.CSSProperties) : style}
         {...props}
       >
         {children ?? text}

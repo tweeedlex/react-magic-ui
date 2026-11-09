@@ -11,6 +11,8 @@ export type SwitchProps = Omit<ComponentPropsWithoutRef<"button">, "onChange" | 
     defaultChecked?: boolean;
     /** Called with the next state. */
     onCheckedChange?: (checked: boolean) => void;
+    /** Track colour when on. Any CSS colour. Default iOS green (`--rmu-green`). */
+    tint?: string;
     /** Track size. Default `"medium"` (64×28). */
     size?: "small" | "medium" | "large";
     /** @deprecated Use `checked`. */
@@ -40,7 +42,9 @@ const Switch = forwardRef<HTMLButtonElement, SwitchProps>(
       setIsActive,
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       enableClickAnimation: _ignored,
+      tint,
       className,
+      style,
       onClick,
       ...props
     },
@@ -75,6 +79,7 @@ const Switch = forwardRef<HTMLButtonElement, SwitchProps>(
           disabled && "rmu-switch--disabled",
           className,
         )}
+        style={tint ? ({ "--rmu-switch-on": tint, ...style } as React.CSSProperties) : style}
         {...props}
       >
         <span className="rmu-switch__fill" aria-hidden="true" />

@@ -59,7 +59,7 @@ const EXIT_MS = 220;
  *   description="This can't be undone."
  *   footer={<>
  *     <Button onClick={() => setOpen(false)}>Cancel</Button>
- *     <Button variant="negative" onClick={remove}>Delete</Button>
+ *     <Button variant="prominent" destructive onClick={remove}>Delete</Button>
  *   </>}
  * />
  */

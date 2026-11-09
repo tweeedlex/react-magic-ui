@@ -26,4 +26,9 @@
 .rmu-button--rounded.rmu-button--medium { width: 44px; }
 .rmu-button--rounded.rmu-button--large  { width: 52px; }
 
+/* glass button with a coloured label: destructive, or a custom tint */
+.rmu-glass.rmu-button--colored { color: var(--rmu-label); }
+.rmu-button--colored > *,
+.rmu-button--colored > svg { mix-blend-mode: normal; color: inherit; opacity: 1; }
+
 .rmu-button--disabled { opacity: .45; }

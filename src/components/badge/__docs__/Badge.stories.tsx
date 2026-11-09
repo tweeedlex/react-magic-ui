@@ -11,43 +11,21 @@ type Story = StoryObj<typeof Example>;
 
 export const Default: Story = {
   args: {
-    text: "Default",
+    text: "Beta",
     variant: "default",
   },
 };
 
-export const Positive: Story = {
+export const Tinted: Story = {
   args: {
-    text: "Positive",
-    variant: "positive",
+    text: "New",
+    tint: "var(--rmu-blue)",
   },
 };
 
-export const Negative: Story = {
+export const Notification: Story = {
   args: {
-    text: "Negative",
-    variant: "negative",
+    text: "3",
+    variant: "notification",
   },
 };
-
-export const Warning: Story = {
-  args: {
-    text: "Warning",
-    variant: "warning",
-  },
-};
-
-export const Info: Story = {
-  args: {
-    text: "Info",
-    variant: "info",
-  },
-};
-
-export const Neutral: Story = {
-  args: {
-    text: "Neutral",
-    variant: "neutral",
-  },
-};
-

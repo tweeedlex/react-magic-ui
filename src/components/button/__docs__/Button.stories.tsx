@@ -9,53 +9,16 @@ const meta: Meta<typeof Example> = {
 export default meta;
 type Story = StoryObj<typeof Example>;
 
-export const Default: Story = {
-  args: {
-    text: "Button",
-    variant: "default",
-    disabled: false,
-    size: "medium",
-    onClick: () => console.log("Button"),
-  },
-};
+const base = { text: "Button", disabled: false, size: "medium", onClick: () => console.log("Button") } as const;
 
-export const Positive: Story = {
-  args: {
-    text: "Button",
-    variant: "positive",
-    disabled: false,
-    size: "medium",
-    onClick: () => console.log("Button"),
-  },
-};
+export const Glass: Story = { args: { ...base, variant: "glass" } };
 
-export const Negative: Story = {
-  args: {
-    text: "Button",
-    variant: "negative",
-    disabled: false,
-    size: "medium",
-    onClick: () => console.log("Button"),
-  },
-};
+export const Prominent: Story = { args: { ...base, text: "Done", variant: "prominent" } };
 
-export const Warning: Story = {
-  args: {
-    text: "Button",
-    variant: "warning",
-    disabled: false,
-    size: "medium",
-    onClick: () => console.log("Button"),
-  },
-};
+export const Destructive: Story = { args: { ...base, text: "Delete", destructive: true } };
 
-export const Rounded: Story = {
-  args: {
-    text: "+",
-    variant: "positive",
-    disabled: false,
-    size: "medium",
-    rounded: true,
-    onClick: () => console.log("Rounded Button"),
-  },
-};
+export const DestructiveProminent: Story = { args: { ...base, text: "Delete", variant: "prominent", destructive: true } };
+
+export const Tinted: Story = { args: { ...base, text: "Answer", variant: "prominent", tint: "var(--rmu-green)" } };
+
+export const Rounded: Story = { args: { ...base, text: "+", rounded: true } };

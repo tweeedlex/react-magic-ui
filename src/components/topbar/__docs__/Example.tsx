@@ -6,7 +6,7 @@ import { Button } from "../../button";
 type ExampleAction = {
   id: string;
   label: string;
-  variant?: "default" | "danger" | "link";
+  variant?: "glass" | "prominent";
   disabled?: boolean;
 };
 
@@ -19,8 +19,8 @@ type ExampleProps = Partial<TopbarProps> & {
 };
 
 const defaultActions: ExampleAction[] = [
-  { id: "invite", label: "Invite", variant: "default" },
-  { id: "share", label: "Share", variant: "link" },
+  { id: "invite", label: "Invite", variant: "prominent" },
+  { id: "share", label: "Share", variant: "glass" },
 ];
 
 const Example: FC<ExampleProps> = ({

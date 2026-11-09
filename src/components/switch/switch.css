@@ -17,7 +17,7 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: var(--rmu-green);
+  background: var(--rmu-switch-on, var(--rmu-green));
   opacity: 0;
   scale: .6 1;
   transition: opacity .25s ease, scale .45s var(--rmu-spring-soft);

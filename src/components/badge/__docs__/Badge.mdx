@@ -6,7 +6,7 @@ import * as BadgeStories from "./Badge.stories.tsx";
 
 # Badge
 
-badge component for status tagging with glassmorphism styling.
+Small glass capsule label, or the iOS red notification count.
 
 #### Example
 
@@ -19,9 +19,11 @@ import { Badge } from "react-glass-ui";
 
 const Example = () => {
   return (
-    <Badge variant="positive">
-      active
-    </Badge>
+    <>
+      <Badge>Beta</Badge>
+      <Badge tint="var(--rmu-blue)">New</Badge>
+      <Badge variant="notification" aria-label="3 unread">3</Badge>
+    </>
   );
 };
 
@@ -30,10 +32,6 @@ export default Example;
 
 #### Variants
 
-- **default** - subtle appearance for neutral information.
-- **positive** - success state such as completed or active.
-- **negative** - error state for failures.
-- **warning** - cautionary messages that need attention.
-- **info** - informational notices.
-- **neutral** - low emphasis state labels.
+- **default** - a glass label ("New", "Beta", a version). Pass `tint` to colour the glass.
+- **notification** - solid red oval with a white count, for things that need attention.
 

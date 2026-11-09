@@ -36,7 +36,7 @@ const Controls: FC = () => {
       }}
     >
       <Button text="Show default" onClick={() => trigger("default")} />
-      <Button text="Show success" variant="link" onClick={() => trigger("success")} />
+      <Button text="Show success" onClick={() => trigger("success")} />
       <Button text="Show error" variant="danger" onClick={() => trigger("error")} />
       <Button
         text="Show info"
@@ -50,7 +50,7 @@ const Controls: FC = () => {
           });
         }}
       />
-      <Button text="Clear all" variant="link" onClick={clearToasts} />
+      <Button text="Clear all" onClick={clearToasts} />
     </div>
   );
 };

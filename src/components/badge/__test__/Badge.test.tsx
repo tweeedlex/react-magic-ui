@@ -15,10 +15,19 @@ describe("Badge component", () => {
     expect(badge.className).toContain("badge");
   });
 
-  it("applies specific variant classes", () => {
-    render(<Badge variant="positive">done</Badge>);
-    const badge = screen.getByText("done");
-    expect(badge.className).toContain("rmu-badge--positive");
+  it("tints a default badge", () => {
+    render(<Badge tint="rgb(1 2 3)">new</Badge>);
+    const badge = screen.getByText("new");
+    expect(badge.className).toContain("rmu-tinted");
+    expect(badge.style.getPropertyValue("--rmu-tint")).toBe("rgb(1 2 3)");
+  });
+
+  it("renders a notification badge as a solid oval, not glass", () => {
+    render(<Badge variant="notification" tone="dark">3</Badge>);
+    const badge = screen.getByText("3");
+    expect(badge.className).toContain("rmu-badge--notification");
+    expect(badge.className).not.toContain("rmu-glass");
+    expect(badge.getAttribute("tone")).toBeNull();
   });
 
   it("renders leading and trailing icons", () => {

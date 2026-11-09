@@ -17,10 +17,29 @@ describe("Button component", () => {
   });
 
   it("applies variant and size specific classes", () => {
-    render(<Button text="negative" variant="negative" size="small" />);
+    render(<Button text="done" variant="prominent" size="small" />);
     const button = screen.getByRole("button") as HTMLButtonElement;
-    expect(button.className).toContain("rmu-button--negative");
+    expect(button.className).toContain("rmu-button--prominent");
+    expect(button.className).toContain("rmu-tinted");
+    expect(button.style.getPropertyValue("--rmu-tint")).toBe("var(--rmu-accent)");
     expect(button.className).toContain("small");
+  });
+
+  it("colours the label of a destructive glass button red", () => {
+    render(<Button text="delete" destructive />);
+    const button = screen.getByRole("button") as HTMLButtonElement;
+    expect(button.className).toContain("rmu-button--glass");
+    expect(button.className).toContain("rmu-button--colored");
+    expect(button.className).not.toContain("rmu-tinted");
+    expect(button.style.getPropertyValue("--rmu-label")).toBe("var(--rmu-red)");
+  });
+
+  it("tints a prominent button with a custom colour, destructive wins", () => {
+    const { rerender } = render(<Button text="go" variant="prominent" tint="rgb(1 2 3)" />);
+    const button = screen.getByRole("button") as HTMLButtonElement;
+    expect(button.style.getPropertyValue("--rmu-tint")).toBe("rgb(1 2 3)");
+    rerender(<Button text="go" variant="prominent" tint="rgb(1 2 3)" destructive />);
+    expect(button.style.getPropertyValue("--rmu-tint")).toBe("var(--rmu-red)");
   });
 
   it("calls onClick handler when enabled", () => {
