@@ -1,6 +1,6 @@
 {
   "name": "react-magic-ui",
-  "version": "2.0.0",
+  "version": "1.1.0",
   "description": "Liquid glass React components in the style of Apple iOS 26. Plain CSS, no Tailwind required.",
   "author": "@tweeedlex",
   "license": "MIT",
