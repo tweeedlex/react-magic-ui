@@ -1,43 +1,53 @@
 import { Canvas, Meta } from "@storybook/addon-docs/blocks";
-import Example from "./Example.tsx";
 import * as Switch from "./Switch.stories.tsx";
 
 <Meta of={Switch} title="Switch" />
 
 # Switch
 
-Switch component with different props.
+An iOS toggle on a glass track. Click or tap it, or grab the knob and drag it left or right. While you hold it, the knob turns into a clear glass bubble.
 
-#### Example
-
-<Canvas of={Switch.Default}/>
+<Canvas of={Switch.Default} />
 
 ## Usage
 
-```ts
-import {Switch} from "react-magic-ui";
+```tsx
+import { Switch } from "react-magic-ui";
 import { useState } from "react";
 
-const Example = () => {
-  const [isActive, setIsActive] = useState(false);
+const [wifi, setWifi] = useState(true);
 
-  return (
-      <Switch
-        size={"medium"}
-        disabled={false}
-        isActive={isActive}
-        setIsActive={setIsActive}
-      />
-  );
-};
-
-export default Example;
+<Switch aria-label="Wi-Fi" checked={wifi} onCheckedChange={setWifi} />
 ```
 
-#### Arguments
+To leave the state inside the switch, use `defaultChecked`:
 
-- **disabled** - A boolean indicating whether the Switch should be disabled or not. When disabled, the Switch cannot be clicked or interacted with.
-- **size** - A string with one of three possible values: "small," "medium," or "large." It defines the size or dimensions of the Switch.
-- **isActive** - A boolean indicating whether the Switch is active or not. When active, the Switch is in the "on" position.
-- **setIsActive** - A function that sets the value of the isActive prop. It is used to toggle the Switch between the "on" and "off" positions.
-- **enableClickAnimation** - A boolean indicating whether to enable the liquid bounce animation on click
+```tsx
+<Switch aria-label="Airplane mode" defaultChecked={false} onCheckedChange={save} />
+```
+
+## Guidelines
+
+- A switch turns something on or off right away. If the change only takes effect after the user confirms, use a [Checkbox](?path=/docs/checkbox--docs) in a form instead.
+- The switch is green when on, as in iOS. Change `tint` only when there's a reason to, such as a brand colour or a Focus mode.
+- Always give it a name: an `aria-label`, or a visible `<label htmlFor>` pointing at its `id`.
+
+## Props
+
+All `<button>` props are passed through, and `ref` points to the `<button role="switch">`.
+
+- **checked** _`boolean`_: the state when controlled.
+- **defaultChecked** _`boolean`_: the starting state when uncontrolled. Default `false`.
+- **onCheckedChange** _`(checked: boolean) => void`_: called with the new state.
+- **tint** _`string`_: track colour when on. Default `--rmu-green`.
+- **size** _`"small" | "medium" | "large"`_: track size 52×24, 64×28 or 76×34. Default `"medium"`.
+- **disabled** _`boolean`_
+- `isActive` / `setIsActive` still work but are deprecated. Use `checked` / `onCheckedChange`.
+
+## Behaviour
+
+- **Click or tap** flips the switch.
+- **Drag**: the knob follows the pointer. When you let go, it settles on the side it is closer to and calls `onCheckedChange` once. The click after a drag doesn't flip it again.
+- On touch screens, dragging up or down still scrolls the page (`touch-action: pan-y`).
+- **Keyboard**: Space and Enter toggle it, like any button.
+- `aria-checked` follows the state, so screen readers announce "on" or "off".

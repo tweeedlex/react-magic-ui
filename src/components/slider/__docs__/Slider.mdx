@@ -1,52 +1,55 @@
 import { Canvas, Meta } from "@storybook/addon-docs/blocks";
-import Example from "./Example.tsx";
 import * as Slider from "./Slider.stories.tsx";
 
 <Meta of={Slider} title="Slider" />
 
 # Slider
 
-Slider component for selecting a numeric value within a range.
+Picks a number in a range by dragging a knob along a glass track. While you drag, the knob grows into a clear glass bubble and the track fills with the accent colour.
 
-#### Example
-
-<Canvas of={Slider.Default}/>
+<Canvas of={Slider.Default} />
 
 ## Usage
 
-```ts
-import {Slider} from "react-magic-ui";
+```tsx
+import { Slider } from "react-magic-ui";
 import { useState } from "react";
 
-const Example = () => {
-  const [value, setValue] = useState(50);
+const [volume, setVolume] = useState(40);
 
-  return (
-      <Slider
-        size={"medium"}
-        disabled={false}
-        min={0}
-        max={100}
-        step={1}
-        value={value}
-        onValueChange={setValue}
-        showValue={false}
-        enableClickAnimation={true}
-      />
-  );
-};
-
-export default Example;
+<Slider aria-label="Volume" value={volume} onValueChange={setVolume} />
 ```
 
-#### Arguments
+With a step and the value shown:
 
-- **disabled** - A boolean indicating whether the Slider should be disabled or not. When disabled, the Slider cannot be clicked or dragged.
-- **size** - A string with one of three possible values: "small," "medium," or "large." It defines the size or dimensions of the Slider.
-- **min** - A number representing the minimum value of the Slider. Defaults to 0.
-- **max** - A number representing the maximum value of the Slider. Defaults to 100.
-- **step** - A number representing the increment step for the Slider value. Defaults to 1.
-- **value** - A number representing the current value of the Slider. Use this to control the Slider component.
-- **onValueChange** - A function that receives the new value as a number parameter. It is called when the user drags the slider or clicks on the track.
-- **showValue** - A boolean indicating whether to display the current value of the Slider. Defaults to false.
-- **enableClickAnimation** - A boolean indicating whether to enable the liquid bounce animation on click
+```tsx
+<Slider aria-label="Opacity" min={0} max={100} step={10} defaultValue={50} showValue />
+```
+
+<Canvas of={Slider.StepTen} />
+
+## Props
+
+All `<div>` props are passed through to the root.
+
+- **value** _`number`_: the value when controlled.
+- **defaultValue** _`number`_: the starting value when uncontrolled. Default `50`.
+- **onValueChange** _`(value: number) => void`_: called while dragging and on each keyboard step. `onChange` still works but is deprecated.
+- **min** / **max** / **step** _`number`_: default `0`, `100`, `1`.
+- **size** _`"small" | "medium" | "large"`_: track thickness and knob size. Default `"medium"`.
+- **showValue** _`boolean`_: shows the number after the track.
+- **disabled** _`boolean`_
+- **aria-label** / **aria-labelledby**: the slider's name. One of them is required.
+- **tone**: ink colour, see [Glass](?path=/docs/glass--docs).
+
+<Canvas of={Slider.Small} />
+<Canvas of={Slider.Large} />
+
+## Behaviour
+
+- Click anywhere on the track to jump there, or drag the knob.
+- **Keyboard**: arrow keys move one step, Page Up / Page Down move a tenth of the range, Home / End go to the minimum / maximum.
+- The knob has `role="slider"` with `aria-valuemin`, `aria-valuemax` and `aria-valuenow`.
+- With `prefers-reduced-motion` the knob doesn't grow; it only changes look.
+
+<Canvas of={Slider.Disabled} />

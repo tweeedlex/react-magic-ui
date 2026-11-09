@@ -1,54 +1,64 @@
 import { Canvas, Meta } from "@storybook/addon-docs/blocks";
-import Example from "./Example.tsx";
 import * as Select from "./Select.stories.tsx";
 
 <Meta of={Select} title="Select" />
 
 # Select
 
-Select component with dropdown options.
+A glass button that opens a menu of choices. As in iOS 26, the menu grows out of the button and shrinks back into it when it closes.
 
-#### Example
-
-<Canvas of={Select.Default}/>
+<Canvas of={Select.Default} />
 
 ## Usage
 
-```ts
-import {Select} from "react-magic-ui";
+```tsx
+import { Select } from "react-magic-ui";
 import { useState } from "react";
 
-const Example = () => {
-  const [value, setValue] = useState("");
+const [size, setSize] = useState("m");
 
-  const options = [
-    { value: "option1", label: "Option 1" },
-    { value: "option2", label: "Option 2" },
-    { value: "option3", label: "Option 3" },
-  ];
-
-  return (
-      <Select
-        size={"medium"}
-        disabled={false}
-        options={options}
-        value={value}
-        onValueChange={setValue}
-        placeholder="Select an option"
-        enableClickAnimation={true}
-      />
-  );
-};
-
-export default Example;
+<Select
+  aria-label="Size"
+  options={[
+    { value: "s", label: "Small" },
+    { value: "m", label: "Medium" },
+    { value: "l", label: "Large", disabled: true },
+  ]}
+  value={size}
+  onValueChange={setSize}
+/>
 ```
 
-#### Arguments
+In a form, pass `name`. A hidden input then holds the value, so it is submitted with the `<form>`:
 
-- **disabled** - A boolean indicating whether the Select should be disabled or not. When disabled, the Select cannot be clicked or interacted with.
-- **size** - A string with one of three possible values: "small," "medium," or "large." It defines the size or dimensions of the Select.
-- **options** - An array of objects with `value` and `label` properties. Each object represents a selectable option in the dropdown.
-- **value** - A string representing the currently selected option's value. Use this to control the Select component.
-- **onValueChange** - A function that receives the selected option's value as a string parameter. It is called when the user selects an option from the dropdown.
-- **placeholder** - An optional string that displays placeholder text when no option is selected. Defaults to "Select an option".
-- **enableClickAnimation** - A boolean indicating whether to enable the liquid bounce animation on click
+```tsx
+<form action="/save">
+  <label htmlFor="size">Size</label>
+  <Select id="size" name="size" options={options} defaultValue="m" />
+</form>
+```
+
+## Props
+
+- **options** _`{ value: string; label: ReactNode; disabled?: boolean }[]`_: the choices. Required.
+- **value** _`string`_: the selection when controlled.
+- **defaultValue** _`string`_: the starting selection when uncontrolled.
+- **onValueChange** _`(value: string) => void`_: called with the chosen `value`. `onChange` still works but is deprecated.
+- **onOpenChange** _`(open: boolean) => void`_: called when the menu opens or closes.
+- **placeholder** _`string`_: shown while nothing is selected. Default `"Select an option"`.
+- **name** _`string`_: field name for forms.
+- **size** _`"small" | "medium" | "large"`_: height 32, 44 or 52px. Default `"medium"`.
+- **disabled** _`boolean`_
+- **id**, **aria-label**, **aria-labelledby**: these go to the button. Give the select a name with one of them.
+- **className**, **style**, **tone**, **lens**. `ref` points to the button.
+
+<Canvas of={Select.ManyOptions} />
+
+## Behaviour
+
+- The menu opens below the button. It is rendered in a portal on `document.body`, so a parent with `overflow: hidden` can't cut it off.
+- **Keyboard**: Enter, Space and the up and down arrows open the menu. The arrows move through the options, skipping disabled ones. Enter or Space picks an option, and Escape or Tab closes the menu.
+- The button has `aria-haspopup="listbox"` and `aria-expanded`. Each option has `role="option"` and `aria-selected`.
+- A click outside the menu closes it. With `prefers-reduced-motion` the grow animation is off.
+
+<Canvas of={Select.Disabled} />

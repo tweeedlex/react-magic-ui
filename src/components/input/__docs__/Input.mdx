@@ -1,43 +1,50 @@
 import { Canvas, Meta } from "@storybook/addon-docs/blocks";
-import Example from "./Example.tsx";
 import * as Input from "./Input.stories.tsx";
 
 <Meta of={Input} title="Input" />
 
 # Input
 
-Input component with different props.
-
-#### Example
+A text field in a glass capsule, for search fields, forms and command bars.
 
 <Canvas of={Input.Default} />
 
 ## Usage
 
-```ts
+```tsx
 import { Input } from "react-magic-ui";
 import { useState } from "react";
 
-const Example = () => {
-  const [value, setValue] = useState("");
+const [q, setQ] = useState("");
 
-  return (
-      <Input
-        size={"small"}
-        onChange={(e) => setValue(previousValue => e.target.value)}
-        placeholder={"Type something..."}
-        value={value}
-      />
-  );
-};
-
-export default Example;
+<Input
+  placeholder="Search"
+  leadingIcon={<SearchIcon />}
+  value={q}
+  onChange={(e) => setQ(e.target.value)}
+/>
 ```
 
-#### Arguments
+It is a real `<input>`, so it works with form libraries that use refs and native events, such as React Hook Form:
 
-- **disabled** - A boolean indicating whether the Input should be disabled or not. When disabled, the Input cannot be interacted with.
-- **size** - A string with one of three possible values: "small," "medium," or "large." It defines the size or dimensions of the Input.
-- **placeholder** - A string that represents the placeholder text of the Input.
-- **onChange** _`() => void`_ - A function that is called when the value of the Input changes.
-- **enableClickAnimation** - A boolean indicating whether to enable the liquid bounce animation on click
+```tsx
+<Input type="email" placeholder="Email" invalid={!!errors.email} {...register("email")} />
+```
+
+## Props
+
+All `<input>` props (`type`, `value`, `onChange`, `name`, `autoComplete`…) go to the inner `<input>`. `ref` and `className` go there too.
+
+- **size** _`"small" | "medium" | "large"`_: height 32, 44 or 52px. Default `"medium"`.
+- **leadingIcon** _`ReactNode`_: an icon before the text, such as a magnifying glass.
+- **trailingIcon** _`ReactNode`_: an icon or small control after the text, such as a clear button.
+- **invalid** _`boolean`_: a red ring plus `aria-invalid`. Put the error message next to the field and link it with `aria-describedby`.
+- **disabled** _`boolean`_
+- **wrapperClassName** / **wrapperStyle**: class and style for the glass capsule, for example to set its width.
+- **tone**, **lens**, **layer**: see [Glass](?path=/docs/glass--docs).
+
+## Behaviour
+
+- The capsule is a `<label>`, so clicking anywhere on it, icons included, focuses the field.
+- When focused, the capsule shows an accent-coloured ring.
+- Give the field a name: a visible `<label htmlFor>`, an `aria-label`, or at least a placeholder for search fields.

@@ -1,48 +1,62 @@
 import { Canvas, Meta } from "@storybook/addon-docs/blocks";
-import Example from "./Example.tsx";
 import * as Button from "./Button.stories.tsx";
 
 <Meta of={Button} title="Button" />
 
 # Button
 
-Button component with different props.
-
-#### Example
+A capsule of liquid glass. On press it swells, springs back and lights up from the point you touched, like buttons in iOS 26.
 
 <Canvas of={Button.Glass} />
 
 ## Usage
 
-```ts
+```tsx
 import { Button } from "react-magic-ui";
 
-const Example = () => {
-  return (
-      <Button
-        onClick={()=> console.log("Clicked")}
-        variant={"prominent"}
-        size={"medium"}
-      >
-        Click me!
-      </Button>
-  );
-};
-
-
-export default Example;
+<Button onClick={cancel}>Cancel</Button>
+<Button variant="prominent" onClick={save}>Done</Button>
+<Button destructive onClick={remove}>Delete</Button>
+<Button rounded aria-label="Add"><PlusIcon /></Button>
 ```
 
-#### Arguments
+## Styles
 
-- **text** _`string`_ - A string that represents the text content of the button.
-- **children** _`React.ReactNode`_ - Content to render inside the button. Takes priority over `text` prop if both are provided.
-- **variant** _`"glass" | "prominent"`_ - The two iOS 26 styles. `"glass"` (default) is clear glass; `"prominent"` is glass tinted with the accent, for the one primary action.
-- **destructive** _`boolean`_ - Destructive role: red label on glass, red tint on prominent.
-- **tint** _`string`_ - Custom colour (any CSS colour): the tint of a prominent button, the label colour of a glass one. Default is the accent.
-- **disabled** _`boolean`_ - A boolean indicating whether the button should be disabled or not. When disabled, the button cannot be clicked or interacted with.
-- **size** _`"small" | "medium" | "large"`_ - Defines the size or dimensions of the button. Default is `"medium"`.
-- **rounded** _`boolean`_ - Makes the button circular. When true, the button will have a 1:1 aspect ratio with rounded corners. Default is `false`.
-- **onClick** _`(event: React.MouseEvent<HTMLButtonElement>) => void`_ - A function that is called when the button is clicked.
-- **enableClickAnimation** _`boolean`_ - A boolean indicating whether to enable the liquid bounce animation on click. Default is `true`.
-- **className** _`string`_ - Additional CSS classes to apply to the button.
+iOS 26 has two button styles, and so does `Button`:
+
+- **`"glass"`** (default): clear glass. Use it for most buttons.
+- **`"prominent"`**: glass tinted with the accent colour. Use it for the one main action on a screen or in a bar, such as Done or Save.
+
+<Canvas of={Button.Prominent} />
+
+Use `destructive` for actions that delete or remove something. It gives a red label on glass and a red tint on prominent.
+
+<Canvas of={Button.Destructive} />
+<Canvas of={Button.DestructiveProminent} />
+
+Use `tint` for any other colour, for example a green Answer button. On a prominent button it colours the glass; on a glass button it colours the label.
+
+<Canvas of={Button.Tinted} />
+
+Use `rounded` for a circular icon button. Give it an `aria-label`, since there is no text to read out.
+
+<Canvas of={Button.Rounded} />
+
+## Props
+
+All `<button>` props are passed through, and `ref` points to the `<button>`. `type` defaults to `"button"`, so a button in a form doesn't submit it by accident.
+
+- **children** _`ReactNode`_: the label, or an icon. `text` also works and is kept for older code.
+- **variant** _`"glass" | "prominent"`_: default `"glass"`.
+- **destructive** _`boolean`_: red role for deleting or removing. Overrides `tint`.
+- **tint** _`string`_: any CSS colour. Default is the accent (`--rmu-accent`, system blue).
+- **size** _`"small" | "medium" | "large"`_: height 32, 44 or 52px. Default `"medium"`.
+- **rounded** _`boolean`_: circle instead of capsule.
+- **enableClickAnimation** _`boolean`_: the press spring and glow. Default `true`.
+- **material**, **tone**, **lens**: glass options, see [Glass](?path=/docs/glass--docs).
+
+## Behaviour
+
+- A press scales the button up and adds a glow at the touch point. With `prefers-reduced-motion` the scale is off and only the glow fades in.
+- `disabled` dims the button and turns off hover, press and clicks.
+- Inside a [Card](?path=/docs/card--docs) or a bar, the button is drawn as an inner layer, so you never get glass blurred on top of glass.

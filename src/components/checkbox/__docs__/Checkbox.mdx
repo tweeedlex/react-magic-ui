@@ -1,46 +1,48 @@
 import { Canvas, Meta } from "@storybook/addon-docs/blocks";
-import Example from "./Example.tsx";
 import * as Checkbox from "./Checkbox.stories.tsx";
 
 <Meta of={Checkbox} title="Checkbox" />
 
 # Checkbox
 
-Checkbox component with different props.
+A glass box with rounded corners. When checked, it fills with the accent colour and the check mark is drawn in.
 
-#### Example
-
-<Canvas of={Checkbox.Default}/>
+<Canvas of={Checkbox.Default} />
 
 ## Usage
 
-```ts
-import {Checkbox} from "react-magic-ui";
+```tsx
+import { Checkbox } from "react-magic-ui";
 import { useState } from "react";
 
-const Example = () => {
-  const [checked, setChecked] = useState(false);
+const [remember, setRemember] = useState(false);
 
-  return (
-      <Checkbox
-        size={"medium"}
-        disabled={false}
-        checked={checked}
-        onChange={setChecked}
-        label="Check me!"
-        enableClickAnimation={true}
-      />
-  );
-};
-
-export default Example;
+<Checkbox label="Remember me" checked={remember} onCheckedChange={setRemember} />
 ```
 
-#### Arguments
+## Checkbox or Switch?
 
-- **disabled** - A boolean indicating whether the Checkbox should be disabled or not. When disabled, the Checkbox cannot be clicked or interacted with.
-- **size** - A string with one of three possible values: "small," "medium," or "large." It defines the size or dimensions of the Checkbox.
-- **checked** - A boolean indicating whether the Checkbox is checked or not. When checked, the Checkbox displays a checkmark icon.
-- **onChange** - A function that receives the new checked state as a boolean parameter. It is called when the user toggles the Checkbox.
-- **label** - An optional string that displays a text label next to the Checkbox. When clicked, it toggles the Checkbox state.
-- **enableClickAnimation** - A boolean indicating whether to enable the liquid bounce animation on click
+- **Checkbox**: a choice in a form or a list that takes effect later, when the user saves or submits, for example "Send me updates" or picking several rows.
+- **[Switch](?path=/docs/switch--docs)**: a setting that changes immediately, for example Wi-Fi.
+
+## Props
+
+All `<button>` props are passed through, and `ref` points to the `<button role="checkbox">`.
+
+- **checked** _`boolean`_: the state when controlled.
+- **defaultChecked** _`boolean`_: the starting state when uncontrolled. Default `false`.
+- **onCheckedChange** _`(checked: boolean) => void`_: called with the new state. `onChange` still works but is deprecated.
+- **label** _`ReactNode`_: text next to the box. Clicking it toggles the box too.
+- **size** _`"small" | "medium" | "large"`_: box size 18, 22 or 26px. Default `"medium"`.
+- **disabled** _`boolean`_
+- **id**: goes to the box. It is generated if you don't pass one, and the `label` is linked to it.
+
+<Canvas of={Checkbox.Small} />
+<Canvas of={Checkbox.Large} />
+
+## Behaviour
+
+- Space toggles it, like any button. `aria-checked` follows the state.
+- Without a `label`, give it an `aria-label`.
+
+<Canvas of={Checkbox.Disabled} />

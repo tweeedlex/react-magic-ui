@@ -1,47 +1,55 @@
 import { Canvas, Meta } from "@storybook/addon-docs/blocks";
-import Example from "./Example.tsx";
 import * as Card from "./Card.stories.tsx";
 
-<Meta of={Card} title="Card"/>
+<Meta of={Card} title="Card" />
 
 # Card
 
-Card component with different props.
-
-#### Example
+A liquid glass panel that groups related content, such as a settings group, a widget or a form. Its content is laid out with flexbox.
 
 <Canvas of={Card.Default} />
 
 ## Usage
 
-```ts
-import { Card } from "react-magic-ui";
+```tsx
+import { Card, Switch } from "react-magic-ui";
 
-const Example = () => {
-  return (
-      <Card
-        size={"small"}
-        direction={"column"}
-        align={"start"}
-        justify={"start"}
-      >
-        <h1>Title</h1>
-        <h2>Subtitle</h2>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-          vehicula, sapien nec consectetur aliquam, turpis ex tincidunt
-          turpis, sed facilisis eros libero a purus.
-        </p>
-      </Card>
-  );
-};
-
-export default Example;
+<Card gap={14}>
+  <h3>Control Center</h3>
+  <label>
+    Wi-Fi <Switch aria-label="Wi-Fi" defaultChecked />
+  </label>
+</Card>
 ```
 
-#### Arguments
+A row of buttons, pushed apart:
 
-- **size** - A string with one of three possible values: "small," "medium," or "large." It defines the size or dimensions of the Card.
-- **direction** - A string with one of two possible values: "row" or "column." It defines the direction of the Card.
-- **align** - A string with one of five possible values: "start," "end," "center," "baseline," or "stretch." It defines the alignment of the Card.
-- **justify** - A string with one of five possible values: "start," "end," "center," "between," or "around." It defines the justification of the Card.
+```tsx
+<Card direction="row" justify="space-between" align="center">
+  <span>3 items selected</span>
+  <Button destructive>Delete</Button>
+</Card>
+```
+
+## No glass on glass
+
+iOS 26 never blurs glass on top of glass. Buttons, switches, fields and tabs inside a card notice they are on glass and draw themselves as **inner layers**: a light fill with a thin edge, but no blur of their own. You don't need to set anything for this.
+
+If something inside a card has to be real glass, such as a popover that floats over other content, pass `layer="surface"` to it. To find out from your own component whether it sits on glass, use `useGlassDepth()`.
+
+## Props
+
+All `<div>` props are passed through, and `ref` points to the `<div>`.
+
+- **size** _`"small" | "medium" | "large"`_: padding 12, 20 or 28px and corner radius 18, 26 or 34px. Default `"medium"`.
+- **direction** _`"column" | "row"`_: default `"column"`.
+- **align** _`"start" | "center" | "end" | "stretch"`_: `align-items`. Default `"stretch"`.
+- **justify** _`"start" | "center" | "end" | "space-between" | "space-around"`_: `justify-content`. Default `"start"`.
+- **gap** _`number`_: space between children in px. Default `12`.
+- **material** _`"glass" | "frosted"`_: `"frosted"` blurs more softly and doesn't bend the light at the edges. Use it behind long text. Default `"glass"`.
+- **tone**, **lens**, **layer**: see [Glass](?path=/docs/glass--docs).
+
+## Tips
+
+- Glass needs something behind it. Over a plain colour it just looks grey; it shows best over a photo, a video or a colourful gradient.
+- For text that sits right on the card, rely on the ink colour (`tone`). If a busy photo makes the text hard to read, use `tone="light"` and the card gets darker under light text.
