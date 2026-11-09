@@ -82,9 +82,10 @@
   overflow: visible;
   filter: drop-shadow(0 1px 3px var(--rmu-gt-shadow));
 }
-.rmu-glass-text__rim text {
+.rmu-glass-text__rim > text {
   fill: none;
-  stroke-width: max(1px, .012em);
+  /* half of it is masked away inside the glyph */
+  stroke-width: max(1.5px, .014em);
 }
 
 /* inside a rounded box that clips its overflow the glass can't be cut to the

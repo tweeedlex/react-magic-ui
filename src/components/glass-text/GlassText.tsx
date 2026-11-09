@@ -64,6 +64,7 @@ const GlassText = forwardRef<HTMLElement, GlassTextProps>(
     const id = useId().replace(/[^a-zA-Z0-9_-]/g, "");
     const clipId = `rmu-gt-clip-${id}`;
     const rimId = `rmu-gt-rim-${id}`;
+    const outsideId = `rmu-gt-out-${id}`;
 
     // where the first glyph's baseline sits inside the glass layer; the SVG
     // copies of the text (clip shape and rim) are drawn from that point
@@ -113,6 +114,12 @@ const GlassText = forwardRef<HTMLElement, GlassTextProps>(
             <clipPath id={clipId} clipPathUnits="userSpaceOnUse">
               <text x={origin?.x ?? 0} y={origin?.y ?? 0}>{text}</text>
             </clipPath>
+            {/* everything but the glyphs: the rim only shows outside the outline, so
+                fonts with overlapping contours (variable fonts) get no inner seams */}
+            <mask id={outsideId} maskUnits="userSpaceOnUse" x="-10000" y="-10000" width="20000" height="20000">
+              <rect x="-10000" y="-10000" width="20000" height="20000" fill="#fff" />
+              <text x={origin?.x ?? 0} y={origin?.y ?? 0} fill="#000">{text}</text>
+            </mask>
             <linearGradient id={rimId} x1="0" y1="0" x2="0.35" y2="1">
               <stop offset="0" stopColor="#fff" stopOpacity="0.95" />
               <stop offset="0.4" stopColor="#fff" stopOpacity="0.15" />
@@ -120,7 +127,7 @@ const GlassText = forwardRef<HTMLElement, GlassTextProps>(
               <stop offset="1" stopColor="#fff" stopOpacity="0.65" />
             </linearGradient>
           </defs>
-          <text x={origin?.x ?? 0} y={origin?.y ?? 0} stroke={`url(#${rimId})`}>
+          <text x={origin?.x ?? 0} y={origin?.y ?? 0} stroke={`url(#${rimId})`} mask={`url(#${outsideId})`}>
             {text}
           </text>
         </svg>
